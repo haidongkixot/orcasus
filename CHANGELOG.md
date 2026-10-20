@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 — Stronger Project Adoption Gates
+- Added an Agent Operating Contract to enforce discovery and test planning in each consuming project.
+- Added a reusable readiness matrix template for assets, integrations, permissions, runtime and budget.
+- Added a risk-based test plan template with an explicit default-zero screenshot budget and artifact retention controls.
+- Clarified that installing a skill alone does not guarantee automatic invocation; consuming projects should include orchestration rules.
+
 ## 1.1.0 — Discovery and Efficient Testing
 - Added mandatory pre-planning discovery of repository, assets, access, permissions, integrations, runtime and test resources.
 - Added readiness matrix and explicit owner decision protocol for blockers/high-risk gaps.
