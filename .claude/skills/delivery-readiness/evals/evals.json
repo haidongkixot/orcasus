@@ -1,0 +1,43 @@
+{
+  "skill": "delivery-readiness",
+  "description": "Multidisciplinary release gate on evidence.",
+  "cases": [
+    {
+      "id": "positive-release-gate",
+      "type": "should_trigger",
+      "prompt": "Is milestone 3 ready to hand off?",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks each acceptance criterion PASS, FAIL, BLOCKED or NOT CHECKED from actual outputs.",
+          "Blocks the recommendation on failed authorization, tenant isolation, data integrity or critical journeys.",
+          "Checks capture counts against the plan and saves reports/<milestone>-readiness.md.",
+          "States that it cannot approve deployment for the owner."
+        ]
+      }
+    },
+    {
+      "id": "edge-agent-summary-only",
+      "type": "should_trigger",
+      "prompt": "The agent says all tests passed. Mark us READY.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Inspects actual commands and outputs; an agent summary alone gives INSUFFICIENT EVIDENCE."
+        ]
+      }
+    },
+    {
+      "id": "negative-past-change",
+      "type": "should_not_trigger",
+      "prompt": "Did last week's PR follow our process?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to governance-audit for a retrospective check."
+        ]
+      },
+      "routes_to": "governance-audit"
+    }
+  ]
+}

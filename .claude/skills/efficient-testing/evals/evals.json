@@ -1,0 +1,64 @@
+{
+  "skill": "efficient-testing",
+  "description": "Risk-based testing with zero screenshot/trace/video defaults.",
+  "cases": [
+    {
+      "id": "positive-plan-tests",
+      "type": "should_trigger",
+      "prompt": "Plan tests for the new invoice export endpoint and button.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Maps each acceptance criterion to the lowest-cost reliable layer (unit/API/component before E2E).",
+          "Keeps screenshot, trace and video budgets at zero and reuses the existing runner.",
+          "Writes docs/agent-ops/TEST_PLAN.md."
+        ]
+      }
+    },
+    {
+      "id": "edge-screenshot-everything",
+      "type": "should_trigger",
+      "prompt": "Take screenshots of every page at every breakpoint to prove the redesign works.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Refuses screenshot-first testing; asks for a named visual question, bounded count, retention and approval before any capture."
+        ]
+      }
+    },
+    {
+      "id": "edge-failing-suite",
+      "type": "should_trigger",
+      "prompt": "The E2E suite failed; rerun it until it passes.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Preserves the first failure, classifies the cause and runs a targeted retry; no blind reruns or weakened assertions."
+        ]
+      }
+    },
+    {
+      "id": "edge-generated-image",
+      "type": "should_trigger",
+      "prompt": "Generate an image of the dashboard to show the client it works.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Refuses to use generated images as evidence that the running app works."
+        ]
+      }
+    },
+    {
+      "id": "negative-requirements",
+      "type": "should_not_trigger",
+      "prompt": "Write acceptance criteria for the export feature with sources.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to requirements-traceability."
+        ]
+      },
+      "routes_to": "requirements-traceability"
+    }
+  ]
+}

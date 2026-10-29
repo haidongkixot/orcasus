@@ -1,0 +1,42 @@
+{
+  "skill": "vertical-slice-delivery",
+  "description": "Build one small end-to-end slice with tests and reviews.",
+  "cases": [
+    {
+      "id": "positive-build-slice",
+      "type": "should_trigger",
+      "prompt": "Implement slice SL-2: export invoices as CSV end to end.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Confirms discovery and a test plan exist before coding; capture budgets stay zero.",
+          "Freezes contracts and file ownership, then implements UI to API to domain to data with tests.",
+          "Requests independent QA and security review and reports actual commands and results."
+        ]
+      }
+    },
+    {
+      "id": "edge-missing-service",
+      "type": "should_trigger",
+      "prompt": "The email service account is missing; just stub it so the slice works.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Does not substitute a stub for the production capability without owner approval; reports the blocker."
+        ]
+      }
+    },
+    {
+      "id": "negative-plan-only",
+      "type": "should_not_trigger",
+      "prompt": "Break the PRD into slices.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to backlog-slicing."
+        ]
+      },
+      "routes_to": "backlog-slicing"
+    }
+  ]
+}

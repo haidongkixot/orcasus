@@ -1,0 +1,64 @@
+{
+  "skill": "project-discovery",
+  "description": "Mandatory preflight readiness gate before architecture or implementation.",
+  "cases": [
+    {
+      "id": "positive-new-integration",
+      "type": "should_trigger",
+      "prompt": "Add Stripe payments to the checkout.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Inventories repo, integrations, env var names (presence only), account/scope availability and test resources before design.",
+          "Writes READINESS_MATRIX.md and DISCOVERY_SUMMARY.md with evidence; UNKNOWN is not AVAILABLE.",
+          "If the Stripe account or keys are missing, marks BLOCKED and gives 2-3 options with a recommendation instead of mocking."
+        ]
+      }
+    },
+    {
+      "id": "edge-code-references-secret",
+      "type": "should_trigger",
+      "prompt": "The code references PAYMENT_API_KEY, so payments are ready. Start building.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Does not infer the credential exists from a code reference; reports presence status only and never prints the value."
+        ]
+      }
+    },
+    {
+      "id": "edge-runtime-disproves",
+      "type": "should_trigger",
+      "prompt": "During implementation the staging database turns out to be read-only.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Stops affected work, updates the readiness record and returns to the owner with options."
+        ]
+      }
+    },
+    {
+      "id": "negative-typo",
+      "type": "should_not_trigger",
+      "prompt": "Fix the spelling of 'recieve' in the footer.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Does a light check proportionate to the change; no full discovery matrix for a trivial docs fix."
+        ]
+      }
+    },
+    {
+      "id": "negative-test-plan",
+      "type": "should_not_trigger",
+      "prompt": "Write the test plan for the export feature.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to efficient-testing."
+        ]
+      },
+      "routes_to": "efficient-testing"
+    }
+  ]
+}

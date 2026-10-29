@@ -1,0 +1,42 @@
+{
+  "skill": "root-cause-debate",
+  "description": "Hard defects investigated with competing hypotheses and falsification.",
+  "cases": [
+    {
+      "id": "positive-flaky-defect",
+      "type": "should_trigger",
+      "prompt": "Orders occasionally duplicate in production and nobody can reproduce it.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Captures symptom, environment and history with secrets removed.",
+          "Has 3-5 distinct hypotheses, each with a discriminating experiment.",
+          "Runs only safe experiments with no production-impacting changes.",
+          "Adds regression tests for the confirmed cause."
+        ]
+      }
+    },
+    {
+      "id": "edge-no-progress",
+      "type": "should_trigger",
+      "prompt": "We have debated the cause for two rounds without new evidence.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Stops and reports the unresolved cause and the next experiment instead of looping."
+        ]
+      }
+    },
+    {
+      "id": "negative-obvious-bug",
+      "type": "should_not_trigger",
+      "prompt": "This function returns null because of a typo on line 12. Fix it.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Fixes it directly; no multi-agent debate for an obvious defect."
+        ]
+      }
+    }
+  ]
+}

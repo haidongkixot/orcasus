@@ -17,6 +17,7 @@ traces/
 *.webm
 meetings/sessions/**/events/*.json
 meetings/unassigned/**/events/*.json
+meetings/HOOK_ERRORS.log
 node_modules/
 dist/
 build/

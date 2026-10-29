@@ -1,0 +1,62 @@
+# Orcasus package checks: skill/agent contracts, skill evals, hook launcher,
+# meeting logger, knowledge and citation links.
+#
+# Static checks only. Passing CI does not prove Agent Teams messaging, hook firing
+# inside real teammate sessions, permission enforcement or live skill behavior;
+# see docs/ACCEPTANCE_TESTS.md for the runtime checks.
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS runners ship python3 without a bare `python`, which exercises
+        # the hook launcher's interpreter fallback.
+        os: [ubuntu-latest, macos-latest]
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Python version
+        run: python3 --version
+
+      - name: Bundle, skill and agent contracts, skill evals
+        run: python3 scripts/validate_bundle.py
+
+      - name: Skill eval files
+        run: python3 scripts/skill_evals.py validate
+
+      - name: Meeting logger tests
+        run: python3 scripts/test_meeting_logger.py
+
+      - name: Hook launcher tests
+        run: python3 scripts/test_hook_launcher.py
+
+      - name: Knowledge link checker tests
+        run: python3 scripts/test_knowledge_links.py
+
+      - name: Knowledge index, trace matrices and documentation links
+        run: python3 scripts/check_knowledge_links.py
+
+      - name: Hook runtime check through the launcher
+        run: sh scripts/hooks/run_python.sh --check

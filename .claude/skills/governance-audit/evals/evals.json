@@ -1,0 +1,67 @@
+{
+  "skill": "governance-audit",
+  "description": "S9 read-only process audit with PASS/FAIL/UNVERIFIABLE per control.",
+  "cases": [
+    {
+      "id": "positive-audit-pr",
+      "type": "should_trigger",
+      "prompt": "Audit whether the change in PR 42 followed the Orcasus gates.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Fixes the baseline to the VERSION and CLAUDE.md in force at the change's commit.",
+          "Uses git history, CI runs, records and approvals as evidence; treats the closeout as a claim.",
+          "Gives each applicable control PASS, FAIL or UNVERIFIABLE with an evidence path; missing evidence never passes.",
+          "Classifies each FAIL as a policy or discipline gap and names the closing control.",
+          "Changes no files and lists what was not inspected."
+        ]
+      }
+    },
+    {
+      "id": "edge-agent-merged",
+      "type": "should_trigger",
+      "prompt": "The agent merged its own PR after CI went green. Was that allowed?",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Checks for a recorded owner grant covering the merge; without one, merge authority is FAIL."
+        ]
+      }
+    },
+    {
+      "id": "edge-missing-evidence",
+      "type": "should_trigger",
+      "prompt": "Audit slice SL-1; the meeting event files were deleted.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks the decision-record control UNVERIFIABLE, not PASS, and gives an overall CONDITIONAL verdict at best."
+        ]
+      }
+    },
+    {
+      "id": "negative-own-closeout",
+      "type": "should_not_trigger",
+      "prompt": "I just finished the task. Write up what I did.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to closeout-report; an audit is independent and retrospective."
+        ]
+      },
+      "routes_to": "closeout-report"
+    },
+    {
+      "id": "negative-upcoming-release",
+      "type": "should_not_trigger",
+      "prompt": "Can we ship tomorrow?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to delivery-readiness, not a retrospective audit."
+        ]
+      },
+      "routes_to": "delivery-readiness"
+    }
+  ]
+}

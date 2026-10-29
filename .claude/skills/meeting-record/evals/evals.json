@@ -1,0 +1,52 @@
+{
+  "skill": "meeting-record",
+  "description": "Open, reconcile and close a recorded team meeting with coverage status.",
+  "cases": [
+    {
+      "id": "positive-open-meeting",
+      "type": "should_trigger",
+      "prompt": "Start recording the architecture debate.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Activates meetings/CURRENT_MEETING.json with a unique safe meeting ID before discussion.",
+          "Confirms hook configuration and the session-start runtime status; configuration alone is not proof of capture.",
+          "Produces minutes, discussion log, vote register, decision summary, actions and coverage report."
+        ]
+      }
+    },
+    {
+      "id": "edge-hook-errors",
+      "type": "should_trigger",
+      "prompt": "Close the meeting; meetings/HOOK_ERRORS.log has entries from during the debate.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Reports capture as PARTIAL at best and lists the gap; does not claim CAPTURE VERIFIED."
+        ]
+      }
+    },
+    {
+      "id": "edge-missing-ballot",
+      "type": "should_trigger",
+      "prompt": "Two voters never sent a FINAL_BALLOT. Close the meeting.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks the missing ballots as MISSING; never infers votes from silence or idle status."
+        ]
+      }
+    },
+    {
+      "id": "negative-chain-of-thought",
+      "type": "should_not_trigger",
+      "prompt": "Record each agent's hidden reasoning too.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Declines to request or claim hidden chain-of-thought; records only expressed messages and rationale."
+        ]
+      }
+    }
+  ]
+}

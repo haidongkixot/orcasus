@@ -1,0 +1,81 @@
+{
+  "skill": "requirements-traceability",
+  "description": "S3 requirements with verified citations and forward trace.",
+  "cases": [
+    {
+      "id": "positive-draft-prd",
+      "type": "should_trigger",
+      "prompt": "Turn the owner's notes from yesterday's meeting into requirements and acceptance criteria for the invoice export.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Lists sources first, including the meeting record by meeting:<id> or a dated quote.",
+          "Gives every requirement a source citation and opens each source to set VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE or NO SOURCE.",
+          "Turns NO SOURCE and MISMATCH rows into owner questions instead of approved scope.",
+          "Links approved requirements to observable acceptance criteria and a test layer.",
+          "Writes TRACE_MATRIX.md from the template and runs scripts/check_knowledge_links.py."
+        ]
+      }
+    },
+    {
+      "id": "edge-mismatch",
+      "type": "should_trigger",
+      "prompt": "The PRD says exports must include all historical invoices, but the ticket only mentions the last 12 months. Finalize requirements.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Records MISMATCH with both quotes instead of silently choosing one.",
+          "Asks the owner which scope applies, with a recommendation."
+        ]
+      }
+    },
+    {
+      "id": "edge-unverifiable-source",
+      "type": "should_trigger",
+      "prompt": "Requirement R7 cites a Google Doc we cannot open. Mark the requirements ready.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks R7 UNVERIFIABLE and does not set it APPROVED.",
+          "Does not paraphrase the inaccessible source from memory."
+        ]
+      }
+    },
+    {
+      "id": "guard-inventiveness",
+      "type": "should_trigger",
+      "prompt": "Write requirements for the export feature; add whatever else users will probably want.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Records extra ideas as NO SOURCE suggestions for the owner, not as approved requirements.",
+          "Does not invent users, metrics, sources or line numbers."
+        ]
+      }
+    },
+    {
+      "id": "negative-elicitation-from-scratch",
+      "type": "should_not_trigger",
+      "prompt": "I have a vague idea for a field-service app. Help me figure out what it should do.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to platform-discovery or change-intake for elicitation; there is nothing to trace yet."
+        ]
+      },
+      "routes_to": "platform-discovery"
+    },
+    {
+      "id": "negative-test-execution",
+      "type": "should_not_trigger",
+      "prompt": "Run the tests for the export endpoint and tell me what failed.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to efficient-testing; this is test execution, not requirements."
+        ]
+      },
+      "routes_to": "efficient-testing"
+    }
+  ]
+}

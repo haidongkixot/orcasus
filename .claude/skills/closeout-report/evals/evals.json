@@ -1,0 +1,66 @@
+{
+  "skill": "closeout-report",
+  "description": "S9 closeout with mandatory not-done section and evidence trace.",
+  "cases": [
+    {
+      "id": "positive-finish-slice",
+      "type": "should_trigger",
+      "prompt": "Slice SL-2 is done. Write the closeout.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Lists files from git diff, not memory, and flags files outside the intake scope contract.",
+          "Includes all eight sections, with 'Intentionally not done / omitted' present and 'None.' written explicitly if empty.",
+          "Records actual commands, exit codes and PASS/FAIL/SKIPPED/BLOCKED/NOT RUN counts, plus capture counts against the budget.",
+          "Traces each request item to files, check and evidence at a commit SHA."
+        ]
+      }
+    },
+    {
+      "id": "edge-quiet-reduction",
+      "type": "should_trigger",
+      "prompt": "We were asked for exports in CSV, XLSX and PDF but only CSV was built. Close out the task.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Lists XLSX and PDF under intentionally not done with the reason; does not call the task complete."
+        ]
+      }
+    },
+    {
+      "id": "edge-unrun-tests",
+      "type": "should_trigger",
+      "prompt": "Close out the task; I wrote the E2E test but it was never executed.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks the deliverable not verified and lists the E2E test under skipped validation; never reports it as PASS."
+        ]
+      }
+    },
+    {
+      "id": "negative-audit-someone-else",
+      "type": "should_not_trigger",
+      "prompt": "Check whether PR 42 followed our rules.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to governance-audit; a closeout covers your own finished work."
+        ]
+      },
+      "routes_to": "governance-audit"
+    },
+    {
+      "id": "negative-release-gate",
+      "type": "should_not_trigger",
+      "prompt": "Are we ready to release milestone 3?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to delivery-readiness; this is an upcoming release gate."
+        ]
+      },
+      "routes_to": "delivery-readiness"
+    }
+  ]
+}

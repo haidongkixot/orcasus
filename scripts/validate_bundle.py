@@ -6,29 +6,44 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+import skill_evals  # noqa: E402
+
+SKILLS = {
+    "change-intake", "project-discovery", "platform-discovery", "requirements-traceability",
+    "team-debate", "meeting-record", "backlog-slicing", "efficient-testing",
+    "vertical-slice-delivery", "root-cause-debate", "design-quality-gate", "delivery-readiness",
+    "closeout-report", "governance-audit", "process-retro", "knowledge-curation",
+}
+AGENTS = {
+    "product-manager", "product-analyst", "domain-architect", "product-designer", "ux-researcher",
+    "frontend-engineer", "backend-engineer", "mobile-engineer", "integration-engineer",
+    "data-platform-engineer", "qa-automation-engineer", "security-reviewer", "performance-reviewer",
+    "devil-advocate", "team-secretary", "governance-auditor", "knowledge-steward",
+}
 REQUIRED = [
     "README.md", "CLAUDE.md", "VERSION", "INITIALIZE_AGENTS.md",
     ".claude/settings.json", ".gitignore", "CHANGELOG.md",
     "docs/TEAM_OPERATING_MODEL.md", "docs/DEBATE_PROTOCOL.md",
     "docs/MEETING_RECORDING_PROTOCOL.md", "docs/PLATFORM_REFERENCE_ARCHITECTURE.md",
-    "docs/UX_NORTH_STAR.md", "docs/ACCEPTANCE_TESTS.md",
+    "docs/UX_NORTH_STAR.md", "docs/ACCEPTANCE_TESTS.md", "docs/AI_SDLC_STAGE_MAP.md",
     "docs/USER_GUIDE_VI.md", "docs/RESEARCH_AND_DECISIONS.md", "docs/STATIC_VALIDATION_RESULTS.md",
     "docs/ADR_TEMPLATE.md", "docs/PRD_TEMPLATE.md", "docs/MEETING_MINUTES_TEMPLATE.md",
     "docs/DEFINITION_OF_DONE.md",
-    ".claude/skills/project-discovery/SKILL.md",
-    ".claude/skills/efficient-testing/SKILL.md",
-    ".claude/skills/team-debate/SKILL.md",
-    ".claude/skills/meeting-record/SKILL.md",
-    ".claude/skills/platform-discovery/SKILL.md",
-    ".claude/skills/root-cause-debate/SKILL.md",
-    ".claude/skills/vertical-slice-delivery/SKILL.md",
-    ".claude/skills/design-quality-gate/SKILL.md",
-    ".claude/skills/delivery-readiness/SKILL.md",
     "skills/project-discovery/SKILL.md", "skills/efficient-testing/SKILL.md",
     "scripts/log_team_message.py", "scripts/test_meeting_logger.py",
+    "scripts/hooks/run_python.sh", "scripts/test_hook_launcher.py",
+    "scripts/check_knowledge_links.py", "scripts/test_knowledge_links.py", "scripts/skill_evals.py",
     "scripts/validate_bundle.py", "meetings/CURRENT_MEETING.json", "meetings/README.md",
+    "knowledge/INDEX.md", "knowledge/README.md", ".github/workflows/validate.yml",
     "templates/READINESS_MATRIX_TEMPLATE.md", "templates/TEST_PLAN_TEMPLATE.md",
+    "templates/INTAKE_RECORD_TEMPLATE.md", "templates/TRACE_MATRIX_TEMPLATE.md",
+    "templates/BACKLOG_TEMPLATE.md", "templates/CLOSEOUT_TEMPLATE.md",
+    "templates/GOVERNANCE_AUDIT_TEMPLATE.md", "templates/RETRO_TEMPLATE.md",
 ]
+REQUIRED += [f".claude/skills/{name}/SKILL.md" for name in sorted(SKILLS)]
+REQUIRED += [f".claude/agents/{name}.md" for name in sorted(AGENTS)]
+LAUNCHER = "scripts/hooks/run_python.sh"
 passed, errors = [], []
 
 for rel in REQUIRED:
@@ -55,6 +70,21 @@ try:
             passed.append("PASS lifecycle hook: " + event)
         else:
             errors.append("Missing logger hook: " + event)
+    if LAUNCHER in json.dumps(hooks.get("SessionStart", [])) and "--check" in json.dumps(hooks.get("SessionStart", [])):
+        passed.append("PASS SessionStart hook runtime check configured")
+    else:
+        errors.append("SessionStart hook must run " + LAUNCHER + " --check")
+    portable = True
+    for event, groups in hooks.items():
+        for group in groups:
+            for hook in group.get("hooks", []):
+                command = hook.get("command", "")
+                first = command.split()[0] if command.split() else ""
+                if first in ("python", "python3", "py") or LAUNCHER not in command:
+                    errors.append(f"Hook {event} must call Python through {LAUNCHER}, not '{command}'")
+                    portable = False
+    if portable:
+        passed.append("PASS every hook uses the portable Python launcher")
     deny = settings.get("permissions", {}).get("deny", [])
     if any("Read(./.env)" in item for item in deny):
         passed.append("PASS env secret guard")
@@ -80,10 +110,12 @@ for path in agents:
     if match.group(1) in agent_names:
         errors.append("Duplicate agent name: " + match.group(1))
     agent_names.add(match.group(1))
-if len(agent_names) == 15 and "team-secretary" in agent_names:
-    passed.append("PASS 15 unique agent roles incl. Team Secretary")
+    if match.group(1) != path.stem:
+        errors.append(f"Agent name '{match.group(1)}' must match file name {path.name}")
+if agent_names == AGENTS:
+    passed.append(f"PASS {len(AGENTS)} unique agent roles match the expected roster")
 else:
-    errors.append("Expected 15 unique roles incl. Team Secretary; found " + str(len(agent_names)))
+    errors.append(f"Agent roster mismatch; missing {sorted(AGENTS - agent_names)}, unexpected {sorted(agent_names - AGENTS)}")
 
 skills_dir = ROOT / ".claude/skills"
 skills = sorted(skills_dir.rglob("SKILL.md")) if skills_dir.exists() else []
@@ -102,10 +134,19 @@ for path in skills:
     if match.group(1) in skill_names:
         errors.append("Duplicate skill name: " + match.group(1))
     skill_names.add(match.group(1))
-if len(skill_names) == 9:
-    passed.append("PASS 9 unique workflow skills")
+    if match.group(1) != path.parent.name:
+        errors.append(f"Skill name '{match.group(1)}' must match its directory {path.parent.name}")
+    description = desc.group(0).split(":", 1)[1].strip().strip('"\'')
+    if len(description) > 1024:
+        errors.append(f"Skill description over 1024 characters: {match.group(1)}")
+if skill_names == SKILLS:
+    passed.append(f"PASS {len(SKILLS)} unique workflow skills match the expected set")
 else:
-    errors.append("Expected 9 skills; found " + str(len(skill_names)))
+    errors.append(f"Skill set mismatch; missing {sorted(SKILLS - skill_names)}, unexpected {sorted(skill_names - SKILLS)}")
+
+eval_passed, eval_errors = skill_evals.validate(ROOT)
+passed.extend("PASS " + item for item in eval_passed)
+errors.extend(eval_errors)
 
 for name in ("project-discovery", "efficient-testing"):
     runtime = ROOT / ".claude/skills" / name / "SKILL.md"
