@@ -2,7 +2,7 @@
 
 What has been proven by running Orcasus for real, and what has not. Each row links to the evidence; a row without evidence is NOT RUN. Update this page whenever new evidence lands, and rerun before each release and at least monthly.
 
-Last updated: 2026-10-29.
+Last updated: 2026-10-29 (pilot added).
 
 ## Package checks (CI, no model calls)
 
@@ -38,7 +38,7 @@ Until a skill reaches PROVEN in the scorecard, treat it as **EXPERIMENTAL**. Tod
 
 | Project | Status | Evidence |
 |---|---|---|
-| tbagri-web | NOT STARTED: owner to pick one small, low-risk feature | `evidence/pilots/tbagri-web-<date>.md` |
+| tbagri-web (security hotfix, production) | RAN 2026-10-29: 11/11 stage records; 31 tests; independent security review APPROVE WITH CHANGES; governance audit **FAIL** (record fixes applied); PR open, not merged or deployed | [evidence/pilots/tbagri-web-2026-10-29.md](../evidence/pilots/tbagri-web-2026-10-29.md) |
 
 ## Not proven by any of the above
 
