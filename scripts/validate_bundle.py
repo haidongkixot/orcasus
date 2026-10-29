@@ -12,7 +12,7 @@ REQUIRED = [
     "docs/TEAM_OPERATING_MODEL.md", "docs/DEBATE_PROTOCOL.md",
     "docs/MEETING_RECORDING_PROTOCOL.md", "docs/PLATFORM_REFERENCE_ARCHITECTURE.md",
     "docs/UX_NORTH_STAR.md", "docs/ACCEPTANCE_TESTS.md",
-    "docs/USER_GUIDE_VI.md", "docs/RESEARCH_AND_DECISIONS.md",
+    "docs/USER_GUIDE_VI.md", "docs/RESEARCH_AND_DECISIONS.md", "docs/STATIC_VALIDATION_RESULTS.md",
     "docs/ADR_TEMPLATE.md", "docs/PRD_TEMPLATE.md", "docs/MEETING_MINUTES_TEMPLATE.md",
     "docs/DEFINITION_OF_DONE.md",
     ".claude/skills/project-discovery/SKILL.md",
