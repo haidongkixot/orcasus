@@ -1,0 +1,23 @@
+# Local runtime outputs and secrets
+.env
+.env.*
+!.env.example
+secrets/
+.ssh/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+test-results/
+playwright-report/
+screenshots/
+videos/
+traces/
+*.trace.zip
+*.webm
+meetings/sessions/**/events/*.json
+meetings/unassigned/**/events/*.json
+node_modules/
+dist/
+build/
+.next/

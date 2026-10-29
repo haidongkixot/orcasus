@@ -1,142 +1,90 @@
-# Hướng dẫn sử dụng Orcasus trong Claude Code — v1.3.0
+# Hướng dẫn sử dụng Orcasus — Claude Code Agent Team System v2.2.0
 
-Orcasus là thư viện skills và quy tắc vận hành giúp Claude Code phát triển web/mobile có kỷ luật hơn. Bản 1.3.0 đặt hai cổng bắt buộc:
+Orcasus không chỉ là hai skill. Đây là **bộ vận hành Agent Teams hoàn chỉnh** dành cho Claude Code: cấu hình, agents, skills, quyền, hooks, Team Secretary, logger, quy trình debate/vote, template, validation và hướng dẫn nghiệm thu.
 
-1. **Project Discovery** — khảo sát repository, assets, giấy phép, quyền, integrations, runtime, môi trường test và ngân sách trước khi chốt giải pháp.
-2. **Efficient Testing** — chọn lớp kiểm thử rẻ nhất nhưng đủ tin cậy; ngân sách screenshot, trace và video mặc định bằng 0.
+## 1. Bắt đầu trong VS Code
 
-Orcasus không phải agent runtime độc lập hoặc sandbox bảo mật. Cần đưa Operating Contract vào CLAUDE.md của dự án và kiểm tra kết quả thực tế.
+1. Mở thư mục gốc của repository Orcasus trong VS Code.
+2. Chọn Claude harness và đăng nhập Claude Code theo hướng dẫn chính thức: https://code.claude.com/docs/en/setup
+3. Đọc CLAUDE.md và .claude/settings.json. File settings bật Agent Teams ở chế độ experimental, thiết lập các quyền bảo vệ và hook ghi log.
+4. Kiểm tra Python 3 trong terminal.
+5. Chạy:
+   - python scripts/test_meeting_logger.py
+   - python scripts/validate_bundle.py
+6. Mở một phiên Claude Code interactive mới, copy phần Initialization prompt từ INITIALIZE_AGENTS.md và gửi.
+7. Chạy acceptance tests trong docs/ACCEPTANCE_TESTS.md ở workspace không production trước khi phụ thuộc vào hook/logger.
 
-## 1. Cài đặt vào dự án
+Không overlay cấu hình lên repository có sẵn một cách mù quáng. Hãy sao lưu/đối chiếu CLAUDE.md, settings, agents và skills; hợp nhất các nội dung hiện có.
 
-Copy cả hai thư mục skill vào dự án đích:
+## 2. Thành phần trong bộ cài đặt
 
-- skills/project-discovery/SKILL.md → .claude/skills/project-discovery/SKILL.md
-- skills/efficient-testing/SKILL.md → .claude/skills/efficient-testing/SKILL.md
+- .claude/settings.json: bật Agent Teams, permission defaults và hooks.
+- .claude/agents/: 15 vai trò gồm Product Manager, Product Analyst, Domain Architect, Product Designer, UX Researcher, Frontend, Backend, Mobile, Integration, Data Platform, QA, Security Reviewer, Performance Reviewer, Devil's Advocate và Team Secretary.
+- .claude/skills/: 9 workflows; bao gồm Project Discovery, Efficient Testing, Team Debate, Meeting Record, Platform Discovery, Root Cause Debate, Vertical Slice Delivery, Design Quality Gate và Delivery Readiness.
+- scripts/: event logger, unit tests, static validator.
+- docs/ và templates/: operating model, debate/meeting protocols, reference architecture, UX quality, acceptance tests, readiness/test-plan templates.
+- meetings/, evidence/, decisions/, projects/, reports/: nơi lưu các hồ sơ bền vững.
 
-Copy hai template vào docs/agent-ops/templates/:
+## 3. Quy trình cho một feature
 
-- templates/READINESS_MATRIX_TEMPLATE.md
-- templates/TEST_PLAN_TEMPLATE.md
+### Bước 1 — Discovery trước khi thiết kế
+Gọi /project-discovery. Orchestrator có thể phân công các agent khảo sát read-only song song, nhưng chưa được giao coding tasks cho đến khi đã tổng hợp bằng chứng về stack, assets/licences, integrations, permission scopes, môi trường, test runner, fixtures và ngân sách.
 
-Hợp nhất nội dung docs/agent-operating-contract.md vào CLAUDE.md hiện có. Không ghi đè các quy tắc build/test/deploy đặc thù của dự án.
+Tạo docs/agent-ops/READINESS_MATRIX.md và docs/agent-ops/DISCOVERY_SUMMARY.md. AVAILABLE phải có bằng chứng; UNKNOWN không phải AVAILABLE. Nếu thiếu quyền, asset, integration, runtime hay quyết định sản phẩm quan trọng, đánh dấu BLOCKED cho phần phụ thuộc và đưa ra lựa chọn cùng trade-offs để chị quyết định.
 
-Ví dụ PowerShell (đang đứng tại root repo Orcasus):
+### Bước 2 — Debate nếu có nhiều phương án
+Gọi /team-debate cho quyết định lớn có nhiều phương án hợp lý. Chọn nhóm nhỏ 3–5 teammates phù hợp; bắt đầu Team Secretary trước khi thảo luận. Mỗi agent đề xuất độc lập, phản biện, trả lời phản biện, chấm điểm phương án và gửi FINAL_BALLOT. Secretary ghi nhận thông tin quan sát được, không bỏ phiếu mặc định và không ghi hidden chain-of-thought.
 
-    $target = "C:\work\my-app"
-    New-Item -ItemType Directory -Force "$target\.claude\skills" | Out-Null
-    Copy-Item -Recurse -Force ".\skills\project-discovery" "$target\.claude\skills\"
-    Copy-Item -Recurse -Force ".\skills\efficient-testing" "$target\.claude\skills\"
-    New-Item -ItemType Directory -Force "$target\docs\agent-ops\templates" | Out-Null
-    Copy-Item -Force ".\templates\READINESS_MATRIX_TEMPLATE.md" "$target\docs\agent-ops\templates\"
-    Copy-Item -Force ".\templates\TEST_PLAN_TEMPLATE.md" "$target\docs\agent-ops\templates/"
+Lưu ADR, minutes, vote register, action items và coverage report. Nếu hook chưa được thử trực tiếp, trạng thái capture là PARTIAL hoặc NOT VERIFIED.
 
-Ví dụ macOS/Linux:
+### Bước 3 — Test plan trước code/test
+Gọi /efficient-testing và lập docs/agent-ops/TEST_PLAN.md. Mỗi acceptance criterion cần một lớp test có lý do. Ưu tiên static, unit, API/integration và component tests trước E2E. Chỉ bổ sung framework/dependency nếu đã xác minh có khoảng trống thực sự.
 
-    TARGET="/path/to/my-app"
-    mkdir -p "$TARGET/.claude/skills" "$TARGET/docs/agent-ops/templates"
-    cp -R skills/project-discovery "$TARGET/.claude/skills/"
-    cp -R skills/efficient-testing "$TARGET/.claude/skills/"
-    cp templates/READINESS_MATRIX_TEMPLATE.md "$TARGET/docs/agent-ops/templates/"
-    cp templates/TEST_PLAN_TEMPLATE.md "$TARGET/docs/agent-ops/templates/"
+### Bước 4 — Xây một vertical slice
+Gọi /vertical-slice-delivery. Chốt API/data/UI contracts, dependencies và file ownership. Implement một luồng end-to-end hoàn chỉnh thay vì nhiều màn hình mock rời rạc. Không tạo workaround làm giảm chất lượng hoặc thay đổi behavior mà chưa được duyệt.
 
-Thay đường dẫn ví dụ bằng đường dẫn dự án thật. Trước khi copy đè, kiểm tra có thay đổi riêng trong các skills đích hay không.
-
-Mở dự án trong VS Code, bắt đầu phiên Claude Code mới nếu cần, rồi gọi:
-
-- /project-discovery
-- /efficient-testing
-
-Xác minh skills được nhận diện theo tài liệu hiện hành: https://code.claude.com/docs/en/skills. Đừng chỉ hỏi model “đã nạp chưa”; yêu cầu nó tạo hồ sơ và đối chiếu file thật.
-
-## 2. Bắt buộc trước khi code: Project Discovery
-
-Với mỗi feature đáng kể, orchestrator được phép giao các agent khảo sát độc lập theo hướng **read-only**, nhưng chưa giao code cho Architect/Developer cho đến khi tổng hợp bằng chứng.
-
-Kiểm kê:
-- Stack, package scripts, phiên bản và trạng thái git hiện tại.
-- Component, design tokens, logo, fonts, icons, ảnh, nguồn và giấy phép.
-- API, database, authentication, integrations, scopes và trạng thái hiện diện của biến môi trường (không tiết lộ giá trị secret).
-- Tool/MCP có thực sự khả dụng trong phiên hiện tại hay không.
-- Runtime, CI, staging, test accounts, browser/device/emulator.
-- Acceptance criteria, security, performance, accessibility, localization và ngân sách.
-
-Tạo docs/agent-ops/READINESS_MATRIX.md và docs/agent-ops/DISCOVERY_SUMMARY.md. AVAILABLE cần bằng chứng; UNKNOWN không phải AVAILABLE.
-
-### Nếu thiếu resource hoặc permission
-
-Đánh dấu task phụ thuộc là BLOCKED. Trình bày 2–3 lựa chọn khả thi, trade-off về chi phí, thời gian, chất lượng, bảo mật, dữ liệu và bảo trì; đưa ra khuyến nghị và hỏi owner. Trong lúc chờ, chỉ tiếp tục việc độc lập và có thể đảo ngược.
-
-Không tự đổi sang fake API, mock production, placeholder asset, local-only behavior hoặc làm giảm acceptance criteria khi chưa được duyệt. Không cài dependency lớn, phát sinh chi phí, mở rộng quyền hoặc thay đổi production khi chưa được phép.
-
-Nếu phát hiện giả định sai lúc chạy, dừng phần công việc phụ thuộc, cập nhật readiness matrix và quay lại owner khi phương án hoặc chất lượng bị ảnh hưởng.
-
-## 3. Trước khi test: lập Test Plan
-
-Gọi /efficient-testing và tạo docs/agent-ops/TEST_PLAN.md theo template.
-
-| Lớp kiểm thử | Dùng để kiểm tra | Ví dụ |
-|---|---|---|
-| Static | Cấu hình/chất lượng mã | lint, typecheck, format, schema check |
-| Unit | Logic, validation, quyền, phép tính | hàm thuần, service nhỏ |
-| API/Integration | Contract, persistence, auth, tích hợp | route, query, migration |
-| Component | Tương tác và accessibility | form, keyboard, role/name |
-| E2E | Hành trình người dùng quan trọng | các luồng chính |
-| Visual regression | Yêu cầu hiển thị cụ thể | clipping, responsive, spacing, theme |
-
-Chọn lớp rẻ nhất nhưng đủ tin cậy để chứng minh acceptance criterion. Không chạy toàn bộ E2E sau mỗi lần sửa nếu test ở lớp thấp hơn đã đủ. Không thêm runner mới trước khi xác minh test stack hiện tại.
+### Bước 5 — Review và bàn giao
+QA, Security, Design, Performance hoặc Mobile Reviewer kiểm tra phần liên quan. Gọi /delivery-readiness trước mốc bàn giao. Báo cáo lệnh/test thực sự chạy, findings, artifact counts và phạm vi chưa kiểm tra.
 
 ## 4. Chính sách screenshot/trace/video
 
-Ngân sách mặc định của cả ba loại artifact đều là **0**.
+Ba ngân sách mặc định đều bằng **0**.
 
-- Không dùng image generation để tạo screenshot giả hoặc bằng chứng rằng ứng dụng thật hoạt động.
-- Không chụp mọi route, component, state, test, viewport hoặc mỗi vòng lặp.
-- Trước khi bật capture, phải ghi câu hỏi cần trả lời, trang/trạng thái đại diện, viewport/device/theme, hạn mức artifact, thư mục lưu, retention/cleanup và phê duyệt hoặc policy CI đã được duyệt.
-- Ưu tiên assertion, API/DOM state, semantic/accessibility queries, console/network logs và kiểm tra geometry.
-- Trace có thể chứa screenshot/screencast và DOM snapshots; trace archive cũng tính vào artifact budget.
-- Với Playwright đã có sẵn, giữ screenshot, trace và video ở chế độ off trong vòng lặp thường ngày. Chỉ bật capture có chọn lọc cho test chẩn đoán/visual cụ thể đã được lập kế hoạch. Không cài Playwright chỉ vì tài liệu gợi ý.
-- Không chấp nhận snapshot mới chỉ để làm test xanh; phải xem diff và ghi lý do.
+- Không generate hình để chứng minh ứng dụng hoạt động.
+- Không chụp tất cả route, state, viewport, theme hoặc mọi vòng lặp.
+- Trước khi capture, cần ghi câu hỏi cụ thể, trang/state đại diện, viewport/device, số artifact tối đa, nơi lưu, retention/cleanup và owner approval hoặc CI policy đã được duyệt.
+- Ưu tiên assertion, DOM/API state, accessibility queries, console/network logs và kiểm tra geometry.
+- Trace có thể chứa screenshot và DOM snapshots; trace archive cũng tính vào ngân sách.
+- Không chấp nhận snapshot mới chỉ để làm test xanh; phải kiểm tra diff và lý do.
+- Khi test fail, giữ lỗi đầu tiên, chẩn đoán nguyên nhân rồi chạy targeted test. Không retry mù toàn bộ suite.
 
-Tài liệu Playwright: https://playwright.dev/docs/api/class-testoptions và https://playwright.dev/docs/test-use-options.
+## 5. Quyền và an toàn
 
-## 5. Khi test thất bại
+Các quy tắc permissions/deny/ask trong settings là lớp bảo vệ giảm rủi ro, không phải sandbox hoàn chỉnh. Xem lại trước khi dùng. Không sử dụng cấu hình bỏ qua mọi quyền trên workstation có secrets/production. Không deploy, publish, xóa dữ liệu quan trọng, migrate production, mở rộng scope, gọi dịch vụ trả phí hay cam kết bên ngoài khi chưa được phép.
 
-1. Giữ assertion/log lỗi đầu tiên và bằng chứng tối thiểu.
-2. Phân loại nguyên nhân: code, giả định test, fixture/data, quyền, service, môi trường, browser/device hoặc flaky timing.
-3. Sửa nguyên nhân và chạy targeted test; không retry mù toàn bộ suite.
-4. Nếu thiếu resource, đánh dấu BLOCKED hoặc NOT RUN và trở lại discovery/owner gate.
-5. Không bỏ qua test, hạ assertion hoặc thay requirement để đạt màu xanh.
-6. Dừng vòng lặp sửa lỗi khi cùng lỗi tái diễn mà chưa có nguyên nhân mới; báo blocker.
+## 6. Kiểm tra Team Secretary
 
-## 6. Báo cáo cuối
+1. Tạo meeting ID duy nhất và đặt meetings/CURRENT_MEETING.json active.
+2. Bắt đầu Secretary và tối thiểu hai teammate thực sự gửi tin nhắn qua công cụ nhắn tin của Agent Teams.
+3. Kiểm tra events JSON có sender, recipient và stated message content đủ dùng.
+4. Đối chiếu event log với tin nhắn thực tế, balloting, minutes và coverage report.
+5. Chỉ ghi CAPTURE VERIFIED nếu có bằng chứng runtime không có khoảng trống quan trọng; nếu không, dùng PARTIAL hoặc NOT VERIFIED.
 
-Báo cáo phải có:
-- Acceptance criteria nào đã được xác minh và ở test layer nào.
-- Lệnh đã chạy, exit code và thời lượng nếu có.
-- Số PASS, FAIL, SKIPPED, BLOCKED, NOT RUN.
-- Số screenshot/trace/video, lý do, thư mục lưu và phê duyệt.
-- Lỗi đầu tiên, root cause, các retry có mục tiêu.
-- Integrations, permissions, devices hoặc phạm vi chưa được xác minh.
-- Workaround/dependency/cấu hình thay đổi và phê duyệt liên quan.
+Logger ghi những thông điệp được quan sát qua hook. Nó không ghi mọi trạng thái nội tâm hay đảm bảo mọi session teammate đều phát ra event.
 
-Không gọi feature là “đã test” nếu test chưa thực sự chạy.
+## 7. Các trạng thái báo cáo
 
-## 7. Checklist
+- PASS: đã xác minh bằng thực thi/bằng chứng.
+- FAIL: tiêu chí không đạt.
+- BLOCKED: thiếu resource hoặc quyết định.
+- NOT RUN: chưa chạy kiểm tra.
+- SKIPPED: không chạy theo policy có ghi nhận.
 
-- [ ] Discovery được tổng hợp trước khi giao code.
-- [ ] Assets, licences, integrations, credential/scopes và environments có bằng chứng.
-- [ ] Blocker và trade-off quan trọng đã được đưa ra owner.
-- [ ] Không có workaround làm giảm chất lượng chưa được duyệt.
-- [ ] Test plan map từng acceptance criterion sang lớp test.
-- [ ] Screenshot, trace, video budget mặc định bằng 0.
-- [ ] Mỗi artifact khác 0 có câu hỏi, hạn mức và phê duyệt/policy.
-- [ ] Report phản ánh lệnh/test thực tế và coverage gaps.
+Không báo test đã pass khi chỉ mới tạo file test hoặc xem screenshot. Không gọi feature “đã kiểm thử” nếu chưa có kết quả chạy thực tế.
 
-## Tài liệu
-
-- Claude Code Skills: https://code.claude.com/docs/en/skills
-- Claude Code Permissions: https://code.claude.com/docs/en/permissions
-- Claude Code Hooks: https://code.claude.com/docs/en/hooks
-- Playwright test options: https://playwright.dev/docs/api/class-testoptions
-- Testing Library query priority: https://testing-library.com/docs/queries/about/
+## Tài liệu chính thức
+- Agent Teams: https://code.claude.com/docs/en/agent-teams
+- Skills: https://code.claude.com/docs/en/skills
+- Hooks: https://code.claude.com/docs/en/hooks
+- Permissions: https://code.claude.com/docs/en/permissions
+- Playwright capture options: https://playwright.dev/docs/api/class-testoptions

@@ -1,0 +1,9 @@
+{
+  "meeting_id": null,
+  "active": false,
+  "decision_question": null,
+  "started_at": null,
+  "participants": [],
+  "voters": [],
+  "note": "Activate before a material debate; close only after Secretary reconciliation and teammate shutdown."
+}

@@ -1,45 +1,42 @@
-# Project Readiness Matrix — v1.3.0
+# Project Readiness Matrix — v2.2.0
 
-> Complete discovery before selecting architecture or starting implementation. Record evidence, not assumptions. Duplicate rows as needed.
+Complete discovery before architecture or implementation. Record current evidence, not assumptions.
 
-| Area | Requirement / capability | Resource / permission required | Status (AVAILABLE / MISSING / UNKNOWN / BLOCKED / NOT NEEDED) | Evidence / path / source | Impact if missing | Feasible options and trade-offs | Recommended action | Owner decision required? |
+| Area | Requirement/capability | Resource/permission | Status (AVAILABLE/MISSING/UNKNOWN/BLOCKED/NOT NEEDED) | Evidence/path/source | Impact if missing | Feasible options/trade-offs | Recommendation | Owner decision? |
 |---|---|---|---|---|---|---|---|---|
-| Product | Requirements and acceptance criteria | Product brief / owner decisions | UNKNOWN | | | | | Yes/No |
-| Repo & stack | Framework, runtime, package manager, scripts | Local repository | UNKNOWN | | | | | Yes/No |
-| UX / assets | Design system, fonts, logos, icons, licensed assets | Files, source, usage rights | UNKNOWN | | | | | Yes/No |
-| Integrations | API, database, SSO, email, payments, analytics | Endpoint, account, scopes | UNKNOWN | | | | | Yes/No |
-| Secrets | Required environment variables | Secret manager / local env | UNKNOWN | Record presence only; never paste values | | | | Yes/No |
-| Permissions | Tool/MCP/API operations available to this session | Granted scopes / policy | UNKNOWN | | | | | Yes/No |
-| Environments | Local, preview, staging, production separation | URLs, access, configuration | UNKNOWN | | | | | Yes/No |
-| Data | Fixtures, seed data, schema, migrations, rollback | Approved test data and backups | UNKNOWN | | | | | Yes/No |
-| Testing | Existing test runner, scripts, fixtures, CI | Dependencies and CI access | UNKNOWN | | | | | Yes/No |
-| Browser/mobile | Supported browsers, devices, emulators | Runtime/device access | UNKNOWN | | | | | Yes/No |
-| Observability | Logs, error tracking, network inspection | Local tools/authorized services | UNKNOWN | | | | | Yes/No |
-| Security | Roles, authorization boundaries, sensitive data | Requirements and test cases | UNKNOWN | | | | | Yes/No |
-| Performance | Target latency, concurrency, bundle size | Acceptance thresholds and measurement tools | UNKNOWN | | | | | Yes/No |
-| Budget | Paid services, CI minutes, device farms, artifact storage | Budget and approval | UNKNOWN | | | | | Yes/No |
-| Visual evidence | Need for screenshots, traces or videos | Named visual question, bounded budget and retention | UNKNOWN | Default capture budgets are zero until a justified need is reviewed | | | | Yes/No |
-| Delivery | Release target, approvals, rollback | Deployment access and owner approval | UNKNOWN | | | | | Yes/No |
+| Product | User goal and acceptance criteria | Product brief/owner decisions | UNKNOWN | | | | | Yes/No |
+| Repo and stack | Framework, runtime, scripts, git status | Existing repository | UNKNOWN | | | | | Yes/No |
+| UX/assets | Components, tokens, fonts, logo, icons, licences | Files/source/usage rights | UNKNOWN | | | | | Yes/No |
+| Integrations | APIs, SSO, database, payments, email, analytics | Account, endpoint, scopes, network | UNKNOWN | | | | | Yes/No |
+| Secrets | Required env var presence | Secret manager/local env | UNKNOWN | Record names/status only; never record values | | | | Yes/No |
+| Permissions | Tool/MCP/API operations | Current session and granted scopes | UNKNOWN | | | | | Yes/No |
+| Environments | Local, preview, staging, production separation | URLs/configuration/access | UNKNOWN | | | | | Yes/No |
+| Data | Fixtures, seed data, schema, migrations, rollback | Approved test data/access | UNKNOWN | | | | | Yes/No |
+| Testing | Runner, scripts, CI, fixtures | Installed tools and CI access | UNKNOWN | | | | | Yes/No |
+| Browser/mobile | Browsers, devices, emulators, signing | Runtime/device access | UNKNOWN | | | | | Yes/No |
+| Security | Roles, tenant boundaries, sensitive data | Requirements/test cases | UNKNOWN | | | | | Yes/No |
+| Performance | Latency/load/bundle budgets | Metrics and approved test resources | UNKNOWN | | | | | Yes/No |
+| Capture artifacts | Screenshot/trace/video requirement | Named question, bounded budget, approval | NOT NEEDED | All budgets default to zero | | | | Yes/No |
+| Cost | Paid services, CI, device farms, storage | Budget/approval | UNKNOWN | | | | | Yes/No |
+| Delivery | Release target, approval, rollback | Deployment access and owner approval | UNKNOWN | | | | | Yes/No |
 
 ## Readiness decision
+- READY: no unresolved material blocker in scope.
+- READY WITH ACCEPTED RISKS: high-risk gaps and owner acceptance are recorded.
+- PARTIAL: safe independent work may continue; dependent work is blocked.
+- BLOCKED: a required resource or decision prevents delivery.
 
-- **READY:** no unresolved material blocker for the proposed scope.
-- **READY WITH ACCEPTED RISKS:** high-risk gaps and owner acceptance are documented.
-- **BLOCKED:** a required resource or owner decision prevents safe delivery.
-- **PARTIAL:** independent work can proceed, but listed dependent tasks remain blocked.
-
-## Blockers and decisions
-
-| ID | Blocker / unknown | Evidence | Option A | Option B | Option C | Recommendation | Decision owner | Decision / date |
+## Owner decisions
+| ID | Blocker/unknown | Evidence | Option A | Option B | Option C | Recommendation | Decision owner | Decision/date |
 |---|---|---|---|---|---|---|---|---|
 
 ## Gate before implementation
-
-- [ ] Existing resources, components, assets and licences inspected.
-- [ ] Permissions, scopes and integrations checked using available evidence.
-- [ ] Runtime, test environment, test runner and fixtures verified.
-- [ ] Missing resources and unknowns remain explicitly labelled.
-- [ ] Alternatives and material trade-offs presented to owner.
-- [ ] No workaround silently changes required behavior or quality.
-- [ ] Architecture decision and acceptance criteria recorded.
-- [ ] Test plan and screenshot/trace/video budgets reviewed (default zero).
+- [ ] Current repository, git diff, existing components and resources inspected.
+- [ ] Assets, sources and licenses checked.
+- [ ] Integrations, credentials availability and permission scopes verified.
+- [ ] Runtime, test runner, fixtures and target platforms checked.
+- [ ] UNKNOWN items are not misclassified as AVAILABLE.
+- [ ] Material trade-offs/options presented to owner.
+- [ ] No unapproved workaround or degraded acceptance criteria.
+- [ ] Architecture decision, acceptance criteria and test plan recorded.
+- [ ] Screenshot/trace/video budgets remain zero unless a justified exception is approved.
