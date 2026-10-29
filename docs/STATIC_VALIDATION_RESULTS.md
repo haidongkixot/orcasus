@@ -4,7 +4,7 @@ Validation date: 2026-10-29
 
 ## Static checks verified by reading the committed GitHub tree and file contents
 
-- Main branch points to commit 629664e66ec743d2e3983503c2bd0b109055892c at the time of this check.
+- The integrated v2.2.0 system snapshot was created in commit `629664e66ec743d2e3983503c2bd0b109055892c`; the final README and this verification report were added in follow-up commit `3301d85b6cd5abc0a770ff6efd624c9b3c433c7e`.
 - The committed tree contains the complete runtime layout, 15 agent definition files, 9 skill files, settings, meeting logger and tests, documentation, templates and output folders.
 - The JSON in .claude/settings.json parses successfully.
 - All 15 agent files were fetched and each has a YAML frontmatter start/end, name, description and non-empty role instructions.
