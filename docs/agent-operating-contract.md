@@ -1,8 +1,8 @@
-# Agent Operating Contract: Discovery and Efficient Testing
+# Agent Operating Contract: Mandatory Discovery and Efficient Testing
 
-Copy and adapt the workflow, role expectations, and stop conditions below into the target project's root CLAUDE.md. Installing skills alone does not guarantee that they will be invoked in every session.
+Copy and adapt this contract into the target project's root CLAUDE.md. Installing skills alone does not guarantee that every agent invokes them; the orchestrator must enforce the gates in each task plan and delegation prompt.
 
-The consuming project should copy the templates into docs/agent-ops/templates/. Store task-specific records at:
+Use these project artifacts:
 - docs/agent-ops/READINESS_MATRIX.md
 - docs/agent-ops/DISCOVERY_SUMMARY.md
 - docs/agent-ops/TEST_PLAN.md
@@ -10,35 +10,30 @@ The consuming project should copy the templates into docs/agent-ops/templates/. 
 
 ## Required workflow
 
-For every new feature, redesign, integration, migration, or material bug fix:
+For every non-trivial feature, redesign, integration, migration or production-relevant bug fix:
 
-1. **Discover before designing.** Invoke /project-discovery before choosing architecture or implementation. Inspect the repository, stack, existing components/assets, integrations, test framework, environments, available credentials/scopes, permissions and budget. Do not ask the owner for facts already discoverable in the repository.
-2. **Create a readiness record.** Use docs/agent-ops/templates/READINESS_MATRIX_TEMPLATE.md or the project-approved equivalent. Record evidence for AVAILABLE; UNKNOWN is not AVAILABLE. Write the task record to docs/agent-ops/READINESS_MATRIX.md.
-3. **Stop at real blockers.** If an essential asset, account, secret, permission, API, runtime, device, budget or product decision is missing, report BLOCKED for the affected work. Present 2–3 feasible options, trade-offs and a recommendation to the owner. Continue only independent and reversible work. Never silently invent a substitute or degrade required quality.
-4. **Approve the plan before risky implementation.** Compare options, document significant decisions in an ADR under docs/agent-ops/adr/ and define acceptance criteria, owners, dependencies and tests. Do not install major dependencies, incur costs, expand permissions or change production resources without authorization.
-5. **Plan tests before implementing.** Invoke /efficient-testing and use docs/agent-ops/templates/TEST_PLAN_TEMPLATE.md to create docs/agent-ops/TEST_PLAN.md. Choose the lowest-cost reliable test layer for each criterion. Reuse the existing runner and fixtures unless a documented gap justifies change.
-6. **No screenshot-first testing.** The default screenshot budget is zero. Use assertions, API/DOM state, accessibility semantics, logs and network checks first. Capture real app screenshots only for a named visual question or approved visual regression. Never use AI-generated imagery as proof of app functionality.
-7. **Bound visual artifacts.** Before any visual test run, write down the question, representative pages/viewports/themes, maximum screenshot count, output path and retention policy. Prefer failure-only screenshots and traces on first retry where supported. Do not capture every screen/state by default or commit transient artifacts.
-8. **Diagnose before retry.** Preserve the first failure evidence, identify the cause, then make a targeted retry. Do not loop blindly, skip tests, soften assertions or update snapshots merely to get green.
-9. **Verify actual resources at runtime.** If an assumption about access, assets, permissions or services fails, update the readiness record and return to the owner. Do not introduce an unapproved workaround.
-10. **Report truthfully.** Record commands, exit codes, duration where available, test counts, screenshot/trace/video counts, coverage gaps and unverified integrations. Use PASS, FAIL, BLOCKED and NOT RUN distinctly.
+1. **Discovery before design.** Invoke /project-discovery. The orchestrator may delegate parallel read-only investigation, but must not assign implementation until discovery evidence is consolidated.
+2. **Readiness evidence.** Create/update docs/agent-ops/READINESS_MATRIX.md and docs/agent-ops/DISCOVERY_SUMMARY.md. AVAILABLE requires evidence; UNKNOWN is not AVAILABLE.
+3. **Owner decision gate.** For missing essential resources/permissions/assets, unresolved product decisions or material quality/cost/security trade-offs, stop dependent work. Present feasible options, consequences and a recommendation. Do not silently replace the intended solution with a workaround.
+4. **Architecture and scope.** Compare feasible options and record significant choices/rejected alternatives in an ADR. Define acceptance criteria, ownership, dependencies and resource constraints.
+5. **Test plan before implementation.** Invoke /efficient-testing and write docs/agent-ops/TEST_PLAN.md before adding tests or starting browser/device/visual work.
+6. **Zero-capture default.** Screenshot, trace and video budgets are all zero unless a named visual/diagnostic question, bounded artifact count, output path, retention policy and owner approval or pre-approved project policy exist. Never use AI-generated imagery as test evidence.
+7. **Use the lowest-cost reliable test.** Prefer static, unit, API/integration and component tests before a small risk-based E2E suite. Do not run full E2E/visual regression after every edit without a reason.
+8. **Diagnose before retrying.** Preserve first failure evidence, diagnose root cause, then run targeted retries. Do not loop blindly, skip tests, soften assertions or update snapshots merely to get green.
+9. **Re-open discovery on runtime surprises.** If access, assets, integration or environment differs from the readiness record, stop dependent work, update the record and ask the owner when a workaround changes quality or requirements.
+10. **Truthful report.** Record actual commands/results, exit codes, durations where available, artifact counts, coverage gaps and unverified areas. Use PASS, FAIL, BLOCKED, NOT RUN and SKIPPED distinctly.
 
 ## Role-specific expectations
 
-- The orchestrator ensures discovery and test planning happen before implementation and includes them in delegated task prompts.
-- Architect/Designer cannot finalize a design based on unverified asset, platform or integration assumptions.
-- Developer cannot substitute a mock, placeholder, local-only implementation or degraded feature for a required production capability without explicit approval.
-- QA selects tests by risk and cost, and must state why each higher-cost browser/device/visual test is necessary.
-- Reviewer verifies the readiness matrix and test evidence, not only code quality.
-- Team Secretary records blocker decisions, approved deviations, test-plan changes and screenshot budgets in the meeting log.
+- Orchestrator: owns discovery gate, test plan and approval of scope/budget; embeds them in prompts to teammates.
+- Architect/Designer: cannot finalize an option based on unverified assets, integrations, permissions or platform assumptions.
+- Developer: cannot substitute mocks, placeholders, local-only implementations or degraded behavior for a required production capability without approval.
+- QA: selects the lowest-cost reliable test, justifies higher-cost layers and respects artifact budget.
+- Reviewer: checks readiness evidence, test assertions, execution logs, artifact counts and coverage gaps—not just code style.
+- Team Secretary: records blockers, owner decisions, accepted risks, approved deviations and test/artifact budgets.
 
 ## Stop conditions
 
-Pause affected work and request owner input if:
-- required permissions, credentials, licenses or external accounts are unavailable;
-- requirements conflict or a quality/cost/security trade-off is material;
-- a proposed workaround changes product behavior, data fidelity, integration behavior or supported platforms;
-- the test environment cannot validate the claimed capability;
-- a requested visual test has no explicit question or artifact budget.
+Pause only the affected work and request owner input if a required credential/scope, licensed asset, third-party account, runtime/device, paid service or product decision is unavailable; if requirements conflict; if a workaround changes product behavior/data fidelity/security/supported platforms; or if requested screenshot/trace/video capture has no approved question and budget.
 
-Do not pause unrelated safe work that does not depend on the unresolved decision.
+Continue unrelated safe and reversible work that does not depend on the blocker. Do not expose secret values or perform unauthorized deployments, destructive migrations or financial commitments.

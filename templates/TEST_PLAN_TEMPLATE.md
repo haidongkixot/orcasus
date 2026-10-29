@@ -1,85 +1,93 @@
-# Risk-Based Test Plan
+# Risk-Based Test Plan — v1.3.0
 
-> Complete before implementation/testing. Default screenshot budget: **0**. Add visual artifacts only when they answer a specific approved question.
+> Default screenshot budget: 0. Default trace budget: 0. Default video budget: 0. Non-zero capture requires a named question, bounded budget and owner approval or pre-approved project policy.
 
 ## 1. Change and acceptance criteria
 
-- Feature / change:
+- Feature/change:
 - Owner:
 - Risk level: LOW / MEDIUM / HIGH / CRITICAL
 - Primary user journeys:
-- In-scope platforms/browsers:
+- In-scope browsers/devices/platforms:
 - Out of scope:
-- Existing test runner/config:
-- Existing baseline runtime/artifact count, if available:
+- Existing test runner/config/version:
+- Current artifact count and runtime baseline, if available:
 
 ## 2. Test selection matrix
 
-| Requirement / acceptance criterion | Risk | Lowest-cost reliable test layer | Test case / assertion | Existing fixture/service | Higher-cost test needed? Why? | Expected runtime / impact | Result |
+| Requirement / acceptance criterion | Risk | Lowest-cost reliable layer | Concrete assertion | Existing fixture/service | Higher-cost layer necessary? Why? | Expected runtime | Result |
 |---|---|---|---|---|---|---|---|
-| | | Static / Unit / API / Component / E2E / Visual | | | | | NOT RUN |
+| | | Static / Unit / API / Integration / Component / E2E / Visual | | | | | NOT RUN |
 
-Use the lowest-cost reliable layer. Do not repeat identical assertions across layers unless each layer covers a distinct failure mode.
+Choose the cheapest layer that credibly proves each criterion. Avoid repeating identical assertions across layers unless they cover distinct failure modes.
 
-## 3. Visual/screenshot authorization (default: none)
+## 3. Resource and permission readiness
 
-- Is visual verification necessary? YES / NO
-- Exact visual question to answer:
-- Why DOM, semantic assertions, geometry checks, accessibility queries or logs are insufficient:
-- Representative pages/states:
-- Required viewports/devices/themes and why:
+| Resource | Needed? | Status: AVAILABLE / MISSING / UNKNOWN / BLOCKED / NOT NEEDED | Evidence | Impact if missing | Owner action/options |
+|---|---|---|---|---|---|
+| Browser/device/emulator | | | | | |
+| Credentials/scopes (never record secret values) | | | | | |
+| API/database/third-party service | | | | | |
+| Test data/fixtures | | | | | |
+| CI/preview/staging/network | | | | | |
+| Licensed assets/fonts/icons | | | | | |
+| Paid service/device farm/artifact storage | | | | | |
+
+If a required resource is missing or UNKNOWN, mark dependent tests BLOCKED or NOT RUN. Do not replace it with an unapproved mock/workaround that changes what is validated.
+
+## 4. Screenshot/trace/video authorization — all default to zero
+
+- Is visual or capture-based diagnosis necessary? YES / NO
+- Exact question to answer:
+- Why assertions, API/DOM state, accessibility queries, logs or geometry checks are insufficient:
+- Real application/page and acceptance criterion:
+- Representative pages/states only:
+- Required viewports/devices/themes and reason:
 - Maximum screenshots:
-- Capture policy: NONE / FAILURE ONLY / APPROVED BASELINE
+- Maximum trace archives and whether traces include screenshots/snapshots:
+- Maximum videos:
+- Capture policy: NONE / TARGETED FAILURE / APPROVED VISUAL BASELINE
 - Output directory:
-- Retention/cleanup:
-- Owner approval / rationale:
-- Expected additional runtime/storage cost:
+- Retention and cleanup:
+- Approval or existing project policy:
+- Expected runtime/storage cost:
 
-If no specific question and budget have been recorded, do not start screenshot-generating tests. Do not use AI-generated pictures as app test evidence. Do not capture every page/state/viewport by default.
-
-## 4. Resource and access check
-
-| Resource | Required? | Available? | Evidence | Owner action if missing |
-|---|---|---|---|---|
-| Browser / emulator / device | | | | |
-| Credentials / permission scopes | | | Do not record secret values | |
-| API / database / third-party service | | | | |
-| Test data / fixtures | | | | |
-| CI / staging / preview | | | | |
-| Paid service / device farm / storage | | | | |
-
-If a required resource is missing, mark dependent tests BLOCKED or NOT RUN; do not silently substitute a mock unless it is appropriate for that test layer and clearly labelled.
+If there is no named question and approved/non-zero budget, do not enable capture. Never use an image-generation model to create test screenshots or to prove app behavior. A screenshot used for visual verification must come from the real running application or an explicitly approved baseline workflow.
 
 ## 5. Execution sequence
 
-1. Static checks (format, lint, typecheck, schema/config).
-2. Unit tests for changed logic.
-3. Focused integration/API/component tests.
-4. Critical E2E user journeys only where needed.
-5. Visual/extended regression only when the risk and approved plan justify them.
+1. Inspect existing test config and preserve the current user changes.
+2. Run static checks relevant to the changed files.
+3. Run unit tests for changed logic.
+4. Run focused API/integration/component tests.
+5. Run critical E2E journeys only where required.
+6. Run visual/extended regression only if the approved plan justifies it.
+7. Record commands, exit codes, duration and actual results.
 
-Run the smallest credible suite during implementation. Expand coverage at agreed release gates, not after every edit.
+Do not run full browser or visual suites after every edit by default. Do not install another test runner without documented need and required approval.
 
-## 6. Failure policy
+## 6. Failure and retry policy
 
-- Preserve the first failure output and minimum diagnostic evidence.
-- Diagnose root cause before retrying.
-- State retry count and whether a retry is for a suspected flake.
-- Do not weaken assertions, skip failures, or update snapshots without review.
-- After repeated failures, stop and report a blocker rather than loop indefinitely.
+- Preserve the first failure and minimal useful evidence.
+- Diagnose code, test assumptions, fixtures, permissions, environment, service or flakiness before retry.
+- Use a targeted retry; explain why it was necessary.
+- Never blindly rerun broad suites, soften assertions, skip failures or update snapshots solely to obtain a green result.
+- Stop after repeated targeted failures and report the blocker/root cause.
 
-## 7. Results and evidence
+## 7. Results
 
-| Command / test | Exit code | Duration | PASS | FAIL | SKIPPED | BLOCKED | NOT RUN | Artifact count and justification |
+| Command/test | Exit code | Duration | PASS | FAIL | SKIPPED | BLOCKED | NOT RUN | Artifacts retained + justification |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
 | | | | | | | | | |
 
-### Final report
+## 8. Final report
 
-- Defects found and fixed:
+- Acceptance criteria verified:
+- Defects found/fixed:
 - Unresolved defects:
-- Screenshot / trace / video counts and rationale:
-- Coverage gaps:
-- Permissions/resources not validated:
+- Commands and actual outcomes:
+- Screenshot/trace/video counts, paths, reason and approval:
+- Dependencies/config changes and justification:
+- Coverage gaps and unverified permissions/integrations:
 - Deviations from plan and authorization:
 - Release recommendation: PASS / FAIL / BLOCKED / NOT READY

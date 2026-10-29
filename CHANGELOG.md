@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0 — Mandatory Preflight and Zero-Capture Testing Defaults
+- Strengthened Project Discovery into an explicit orchestrator-owned gate: parallel work before readiness is read-only discovery, and implementation delegation waits for consolidated evidence.
+- Added a stricter owner-decision protocol for missing permissions, credentials, licensed assets, integration access, environments and material quality/cost trade-offs.
+- Prohibited silent substitute integrations, degraded workarounds and requirement weakening without approval.
+- Set screenshot, trace and video budgets to zero by default; non-zero capture requires a named visual/diagnostic question, bounded artifact plan and owner approval or pre-approved project policy.
+- Clarified that Playwright traces may embed screenshots/screencasts and DOM snapshots, so they count toward the artifact budget.
+- Strengthened test-layer selection, targeted retries, failure diagnosis and reporting of actual execution evidence.
+- Updated Agent Operating Contract, principles, templates, user guide and README to align with the new gates.
+
 ## 1.2.1 — Documentation and Adoption Guide
 - Rewrote README to describe the library's scope, limitations, core skills, installation and recommended reading order.
 - Added a Vietnamese end-to-end user guide with platform-specific copy commands, workflow, blocker handling, testing layers, screenshot policy and acceptance checklist.

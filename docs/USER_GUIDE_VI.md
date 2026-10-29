@@ -1,30 +1,27 @@
-# Hướng dẫn sử dụng Orcasus trong Claude Code
+# Hướng dẫn sử dụng Orcasus trong Claude Code — v1.3.0
 
-Orcasus là thư viện **skills và quy tắc làm việc** giúp Claude Code phát triển web/mobile có kỷ luật hơn. Bộ này có hai skill cốt lõi:
+Orcasus là thư viện skills và quy tắc vận hành giúp Claude Code phát triển web/mobile có kỷ luật hơn. Bản 1.3.0 đặt hai cổng bắt buộc:
 
-- **Project Discovery**: khảo sát repository, stack, tài nguyên, assets, tích hợp, quyền truy cập và môi trường trước khi chốt thiết kế hoặc triển khai.
-- **Efficient Testing**: lập kế hoạch kiểm thử theo rủi ro, ưu tiên cách kiểm tra rẻ nhất nhưng đủ tin cậy, hạn chế screenshot và báo cáo bằng chứng thực tế.
+1. **Project Discovery** — khảo sát repository, assets, giấy phép, quyền, integrations, runtime, môi trường test và ngân sách trước khi chốt giải pháp.
+2. **Efficient Testing** — chọn lớp kiểm thử rẻ nhất nhưng đủ tin cậy; ngân sách screenshot, trace và video mặc định bằng 0.
 
-> Orcasus không phải hệ thống agent độc lập, cũng không phải cơ chế permission enforcement hoàn chỉnh. Cài skill không tự bảo đảm mọi agent đều gọi skill trong mọi nhiệm vụ. Để tăng tính tuân thủ, hãy áp dụng Agent Operating Contract vào CLAUDE.md của dự án và kiểm tra hành vi thực tế.
+Orcasus không phải agent runtime độc lập hoặc sandbox bảo mật. Cần đưa Operating Contract vào CLAUDE.md của dự án và kiểm tra kết quả thực tế.
 
-## 1. Khi nào nên dùng?
+## 1. Cài đặt vào dự án
 
-Dùng cho khởi tạo dự án web/mobile; xây dựng feature/module; tích hợp API, database, SSO, thanh toán, email hoặc analytics; redesign UI; migration; thay đổi schema/phân quyền; sửa lỗi có rủi ro regression; hoặc khi testing đang tạo nhiều screenshot và chạy quá nhiều test.
+Copy cả hai thư mục skill vào dự án đích:
 
-Với thay đổi nhỏ, rõ ràng, ít rủi ro, thực hiện discovery ở quy mô phù hợp. Không bỏ qua việc kiểm tra các phụ thuộc hoặc quyền cần thiết.
+- skills/project-discovery/SKILL.md → .claude/skills/project-discovery/SKILL.md
+- skills/efficient-testing/SKILL.md → .claude/skills/efficient-testing/SKILL.md
 
-## 2. Cài đặt vào dự án Claude Code
+Copy hai template vào docs/agent-ops/templates/:
 
-### Bước A — Copy hai skill
+- templates/READINESS_MATRIX_TEMPLATE.md
+- templates/TEST_PLAN_TEMPLATE.md
 
-Copy cả thư mục skill từ repository Orcasus vào dự án đích. Cấu trúc dự án đích cần có:
+Hợp nhất nội dung docs/agent-operating-contract.md vào CLAUDE.md hiện có. Không ghi đè các quy tắc build/test/deploy đặc thù của dự án.
 
-- your-project/.claude/skills/project-discovery/SKILL.md
-- your-project/.claude/skills/efficient-testing/SKILL.md
-- your-project/docs/agent-ops/templates/READINESS_MATRIX_TEMPLATE.md
-- your-project/docs/agent-ops/templates/TEST_PLAN_TEMPLATE.md
-
-Ví dụ PowerShell, giả sử terminal đang ở root repository Orcasus và dự án đích là C:\work\my-app:
+Ví dụ PowerShell (đang đứng tại root repo Orcasus):
 
     $target = "C:\work\my-app"
     New-Item -ItemType Directory -Force "$target\.claude\skills" | Out-Null
@@ -32,9 +29,9 @@ Ví dụ PowerShell, giả sử terminal đang ở root repository Orcasus và d
     Copy-Item -Recurse -Force ".\skills\efficient-testing" "$target\.claude\skills\"
     New-Item -ItemType Directory -Force "$target\docs\agent-ops\templates" | Out-Null
     Copy-Item -Force ".\templates\READINESS_MATRIX_TEMPLATE.md" "$target\docs\agent-ops\templates\"
-    Copy-Item -Force ".\templates\TEST_PLAN_TEMPLATE.md" "$target\docs\agent-ops\templates\"
+    Copy-Item -Force ".\templates\TEST_PLAN_TEMPLATE.md" "$target\docs\agent-ops\templates/"
 
-Ví dụ macOS/Linux, chạy từ root repository Orcasus:
+Ví dụ macOS/Linux:
 
     TARGET="/path/to/my-app"
     mkdir -p "$TARGET/.claude/skills" "$TARGET/docs/agent-ops/templates"
@@ -43,66 +40,40 @@ Ví dụ macOS/Linux, chạy từ root repository Orcasus:
     cp templates/READINESS_MATRIX_TEMPLATE.md "$TARGET/docs/agent-ops/templates/"
     cp templates/TEST_PLAN_TEMPLATE.md "$TARGET/docs/agent-ops/templates/"
 
-Thay đường dẫn ví dụ bằng đường dẫn dự án thật. Kiểm tra thao tác không ghi đè một phiên bản skill đang được sửa riêng trong dự án.
+Thay đường dẫn ví dụ bằng đường dẫn dự án thật. Trước khi copy đè, kiểm tra có thay đổi riêng trong các skills đích hay không.
 
-### Bước B — Áp dụng Agent Operating Contract
-
-Mở docs/agent-operating-contract.md. Đọc và hợp nhất các phần Required workflow, Role-specific expectations và Stop conditions vào CLAUDE.md ở root dự án đích.
-
-- Không thay thế toàn bộ CLAUDE.md hiện có.
-- Giữ nguyên hướng dẫn build/test/deploy đặc thù của repository.
-- Contract giúp Main Agent/orchestrator tuân thủ các cổng quy trình; nó không thay thế permission rules hoặc chính sách bảo mật ở cấp hạ tầng.
-
-### Bước C — Khởi động và xác minh
-
-Mở thư mục dự án đích trong VS Code, tạo phiên Claude Code mới nếu cần, rồi gọi trực tiếp hai skill:
+Mở dự án trong VS Code, bắt đầu phiên Claude Code mới nếu cần, rồi gọi:
 
 - /project-discovery
 - /efficient-testing
 
-Nếu slash command không xuất hiện, kiểm tra đường dẫn .claude/skills/<skill-name>/SKILL.md, frontmatter, phiên làm việc và tài liệu hiện hành: https://code.claude.com/docs/en/skills.
+Xác minh skills được nhận diện theo tài liệu hiện hành: https://code.claude.com/docs/en/skills. Đừng chỉ hỏi model “đã nạp chưa”; yêu cầu nó tạo hồ sơ và đối chiếu file thật.
 
-Đừng chỉ hỏi model “đã nạp skill chưa”. Yêu cầu nó thực hiện workflow trên feature thử nghiệm và kiểm tra các đầu ra đã tạo.
+## 2. Bắt buộc trước khi code: Project Discovery
 
-## 3. Quy trình chuẩn cho một feature
+Với mỗi feature đáng kể, orchestrator được phép giao các agent khảo sát độc lập theo hướng **read-only**, nhưng chưa giao code cho Architect/Developer cho đến khi tổng hợp bằng chứng.
 
-### Giai đoạn 1 — Discovery
+Kiểm kê:
+- Stack, package scripts, phiên bản và trạng thái git hiện tại.
+- Component, design tokens, logo, fonts, icons, ảnh, nguồn và giấy phép.
+- API, database, authentication, integrations, scopes và trạng thái hiện diện của biến môi trường (không tiết lộ giá trị secret).
+- Tool/MCP có thực sự khả dụng trong phiên hiện tại hay không.
+- Runtime, CI, staging, test accounts, browser/device/emulator.
+- Acceptance criteria, security, performance, accessibility, localization và ngân sách.
 
-Gọi /project-discovery và khảo sát:
-- Kiến trúc/stack, package scripts và phiên bản.
-- Component, design tokens, fonts, logos, icons, ảnh, nguồn và giấy phép assets.
-- API, database, authentication, integration, tên biến môi trường và quyền/scope.
-- Test runner, fixtures, CI, browser/device, preview hoặc staging.
-- Yêu cầu chức năng, acceptance criteria, bảo mật, hiệu năng và ngân sách.
+Tạo docs/agent-ops/READINESS_MATRIX.md và docs/agent-ops/DISCOVERY_SUMMARY.md. AVAILABLE cần bằng chứng; UNKNOWN không phải AVAILABLE.
 
-Tạo hồ sơ ở docs/agent-ops/:
-- READINESS_MATRIX.md
-- DISCOVERY_SUMMARY.md
+### Nếu thiếu resource hoặc permission
 
-Chỉ đánh dấu AVAILABLE khi có bằng chứng. Không đưa giá trị secret vào báo cáo; chỉ ghi tên biến và trạng thái có/thiếu.
+Đánh dấu task phụ thuộc là BLOCKED. Trình bày 2–3 lựa chọn khả thi, trade-off về chi phí, thời gian, chất lượng, bảo mật, dữ liệu và bảo trì; đưa ra khuyến nghị và hỏi owner. Trong lúc chờ, chỉ tiếp tục việc độc lập và có thể đảo ngược.
 
-### Giai đoạn 2 — Xử lý blocker và lựa chọn phương án
+Không tự đổi sang fake API, mock production, placeholder asset, local-only behavior hoặc làm giảm acceptance criteria khi chưa được duyệt. Không cài dependency lớn, phát sinh chi phí, mở rộng quyền hoặc thay đổi production khi chưa được phép.
 
-Phân loại:
-- **BLOCKER**: chưa thể đáp ứng yêu cầu nếu thiếu tài nguyên/quyền/quyết định.
-- **HIGH RISK**: có thể triển khai nhưng đánh đổi đáng kể về chất lượng, bảo mật, chi phí hoặc bảo trì.
-- **NON-BLOCKING**: có thể tiếp tục mà không làm giảm chất lượng yêu cầu.
-- **UNKNOWN**: chưa đủ bằng chứng; không được coi là sẵn sàng.
+Nếu phát hiện giả định sai lúc chạy, dừng phần công việc phụ thuộc, cập nhật readiness matrix và quay lại owner khi phương án hoặc chất lượng bị ảnh hưởng.
 
-Với blocker/trade-off quan trọng, trình bày 2–3 lựa chọn khả thi (nếu có), chi phí/thời gian, hệ quả chất lượng/bảo mật, tính đảo ngược, khuyến nghị và quyết định cần từ owner.
+## 3. Trước khi test: lập Test Plan
 
-Không âm thầm dùng mock, placeholder, ảnh sinh bởi AI, local-only implementation hoặc integration giả làm giải pháp production. Mock được phép cho unit test cô lập nếu ghi rõ phạm vi và không che giấu rủi ro tích hợp thật.
-
-### Giai đoạn 3 — Chốt thiết kế và test plan
-
-Trước khi code:
-1. So sánh phương án dựa trên yêu cầu và Readiness Matrix.
-2. Ghi quyết định quan trọng vào ADR, gồm cả phương án bị loại và lý do.
-3. Xác định acceptance criteria, task owner, dependencies và phạm vi.
-4. Dùng docs/agent-ops/templates/TEST_PLAN_TEMPLATE.md để tạo docs/agent-ops/TEST_PLAN.md.
-5. Xin phê duyệt trước khi cài dependency lớn, phát sinh chi phí, mở rộng quyền hoặc thay đổi production.
-
-### Giai đoạn 4 — Implement và test theo lớp
+Gọi /efficient-testing và tạo docs/agent-ops/TEST_PLAN.md theo template.
 
 | Lớp kiểm thử | Dùng để kiểm tra | Ví dụ |
 |---|---|---|
@@ -110,61 +81,59 @@ Trước khi code:
 | Unit | Logic, validation, quyền, phép tính | hàm thuần, service nhỏ |
 | API/Integration | Contract, persistence, auth, tích hợp | route, query, migration |
 | Component | Tương tác và accessibility | form, keyboard, role/name |
-| E2E | Hành trình người dùng quan trọng | đăng nhập, tạo bản ghi, luồng chính |
+| E2E | Hành trình người dùng quan trọng | các luồng chính |
 | Visual regression | Yêu cầu hiển thị cụ thể | clipping, responsive, spacing, theme |
 
-Chọn lớp rẻ nhất nhưng đủ tin cậy để chứng minh acceptance criterion. Không chạy toàn bộ E2E sau mỗi lần sửa nếu test ở lớp thấp hơn đã đủ. Chạy targeted tests khi phát triển, mở rộng phạm vi ở các mốc nghiệm thu.
+Chọn lớp rẻ nhất nhưng đủ tin cậy để chứng minh acceptance criterion. Không chạy toàn bộ E2E sau mỗi lần sửa nếu test ở lớp thấp hơn đã đủ. Không thêm runner mới trước khi xác minh test stack hiện tại.
 
-### Giai đoạn 5 — Quy tắc screenshot
+## 4. Chính sách screenshot/trace/video
 
-- Ngân sách mặc định: **0 screenshot**.
-- Không dùng image generation để tạo hình giả làm bằng chứng app chạy.
-- Chỉ chụp screenshot thật khi trả lời một câu hỏi thị giác cụ thể hoặc kiểm tra visual baseline đã duyệt.
-- Trước visual test, ghi rõ câu hỏi, trang/trạng thái đại diện, viewport/device/theme, số ảnh tối đa, nơi lưu và dọn dẹp.
-- Nếu Playwright đã được cấu hình, cân nhắc chụp khi test thất bại và trace ở lần retry đầu tiên, nếu phiên bản hiện tại hỗ trợ. Không cài Playwright chỉ vì có hướng dẫn này.
-- Không chụp mọi trang × mọi trạng thái × mọi viewport mặc định.
+Ngân sách mặc định của cả ba loại artifact đều là **0**.
+
+- Không dùng image generation để tạo screenshot giả hoặc bằng chứng rằng ứng dụng thật hoạt động.
+- Không chụp mọi route, component, state, test, viewport hoặc mỗi vòng lặp.
+- Trước khi bật capture, phải ghi câu hỏi cần trả lời, trang/trạng thái đại diện, viewport/device/theme, hạn mức artifact, thư mục lưu, retention/cleanup và phê duyệt hoặc policy CI đã được duyệt.
+- Ưu tiên assertion, API/DOM state, semantic/accessibility queries, console/network logs và kiểm tra geometry.
+- Trace có thể chứa screenshot/screencast và DOM snapshots; trace archive cũng tính vào artifact budget.
+- Với Playwright đã có sẵn, giữ screenshot, trace và video ở chế độ off trong vòng lặp thường ngày. Chỉ bật capture có chọn lọc cho test chẩn đoán/visual cụ thể đã được lập kế hoạch. Không cài Playwright chỉ vì tài liệu gợi ý.
 - Không chấp nhận snapshot mới chỉ để làm test xanh; phải xem diff và ghi lý do.
 
-### Giai đoạn 6 — Khi test thất bại
+Tài liệu Playwright: https://playwright.dev/docs/api/class-testoptions và https://playwright.dev/docs/test-use-options.
 
-1. Lưu lỗi đầu tiên và bằng chứng tối thiểu hữu ích.
-2. Chẩn đoán nguyên nhân trước khi retry.
-3. Xác định lỗi do code, môi trường, quyền, fixture, service hay test không ổn định.
-4. Nếu resource/access chưa sẵn sàng, đánh dấu BLOCKED hoặc NOT RUN và cập nhật Readiness Matrix.
-5. Nếu cần giảm chất lượng/coverage hoặc đổi phương án, quay lại owner xin quyết định.
-6. Không retry mù liên tục, xóa assertion hoặc bỏ qua lỗi chỉ để đạt màu xanh.
+## 5. Khi test thất bại
 
-### Giai đoạn 7 — Báo cáo nghiệm thu
+1. Giữ assertion/log lỗi đầu tiên và bằng chứng tối thiểu.
+2. Phân loại nguyên nhân: code, giả định test, fixture/data, quyền, service, môi trường, browser/device hoặc flaky timing.
+3. Sửa nguyên nhân và chạy targeted test; không retry mù toàn bộ suite.
+4. Nếu thiếu resource, đánh dấu BLOCKED hoặc NOT RUN và trở lại discovery/owner gate.
+5. Không bỏ qua test, hạ assertion hoặc thay requirement để đạt màu xanh.
+6. Dừng vòng lặp sửa lỗi khi cùng lỗi tái diễn mà chưa có nguyên nhân mới; báo blocker.
 
-Báo cáo cuối phải liệt kê:
+## 6. Báo cáo cuối
+
+Báo cáo phải có:
+- Acceptance criteria nào đã được xác minh và ở test layer nào.
 - Lệnh đã chạy, exit code và thời lượng nếu có.
-- Số PASS, FAIL, SKIPPED, BLOCKED và NOT RUN.
-- Số screenshot/trace/video được giữ lại và lý do.
-- Phạm vi chưa kiểm tra; integrations/permissions chưa xác minh.
-- Dependencies/cấu hình mới và lý do.
-- Sai lệch so với test plan và phê duyệt tương ứng.
-- Quyết định hoặc blocker còn chờ owner.
+- Số PASS, FAIL, SKIPPED, BLOCKED, NOT RUN.
+- Số screenshot/trace/video, lý do, thư mục lưu và phê duyệt.
+- Lỗi đầu tiên, root cause, các retry có mục tiêu.
+- Integrations, permissions, devices hoặc phạm vi chưa được xác minh.
+- Workaround/dependency/cấu hình thay đổi và phê duyệt liên quan.
 
-Không gọi feature là “đã test” nếu mới tạo test mà chưa chạy test thật.
+Không gọi feature là “đã test” nếu test chưa thực sự chạy.
 
-## 4. Prompt khởi động gợi ý
+## 7. Checklist
 
-> Trước khi thiết kế hoặc code, hãy gọi skill /project-discovery và khảo sát repository, assets, quyền truy cập, integrations, test infrastructure và môi trường. Tạo docs/agent-ops/READINESS_MATRIX.md và DISCOVERY_SUMMARY.md với bằng chứng. Sau đó gọi /efficient-testing và lập docs/agent-ops/TEST_PLAN.md, screenshot budget mặc định bằng 0. Nếu thiếu tài nguyên/quyền hoặc có trade-off ảnh hưởng chất lượng, hãy đưa ra lựa chọn và hỏi tôi; không tự dựng workaround. Chỉ bắt đầu phần triển khai có thể thực hiện an toàn sau khi các cổng này được xử lý. Báo cáo chính xác các lệnh và test thực tế đã chạy.
+- [ ] Discovery được tổng hợp trước khi giao code.
+- [ ] Assets, licences, integrations, credential/scopes và environments có bằng chứng.
+- [ ] Blocker và trade-off quan trọng đã được đưa ra owner.
+- [ ] Không có workaround làm giảm chất lượng chưa được duyệt.
+- [ ] Test plan map từng acceptance criterion sang lớp test.
+- [ ] Screenshot, trace, video budget mặc định bằng 0.
+- [ ] Mỗi artifact khác 0 có câu hỏi, hạn mức và phê duyệt/policy.
+- [ ] Report phản ánh lệnh/test thực tế và coverage gaps.
 
-## 5. Checklist nghiệm thu
-
-- [ ] Hai skills có trong .claude/skills/ và gọi được.
-- [ ] Main Agent thực hiện discovery trước khi chọn kiến trúc.
-- [ ] Readiness Matrix phân biệt AVAILABLE/MISSING/UNKNOWN/BLOCKED.
-- [ ] Assets, integrations, permissions, environment và test resources được kiểm tra.
-- [ ] Blockers có lựa chọn, trade-off và quyết định owner khi cần.
-- [ ] Test plan gắn với acceptance criteria, rủi ro và lớp test.
-- [ ] Screenshot budget mặc định bằng 0; mọi ảnh có câu hỏi cụ thể.
-- [ ] Test evidence đến từ app/runtime thật, không phải ảnh AI.
-- [ ] Báo cáo phân biệt PASS/FAIL/BLOCKED/NOT RUN và ghi coverage gaps.
-- [ ] Không có workaround giảm chất lượng hoặc đổi hành vi mà chưa được duyệt.
-
-## 6. Tài liệu tham khảo
+## Tài liệu
 
 - Claude Code Skills: https://code.claude.com/docs/en/skills
 - Claude Code Permissions: https://code.claude.com/docs/en/permissions

@@ -1,65 +1,63 @@
 # Orcasus — Claude Code Skills for Disciplined Web/Mobile Engineering
 
-Orcasus is a reusable skills library for Claude Code. It helps teams discover project constraints **before** choosing a solution and plan efficient, evidence-based tests **before** implementation/testing.
+Orcasus is a reusable skills library that helps Claude Code teams discover project resources and permissions before choosing a solution, and test features efficiently with explicit evidence and artifact budgets.
 
-It is not a standalone agent framework and does not, by itself, enforce permissions or guarantee that every agent invokes a skill. For consistent adoption, copy the Agent Operating Contract into the target project's root CLAUDE.md.
+## Version 1.3.0
 
-## What it solves
+This release strengthens two core skills:
+- **Project Discovery**: a mandatory preflight gate. The orchestrator consolidates evidence about repository, assets/licences, integrations, credentials/scopes, tools, environments, test resources and budget before assigning implementation.
+- **Efficient Testing**: screenshot, trace and video budgets default to zero. Capture remains disabled unless a named visual/diagnostic question, bounded budget and owner approval or pre-approved project policy exist.
 
-- Agents start implementation before checking assets, permissions, integrations or test infrastructure.
-- Missing resources are silently replaced by inferior workarounds.
-- Browser tests generate too many screenshots or use images instead of behavior assertions.
-- Teams rerun broad suites repeatedly without diagnosing the first failure.
+Orcasus is a skills and workflow library, not a standalone agent runtime or a technical permission-enforcement sandbox. Apply the Agent Operating Contract to each consuming project's CLAUDE.md and validate behavior in that project.
+
+## What this is designed to prevent
+
+- Coding starts before assets, permissions, integrations and environments have been checked.
+- Agents silently substitute fake integrations, placeholder assets, local-only behavior or degraded workarounds.
+- Tests create screenshots for each screen/state/run or use AI-generated images instead of behavioral assertions.
+- Broad suites are rerun without diagnosing initial failures.
 - Reports claim success without execution evidence or hide untested areas.
 
 ## Core skills
 
-| Skill | Use it for | Main output |
+| Skill | Use it for | Required outputs |
 |---|---|---|
-| [Project Discovery](skills/project-discovery/SKILL.md) | New projects/features, redesigns, integrations, migrations, significant bug fixes | Readiness matrix, discovery summary, owner decisions, feasible options |
-| [Efficient Testing](skills/efficient-testing/SKILL.md) | Test planning and execution for changed web/mobile behavior | Risk-based test plan, minimal test set, artifact budget, evidence-based report |
+| [Project Discovery](skills/project-discovery/SKILL.md) | New projects/features, integrations, redesigns, migrations and material bug fixes | Evidence-backed readiness matrix, discovery summary, blockers/options and owner decisions |
+| [Efficient Testing](skills/efficient-testing/SKILL.md) | Test planning and execution | Acceptance-criterion test matrix, lowest-cost reliable test layers, capture budget and evidence report |
 
 ## Recommended reading order
 
-1. [Vietnamese user guide](docs/USER_GUIDE_VI.md) — installation and end-to-end usage.
-2. [Discovery and Testing Principles](docs/discovery-and-testing-principles.md) — required sequence and anti-patterns.
-3. [Agent Operating Contract](docs/agent-operating-contract.md) — copy/adapt into the consuming project's CLAUDE.md.
-4. [Readiness Matrix template](templates/READINESS_MATRIX_TEMPLATE.md).
-5. [Risk-Based Test Plan template](templates/TEST_PLAN_TEMPLATE.md).
+1. [Vietnamese User Guide](docs/USER_GUIDE_VI.md)
+2. [Discovery and Testing Principles](docs/discovery-and-testing-principles.md)
+3. [Agent Operating Contract](docs/agent-operating-contract.md)
+4. [Readiness Matrix template](templates/READINESS_MATRIX_TEMPLATE.md)
+5. [Risk-Based Test Plan template](templates/TEST_PLAN_TEMPLATE.md)
 
 ## Quick install
 
-Copy the two skill folders to the target project's .claude/skills/ directory:
+Copy both skill folders into the target project's .claude/skills/ directory, copy templates into docs/agent-ops/templates/, and merge the Agent Operating Contract into the existing CLAUDE.md without overwriting project-specific instructions.
 
-    target-project/
-    ├── CLAUDE.md
-    └── .claude/
-        └── skills/
-            ├── project-discovery/SKILL.md
-            └── efficient-testing/SKILL.md
+Once installed, invoke /project-discovery and /efficient-testing at the start of material work. The orchestrator must include the gates in prompts to teammates; installing a skill alone does not guarantee every agent invokes it.
 
-Also copy the templates into docs/agent-ops/templates/ and merge the Agent Operating Contract into the existing CLAUDE.md — do not overwrite project-specific instructions. See the [user guide](docs/USER_GUIDE_VI.md) for PowerShell/macOS/Linux commands and the full workflow.
-
-Once installed, invoke /project-discovery and /efficient-testing or let Claude Code select them when appropriate. Confirm the current [Claude Code Skills documentation](https://code.claude.com/docs/en/skills) if the installed version behaves differently.
+See [docs/USER_GUIDE_VI.md](docs/USER_GUIDE_VI.md) for Windows PowerShell and macOS/Linux instructions and the full workflow.
 
 ## Non-negotiable principles
 
-- Inspect the actual repository, assets, integrations, permissions, environments and test resources before selecting an implementation.
-- Do not infer that a credential/scope is available just because code references it.
-- Treat UNKNOWN as unknown, not AVAILABLE.
-- Escalate blockers and material trade-offs to the owner rather than silently adopting a degraded workaround.
-- Prefer assertions and low-cost reliable test layers; screenshot budget is zero by default.
+- Verify evidence; UNKNOWN is not AVAILABLE.
+- No implementation before the readiness gate for material tasks.
+- No silent workaround that changes required quality or behavior.
+- Screenshot, trace and video budgets default to zero.
 - AI-generated imagery is not evidence that a real application works.
-- Report commands and actual outcomes; never mark untested behavior as passed.
+- Prefer the cheapest reliable test layer and diagnose failure before retries.
+- Report PASS, FAIL, BLOCKED, NOT RUN and SKIPPED truthfully.
 
-## Version
+## Version and references
 
-Current documentation version: **1.2.1**. See [CHANGELOG.md](CHANGELOG.md).
-
-## References
+Current version: **1.3.0**. See CHANGELOG.md.
 
 - Claude Code Skills: https://code.claude.com/docs/en/skills
 - Claude Code Permissions: https://code.claude.com/docs/en/permissions
 - Claude Code Hooks: https://code.claude.com/docs/en/hooks
 - Playwright test options: https://playwright.dev/docs/api/class-testoptions
+- Playwright test configuration: https://playwright.dev/docs/test-use-options
 - Testing Library query priority: https://testing-library.com/docs/queries/about/
