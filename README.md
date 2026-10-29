@@ -74,7 +74,7 @@ Full stage map: [docs/AI_SDLC_STAGE_MAP.md](docs/AI_SDLC_STAGE_MAP.md).
 
 - Agent Teams are experimental, consume more tokens than a single session and have known coordination/resume/shutdown limitations.
 - Configured hooks are not proof that hooks execute in every teammate session. Run the actual multi-teammate recording acceptance test.
-- CI checks file contracts, eval structure, links and scripts; it does not run a model. Grade live skill behavior with `python3 scripts/skill_evals.py sheet`.
+- CI checks file contracts, eval structure, links and scripts; it does not run a model. Live skill evals run locally with `scripts/live_evals/` (see docs/EVIDENCE.md); until a skill is PROVEN there, treat it as experimental.
 - A resolving citation proves the source exists, not that it supports the claim; people check content.
 - Permission rules and instructions reduce risk but are not a complete sandbox.
 - This system is an engineering scaffold, not a prebuilt ERP or mobile application. Start with a thin vertical slice.
@@ -92,6 +92,8 @@ Full stage map: [docs/AI_SDLC_STAGE_MAP.md](docs/AI_SDLC_STAGE_MAP.md).
 - Acceptance tests: docs/ACCEPTANCE_TESTS.md
 - Static verification record: docs/STATIC_VALIDATION_RESULTS.md
 - AI SDLC stage map: docs/AI_SDLC_STAGE_MAP.md
+- Evidence status (what real runs have proven): docs/EVIDENCE.md
+- Runtime acceptance runbook: docs/RUNTIME_ACCEPTANCE_RUNBOOK.md
 - Research decisions and attribution: docs/RESEARCH_AND_DECISIONS.md
 - Official Agent Teams: https://code.claude.com/docs/en/agent-teams
 - Official Skills: https://code.claude.com/docs/en/skills

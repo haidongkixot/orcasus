@@ -108,7 +108,21 @@ Trước v2.3.0, hook gọi thẳng `python`; máy chỉ có `python3` (macOS, n
 - .github/workflows/validate.yml chạy trên Ubuntu và macOS cho mỗi pull request: validator, eval skill, test logger/launcher/link checker và kiểm tra link tri thức/trích dẫn.
 - CI không chạy model. Để đo hành vi thật của skill: `python3 scripts/skill_evals.py sheet --out reports/skill-eval-sheet.md`, chạy từng prompt trong phiên Claude Code mới và chấm PASS/FAIL kèm bằng chứng.
 
-## 9. Các trạng thái báo cáo
+## 9. Chứng minh bằng chạy thật
+
+Kiểm tra tĩnh và CI không gọi model. Bằng chứng chạy thật được tổng hợp ở docs/EVIDENCE.md:
+
+1. Eval sống (chạy trên máy chị, dùng tài khoản Claude của chị):
+   - `python3 scripts/live_evals/run_live_evals.py --smoke --budget-total <USD>`: 32 lượt, mỗi lượt chạy trên một bản sao app mẫu (evals/fixtures/sample-app) đã cài Orcasus. Kiểm tra tự động: có gọi đúng skill không, có tạo đúng file không, có sửa code ngoài phạm vi không, có in giá trị giống secret không. Thêm `--dry-run` để xem trước.
+   - `python3 scripts/live_evals/judge.py evidence/live-evals/run-<id>`: LLM judge chấm các assertion câu chữ. PASS phải trích dẫn được câu có thật trong bằng chứng.
+   - `python3 scripts/live_evals/calibrate.py sample ...` rồi chị chấm tay trong file CSV, sau đó `calibrate.py score ...`. Judge chỉ được tin khi khớp ≥ 80% và PASS sai ≤ 5%.
+   - `python3 scripts/live_evals/scorecard.py ...`: bảng điểm từng skill (PROVEN, PASSING, BELOW THRESHOLD, INSUFFICIENT EVIDENCE).
+2. Agent Teams, hook và Thư ký: làm theo docs/RUNTIME_ACCEPTANCE_RUNBOOK.md trong phiên interactive, rồi chạy `scripts/runtime_acceptance/collect_evidence.py` trước khi đóng phiên.
+3. Pilot trên một repo thật (tbagri-web): đi đủ S0–S10 trên một feature nhỏ, có audit độc lập và retro.
+
+Skill chưa đạt PROVEN được coi là thử nghiệm (EXPERIMENTAL). Khi sửa SKILL.md hoặc evals.json của một skill, chạy lại eval sống của skill đó và ghi đường dẫn bằng chứng trong PR.
+
+## 10. Các trạng thái báo cáo
 
 - PASS: đã xác minh bằng thực thi/bằng chứng.
 - FAIL: tiêu chí không đạt.

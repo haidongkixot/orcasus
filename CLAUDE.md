@@ -102,7 +102,12 @@ For each feature before implementation/testing:
 - Memory is a lead, not truth: verify remembered state against the live repository before acting on it.
 
 ## Package checks
-Run `python3 scripts/validate_bundle.py`, the unit tests in `scripts/test_*.py` and `python3 scripts/check_knowledge_links.py` before proposing a change to this system; CI runs the same checks. Static checks do not prove live skill behavior; use `python3 scripts/skill_evals.py sheet` and `docs/ACCEPTANCE_TESTS.md` for that.
+Run `python3 scripts/validate_bundle.py`, the unit tests in `scripts/test_*.py`, `scripts/live_evals/test_live_evals.py`, `scripts/runtime_acceptance/test_collect_evidence.py` and `python3 scripts/check_knowledge_links.py` before proposing a change to this system; CI runs the same checks.
+
+Static checks do not prove live behavior. Evidence of real runs lives in `docs/EVIDENCE.md`:
+- Live skill evals run locally on the owner's account: `scripts/live_evals/run_live_evals.py` (deterministic checks), `judge.py` (LLM judge), `calibrate.py` (judge trusted only at ≥ 80% agreement and ≤ 5% false-PASS against human labels), `scorecard.py`.
+- Regression rule: a change to a skill's `SKILL.md` or `evals.json` reruns that skill's live evals before merge, and the PR lists the evidence path. A skill that is not PROVEN in the latest scorecard is EXPERIMENTAL.
+- Agent Teams, hooks and Secretary capture are proven only by `docs/RUNTIME_ACCEPTANCE_RUNBOOK.md` and its collector report.
 
 ## Definition of done
 A task is complete only when intake, readiness and owner decisions are handled; requirements trace to checked sources; acceptance criteria and changed files are listed; relevant tests have actually run; reviewer findings are resolved or accepted; capture counts comply with the test plan; material ADR/meeting records/docs are updated; the closeout is written; knowledge entries are proposed; risks and unverified areas are disclosed.

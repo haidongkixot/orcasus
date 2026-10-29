@@ -13,6 +13,16 @@
           "Keeps screenshot, trace and video budgets at zero and reuses the existing runner.",
           "Writes docs/agent-ops/TEST_PLAN.md."
         ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/TEST_PLAN.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
       }
     },
     {

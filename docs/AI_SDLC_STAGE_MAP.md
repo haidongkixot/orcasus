@@ -23,6 +23,10 @@ This map shows how Orcasus covers the 11-stage AI SDLC lifecycle (S0–S10): wha
 - **Hook runtime:** every hook runs Python through `scripts/hooks/run_python.sh`; a SessionStart check reports whether logging can run, and launch failures are written to `meetings/HOOK_ERRORS.log`.
 - **Package CI:** `.github/workflows/validate.yml` runs the bundle validator, skill eval validation, logger, launcher and link-checker tests and the knowledge/citation link check on every pull request.
 
+## Evidence status
+
+Every skill above is **EXPERIMENTAL** until the live eval scorecard marks it PROVEN (thresholds and current results in [EVIDENCE.md](EVIDENCE.md)). Agent Teams capture is proven only by the [runtime acceptance runbook](RUNTIME_ACCEPTANCE_RUNBOOK.md).
+
 ## Limits
 
 Static checks and CI prove file contracts, configuration and script behavior. They do not prove that agents choose the right skill, that Agent Teams messaging works in a given runtime or that a resolving citation supports its claim. Use `python3 scripts/skill_evals.py sheet` for live skill evals and `docs/ACCEPTANCE_TESTS.md` for runtime checks.

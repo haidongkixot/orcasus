@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Live evidence tooling
+- Added a live skill eval pipeline run locally with `claude -p`: sample-app fixture with deliberate traps, deterministic checks per case (`checks` in evals.json), LLM judge whose PASS must quote real evidence, calibration against human labels (trusted only at ≥ 80% agreement, ≤ 5% false-PASS), and a per-skill scorecard. Tests use a fake `claude`, so CI makes no model calls.
+- Added a headless SendMessage hook probe, the Agent Teams runtime acceptance runbook and an evidence collector that computes capture coverage.
+- Added docs/EVIDENCE.md (what real runs have proven; all skills EXPERIMENTAL until PROVEN) and a pull request template with the skill-eval regression rule.
+
 ## 2.3.0 — Full S0–S10 Lifecycle Coverage, Skill CI and Portable Hooks
 - Added 7 skills: change-intake (S0), requirements-traceability (S3), backlog-slicing (S5), closeout-report, governance-audit and process-retro (S9), knowledge-curation (S10). The package now has 16 skills.
 - Added 2 agents: governance-auditor (independent, read-only) and knowledge-steward (prepares entries, never approves). The package now has 17 agents.

@@ -15,6 +15,16 @@
           "Classifies each FAIL as a policy or discipline gap and names the closing control.",
           "Changes no files and lists what was not inspected."
         ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/**",
+          "decisions/**",
+          "tickets/**"
+        ]
       }
     },
     {

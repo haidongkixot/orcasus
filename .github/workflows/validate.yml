@@ -69,6 +69,12 @@ jobs:
       - name: Knowledge link checker tests
         run: $PY scripts/test_knowledge_links.py
 
+      - name: Live eval pipeline tests (fake claude, no model calls)
+        run: $PY scripts/live_evals/test_live_evals.py
+
+      - name: Runtime evidence collector tests
+        run: $PY scripts/runtime_acceptance/test_collect_evidence.py
+
       - name: Knowledge index, trace matrices and documentation links
         run: $PY scripts/check_knowledge_links.py
 

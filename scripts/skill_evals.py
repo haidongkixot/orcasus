@@ -28,6 +28,25 @@ def skill_names(root: Path) -> list[str]:
     return sorted(p.parent.name for p in (root / ".claude" / "skills").glob("*/SKILL.md"))
 
 
+CHECK_KEYS = {"files_created", "files_unchanged", "forbidden_tools", "max_turns"}
+
+
+def validate_checks(checks, where: str) -> list[str]:
+    """Deterministic checks the live runner applies to a run (see scripts/live_evals/)."""
+    if not isinstance(checks, dict):
+        return [f"{where}: checks must be an object"]
+    errors = [f"{where}: unknown check '{key}'" for key in checks if key not in CHECK_KEYS]
+    for key in ("files_created", "files_unchanged", "forbidden_tools"):
+        value = checks.get(key)
+        if value is not None and (not isinstance(value, list) or not value
+                                  or not all(isinstance(v, str) and v.strip() for v in value)):
+            errors.append(f"{where}: checks.{key} must be a non-empty list of strings")
+    turns = checks.get("max_turns")
+    if turns is not None and (not isinstance(turns, int) or not 1 <= turns <= 100):
+        errors.append(f"{where}: checks.max_turns must be an integer from 1 to 100")
+    return errors
+
+
 def validate_file(path: Path, skill: str, known_skills: set[str]) -> list[str]:
     errors = []
     try:
@@ -69,6 +88,8 @@ def validate_file(path: Path, skill: str, known_skills: set[str]) -> list[str]:
                 errors.append(f"{where}: routes_to is only for should_not_trigger cases")
             elif routes_to not in known_skills:
                 errors.append(f"{where}: routes_to names unknown skill '{routes_to}'")
+        if "checks" in case:
+            errors.extend(validate_checks(case["checks"], where))
     for case_type in CASE_TYPES:
         if case_type not in types:
             errors.append(f"{skill}: needs at least one {case_type} case")

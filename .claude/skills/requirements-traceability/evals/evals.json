@@ -15,6 +15,18 @@
           "Links approved requirements to observable acceptance criteria and a test layer.",
           "Writes TRACE_MATRIX.md from the template and runs scripts/check_knowledge_links.py."
         ]
+      },
+      "checks": {
+        "files_created": [
+          "**/TRACE_MATRIX.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/demo/PRD.md",
+          "tickets/**"
+        ]
       }
     },
     {
@@ -25,7 +37,14 @@
         "triggers": true,
         "assertions": [
           "Records MISMATCH with both quotes instead of silently choosing one.",
-          "Asks the owner which scope applies, with a recommendation."
+          "Asks the owner which scope applies, with a recommendation.",
+          "Cites projects/demo/PRD.md (R3) and tickets/TICKET-12.md with the conflicting quotes."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "projects/demo/PRD.md",
+          "tickets/**"
         ]
       }
     },

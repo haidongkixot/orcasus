@@ -18,6 +18,8 @@ traces/
 meetings/sessions/**/events/*.json
 meetings/unassigned/**/events/*.json
 meetings/HOOK_ERRORS.log
+# Raw live-eval transcripts stay local; only redacted copies are committed.
+evidence/live-evals/raw/
 node_modules/
 dist/
 build/

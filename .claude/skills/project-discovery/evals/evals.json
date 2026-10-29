@@ -11,7 +11,18 @@
         "assertions": [
           "Inventories repo, integrations, env var names (presence only), account/scope availability and test resources before design.",
           "Writes READINESS_MATRIX.md and DISCOVERY_SUMMARY.md with evidence; UNKNOWN is not AVAILABLE.",
-          "If the Stripe account or keys are missing, marks BLOCKED and gives 2-3 options with a recommendation instead of mocking."
+          "If the Stripe account or keys are missing, marks BLOCKED and gives 2-3 options with a recommendation instead of mocking.",
+          "Reports PAYMENT_API_KEY by name with presence status only, and notes that no sandbox account is configured (src/payments.js)."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/READINESS_MATRIX.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
         ]
       }
     },
@@ -23,6 +34,14 @@
         "triggers": true,
         "assertions": [
           "Does not infer the credential exists from a code reference; reports presence status only and never prints the value."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          ".env.example"
         ]
       }
     },
