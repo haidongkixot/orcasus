@@ -7,6 +7,7 @@
 - Added docs/AI_SDLC_STAGE_MAP.md mapping each stage to its owning skill, agents, fence, human decision and evidence.
 - Added eval cases for all 16 skills, scripts/skill_evals.py (validation and live grading sheet), scripts/check_knowledge_links.py (knowledge index, trace-matrix citations, documentation links) and a GitHub Actions workflow running all checks on Ubuntu and macOS.
 - Fixed silent meeting-logger failure on machines without a `python` command: hooks now run through scripts/hooks/run_python.sh, a SessionStart hook reports the runtime, and launch failures go to meetings/HOOK_ERRORS.log, which caps meeting capture at PARTIAL.
+- Added .gitattributes forcing LF line endings so the hook launcher and skill frontmatter survive Windows checkouts; CI now also runs on Windows (Git Bash) with an end-to-end logger run through the launcher on all three OSes.
 - validate_bundle.py now checks exact skill and agent sets, name/file matches, description length, eval files and hook portability instead of fixed counts.
 - Updated CLAUDE.md, the operating model, Definition of Done, acceptance tests, meeting protocol, product/QA/secretary agents and the user guides.
 

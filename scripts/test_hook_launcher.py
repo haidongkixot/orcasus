@@ -18,6 +18,7 @@ PAYLOAD = {"hook_event_name": "PostToolUse", "tool_name": "SendMessage", "tool_u
 
 
 @unittest.skipUnless(SH, "POSIX sh is required for the hook launcher")
+@unittest.skipIf(os.name == "nt", "PATH isolation relies on POSIX symlinks; Windows is covered by the CI end-to-end launcher step")
 class HookLauncherTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

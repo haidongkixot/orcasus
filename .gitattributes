@@ -1,0 +1,9 @@
+# Keep LF line endings on every platform. Hook scripts (scripts/hooks/*.sh) break
+# under CRLF (`set -u\r`), and the validators expect LF frontmatter.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
