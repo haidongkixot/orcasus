@@ -11,7 +11,7 @@
 
 > "tiếp tục kế hoạch cải tiến Orcasus" (owner, 2026-10-30). The owner approved the v2.4 plan (P1–P9) in the session's plan approval the same day.
 
-The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilot evidence](../../evidence/pilots/tbagri-web-2026-10-29.md). The full retro is `reports/sl-1-retro.md` in the private tbagri-web repository.
+The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilot evidence](../../evidence/pilots/tbagri-web-2026-10-29.md). The full retro is reports/sl-1-retro.md in the private tbagri-web repository.
 
 ## 2. Deliverables and classes
 

@@ -103,6 +103,36 @@ class KnowledgeLinkTests(unittest.TestCase):
         self.assertIn("broken link", out)
         self.assertNotIn("R1:", out)
 
+    def test_assumption_accepted_needs_human_owner(self):
+        # Reproduces the tbagri-web pilot: the agent accepted its own assumption (R6).
+        (self.root / ".claude" / "agents").mkdir(parents=True)
+        (self.root / ".claude" / "agents" / "security-reviewer.md").write_text("x", encoding="utf-8")
+        trace = ("| R1 | Fail closed | — | NO SOURCE | ASSUMPTION-ACCEPTED |\n"
+                 "| R2 | Fail closed | accepted by owner: Claude (pilot session) 2026-10-29 | NO SOURCE | ASSUMPTION-ACCEPTED |\n"
+                 "| R3 | Fail closed | owner said yes | NO SOURCE | ASSUMPTION-ACCEPTED |\n"
+                 "| R4 | Fail closed | accepted by owner: Hai 2026-10-30 | NO SOURCE | ASSUMPTION-ACCEPTED |\n"
+                 "| R5 | Fail closed | accepted by owner: security-reviewer 2026-10-30 | NO SOURCE | ASSUMPTION-ACCEPTED |\n")
+        code, out = self.run_check("", trace=trace)
+        self.assertEqual(code, 1)
+        self.assertIn("R1: ASSUMPTION-ACCEPTED needs 'accepted by owner", out)
+        self.assertIn("R2: ASSUMPTION-ACCEPTED by 'Claude (pilot session)', an agent", out)
+        self.assertIn("R3: ASSUMPTION-ACCEPTED needs 'accepted by owner", out)
+        self.assertIn("R5: ASSUMPTION-ACCEPTED by 'security-reviewer', an agent", out)
+        self.assertNotIn("R4:", out)
+
+    def test_dangling_record_path_warns(self):
+        # Reproduces the pilot: records named a closeout that did not exist yet.
+        (self.root / "reports").mkdir()
+        (self.root / "reports" / "sl-1-readiness.md").write_text(
+            "See `reports/sl-1-closeout.md` and `decisions/ADR-0001.md#L2`.\n"
+            "Pattern `reports/<slice>-closeout.md` and ```\n`reports/in-code.md`\n```\n", encoding="utf-8")
+        code, out = self.run_check("| K-0001 | DECISION | A | PROPOSED | [ADR](../decisions/ADR-0001.md) | — | — | a 2026-10-01 | — |\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("WARN reports/sl-1-readiness.md: names `reports/sl-1-closeout.md`, which does not exist", out)
+        self.assertNotIn("ADR-0001.md`, which", out)
+        self.assertNotIn("<slice>", out)
+        self.assertNotIn("in-code", out)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

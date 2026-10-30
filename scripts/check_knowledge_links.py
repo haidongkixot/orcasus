@@ -5,8 +5,12 @@ Checks:
 - knowledge/INDEX.md rows: columns, IDs, allowed values, dates, curator approval,
   successors, tracked source links and secret-like content (S10).
 - TRACE_MATRIX.md files: citation status vocabulary, resolvable repo-relative
-  citations and no unaccepted uncited requirement in approved scope (S3).
+  citations, no unaccepted uncited requirement in approved scope, and
+  ASSUMPTION-ACCEPTED only with a named human owner and date (S3).
 - Relative markdown links in the repository's documentation resolve.
+- Repository paths quoted in backticks in lifecycle records (docs/agent-ops,
+  reports, decisions, projects, evidence) exist; a missing one is a warning,
+  because a record may name an output that is still planned (S9).
 
 A resolving link proves the source exists, not that it says what the record
 claims; content checks stay with the human reviewer or curator.
@@ -38,6 +42,10 @@ SHA_RE = re.compile(r"(?<![0-9a-f/])\b[0-9a-f]{7,40}\b")
 DOC_GLOBS = ["*.md", "docs/**/*.md", "templates/**/*.md", "knowledge/**/*.md", ".claude/**/*.md",
              "skills/**/*.md", "meetings/README.md", "projects/**/*.md", "decisions/**/*.md", "reports/**/*.md"]
 EMPTY = {"", "—", "-"}
+OWNER_ACCEPT_RE = re.compile(r"accepted by owner:\s*(?P<name>[^|;]*?\S)\s+(?P<date>\d{4}-\d{2}-\d{2})\b", re.I)
+AGENT_NAMES = {"claude", "agent", "assistant", "ai", "lead", "orchestrator", "main agent", "subagent"}
+RECORD_GLOBS = ["docs/agent-ops/**/*.md", "reports/**/*.md", "decisions/**/*.md", "projects/**/*.md", "evidence/**/*.md"]
+RECORD_PATH_RE = re.compile(r"`((?:docs|reports|decisions|projects|knowledge|meetings|evidence|templates|scripts)/[^`\s]*)`")
 
 
 class Report:
@@ -198,7 +206,19 @@ def check_unindexed(root, index_text, report):
             report.warn(f"unindexed record: {rel} (index it or note why not)")
 
 
+def check_owner_acceptance(text, agents, where, report):
+    """Only a named human owner may accept an assumption (retro P1, tbagri-web pilot 2026-10-29)."""
+    match = OWNER_ACCEPT_RE.search(text)
+    if not match:
+        report.fail(f"{where}: ASSUMPTION-ACCEPTED needs 'accepted by owner: <name> YYYY-MM-DD'; only the owner may accept an assumption")
+        return
+    name = match.group("name").strip().lower()
+    if name in agents or name.split()[0] in AGENT_NAMES:
+        report.fail(f"{where}: ASSUMPTION-ACCEPTED by '{match.group('name')}', an agent; only the human owner may accept an assumption")
+
+
 def check_trace_matrices(root, report):
+    agents = AGENT_NAMES | {p.stem.lower() for p in (root / ".claude" / "agents").glob("*.md")}
     files = [root / "docs" / "agent-ops" / "TRACE_MATRIX.md"] + sorted((root / "projects").glob("*/TRACE_MATRIX.md"))
     for path in [p for p in files if p.is_file()]:
         rel = path.relative_to(root).as_posix()
@@ -223,7 +243,9 @@ def check_trace_matrices(root, report):
             if status in {"VERIFIED", "PARAPHRASE-OK"} and not has_source(citation):
                 report.fail(f"{where}: {status} needs a source citation")
             if status in {"MISMATCH", "UNVERIFIABLE", "NO SOURCE"} and req_status == "APPROVED":
-                report.fail(f"{where}: {status} cannot be APPROVED; resolve with the owner or mark ASSUMPTION-ACCEPTED")
+                report.fail(f"{where}: {status} cannot be APPROVED; resolve it with the owner, who may accept it as ASSUMPTION-ACCEPTED")
+            if req_status == "ASSUMPTION-ACCEPTED":
+                check_owner_acceptance(" | ".join(row), agents, where, report)
             for target in LINK_RE.findall(citation):
                 check_target(target, path.parent, root, where, report)
             check_meetings(citation, root, where, report)
@@ -247,6 +269,26 @@ def check_docs(root, report):
     report.ok(f"documentation links checked: {count} in {len(seen)} files")
 
 
+def check_record_paths(root, report):
+    """Warn when a lifecycle record names a repository path that does not exist (retro P4)."""
+    seen, count = set(), 0
+    for pattern in RECORD_GLOBS:
+        for path in sorted(root.glob(pattern)):
+            if path in seen or not path.is_file():
+                continue
+            seen.add(path)
+            rel = path.relative_to(root).as_posix()
+            text = re.sub(r"```.*?```", "", path.read_text(encoding="utf-8", errors="replace"), flags=re.S)
+            for target in RECORD_PATH_RE.findall(text):
+                if any(ch in target for ch in "<>*{}…") or "..." in target:
+                    continue  # placeholder or pattern, not a concrete path
+                target = re.sub(r"(#.*|:\d+(-\d+)?)$", "", target)
+                count += 1
+                if not (root / target).exists():
+                    report.warn(f"{rel}: names `{target}`, which does not exist (write it, or mark it as planned without backticks)")
+    report.ok(f"record paths checked: {count} in {len(seen)} records")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--root", default=str(Path(__file__).resolve().parents[1]))
@@ -257,6 +299,7 @@ def main(argv=None):
     check_unindexed(root, index_text, report)
     check_trace_matrices(root, report)
     check_docs(root, report)
+    check_record_paths(root, report)
     print("Orcasus knowledge and citation link check")
     for item in report.passed:
         print("PASS", item)
