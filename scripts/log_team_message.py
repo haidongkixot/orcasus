@@ -22,7 +22,8 @@ SECRET_PATTERNS = [
     (re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"), "[REDACTED_API_KEY]"),
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[REDACTED_AWS_KEY]"),
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
-    (re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*(['\"]?)[^\s,;\"']{4,}\2"), r"\1=[REDACTED]"),
+    # A value that only reads the environment (process.env.X, os.environ[...], getenv) is a reference, not a secret.
+    (re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*(['\"]?)(?!process\.env\b|os\.environ\b|os\.getenv\b|getenv\b|env\(|\$\{|\$[A-Z_])[^\s,;\"']{4,}\2"), r"\1=[REDACTED]"),
 ]
 ALLOWED_TASK_EVENTS = {"TaskCreated", "TaskCompleted", "TeammateIdle"}
 

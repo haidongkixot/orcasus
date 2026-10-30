@@ -35,13 +35,24 @@ from common import (EVIDENCE_DIR, FIXTURE_DIR, ROOT, has_secret, load_cases, mat
 # What a consuming project gets when it installs Orcasus.
 INSTALL_PATHS = [".claude", "CLAUDE.md", "templates", "scripts", "knowledge", "docs",
                  "meetings/README.md", "meetings/CURRENT_MEETING.json", ".gitignore", ".gitattributes"]
-IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc", "live_evals", "runtime_acceptance")
+# Orcasus's own lifecycle records (docs/agent-ops, knowledge entries) are not part of the
+# package; copying them would give the agent under test someone else's intake and history.
+IGNORE = shutil.ignore_patterns("__pycache__", "*.pyc", "live_evals", "runtime_acceptance", "agent-ops")
 DEFAULT_TOOLS = [
     "Read", "Grep", "Glob", "Write", "Edit", "Skill", "Agent", "SendMessage", "TodoWrite",
     "Bash(git status *)", "Bash(git diff *)", "Bash(git log *)", "Bash(git show *)", "Bash(ls *)",
     "Bash(python3 scripts/*)", "Bash(node --test *)", "Bash(npm test *)",
 ]
 DEFAULT_MAX_TURNS = 25
+
+
+def empty_index(text: str) -> str:
+    """Keep the knowledge index header and drop Orcasus's own entries."""
+    lines = text.splitlines()
+    for i, line in enumerate(lines[:-1]):
+        if line.startswith("| ID |") and set(lines[i + 1].replace("|", "").strip()) <= set("-: "):
+            return "\n".join(lines[:i + 2]) + "\n"
+    return text
 
 
 def prepare_workspace(dest: Path, fixture: Path = FIXTURE_DIR, root: Path = ROOT) -> None:
@@ -53,6 +64,9 @@ def prepare_workspace(dest: Path, fixture: Path = FIXTURE_DIR, root: Path = ROOT
         elif src.is_file():
             (dest / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dest / rel)
+    index = dest / "knowledge" / "INDEX.md"
+    if index.is_file():
+        index.write_text(empty_index(index.read_text(encoding="utf-8")), encoding="utf-8")
     git(dest, "init", "-q")
     git(dest, "add", "-A")
     git(dest, "-c", "user.name=orcasus-eval", "-c", "user.email=eval@example.invalid",

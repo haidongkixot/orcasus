@@ -189,6 +189,13 @@ class UnitTests(unittest.TestCase):
             self.assertTrue(record["trusted"])
             self.assertEqual((record["judge_model"], record["rubric_hash"]), ("m", "h"))
 
+    def test_env_references_are_not_secrets(self):
+        self.assertFalse(common.has_secret("const apiKey = process.env.PAYMENT_API_KEY;"))
+        self.assertFalse(common.has_secret('api_key = os.environ["PAYMENT_API_KEY"]'))
+        self.assertFalse(common.has_secret("password: ${DB_PASSWORD}"))
+        self.assertTrue(common.has_secret("const apiKey = 'live_abcd1234efgh';"))
+        self.assertTrue(common.has_secret("password=hunter22"))
+
     def test_fixture_and_cases_line_up(self):
         cases = common.load_cases(smoke=True)
         self.assertEqual(len(cases), 32)
@@ -199,6 +206,10 @@ class UnitTests(unittest.TestCase):
             for rel in (".claude/settings.json", "CLAUDE.md", "scripts/hooks/run_python.sh", "src/server.js"):
                 self.assertTrue((dest / rel).is_file(), rel)
             self.assertFalse((dest / "scripts" / "live_evals").exists())
+            # Orcasus's own records must not leak into the project under test.
+            self.assertFalse((dest / "docs" / "agent-ops").exists())
+            index = (dest / "knowledge" / "INDEX.md").read_text(encoding="utf-8")
+            self.assertTrue(index.rstrip().endswith("|---|---|---|---|---|---|---|---|---|"), index[-200:])
             self.assertEqual(run_live_evals.changed_files(dest), {})
 
 
