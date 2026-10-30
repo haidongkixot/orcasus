@@ -1,4 +1,4 @@
-# AI SDLC Stage Map — Orcasus v2.3.0
+# AI SDLC Stage Map — Orcasus v2.4.0
 
 This map shows how Orcasus covers the 11-stage AI SDLC lifecycle (S0–S10): what AI does, what is fenced, and what stays human at each stage. Each row names the owning skill, the agents involved, the evidence the stage must leave and the human decision that closes it. Skills are cited by name; their procedures live in `.claude/skills/<name>/SKILL.md`.
 

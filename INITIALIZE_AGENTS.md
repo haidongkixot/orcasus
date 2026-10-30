@@ -1,4 +1,4 @@
-# Initialize Orcasus v2.3.0
+# Initialize Orcasus v2.4.0
 
 ## Before starting
 1. Open this repository root in VS Code and select the Claude harness.
@@ -13,7 +13,7 @@
 
 ## Initialization prompt
 
-Initialize this workspace as the complete Orcasus Agent Team System v2.3.0. Do not implement a feature yet. Read CLAUDE.md, README.md, the AI SDLC stage map, the team operating model, debate protocol, meeting recording protocol, platform reference architecture, UX North Star, and acceptance tests. Inspect every configured agent, skill, permission rule, and hook. Run the validation scripts and report actual exit codes. Distinguish static configuration from runtime proof. Check Team Secretary capture with two or more real teammates if the runtime supports teams. Do not claim a hook worked merely because it is configured. Explain the intake gate, the mandatory discovery gate, requirement citation checks, backlog slicing, owner decision process, debate/voting, zero-capture test policy, release readiness gate, closeout/audit/retro and knowledge curation. Report any gaps, then stop before implementation.
+Initialize this workspace as the complete Orcasus Agent Team System v2.4.0. Do not implement a feature yet. Read CLAUDE.md, README.md, the AI SDLC stage map, the team operating model, debate protocol, meeting recording protocol, platform reference architecture, UX North Star, and acceptance tests. Inspect every configured agent, skill, permission rule, and hook. Run the validation scripts and report actual exit codes. Distinguish static configuration from runtime proof. Check Team Secretary capture with two or more real teammates if the runtime supports teams. Do not claim a hook worked merely because it is configured. Explain the intake gate, the mandatory discovery gate, requirement citation checks, backlog slicing, owner decision process, debate/voting, zero-capture test policy, release readiness gate, closeout/audit/retro and knowledge curation. Report any gaps, then stop before implementation.
 
 ## First exercise
 

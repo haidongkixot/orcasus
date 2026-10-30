@@ -1,4 +1,4 @@
-# Orcasus — Complete Claude Code Agent Team System v2.3.0
+# Orcasus — Complete Claude Code Agent Team System v2.4.0
 
 Orcasus is a complete, repository-integrated Agent Team System for complex web/mobile platform development. It is not just a collection of two skills. The package brings together runtime configuration, role agents, workflow skills, debate/voting, Team Secretary, hook-based event logging, discovery/test gates, templates, validation and setup documentation.
 
@@ -13,7 +13,7 @@ Orcasus is a complete, repository-integrated Agent Team System for complex web/m
 | Quality resources | Intake record, readiness matrix, trace matrix, backlog, test plan, ADR, PRD, minutes, closeout, governance audit, retro and definition-of-done templates; curated knowledge index |
 | Validation and documentation | Bundle validator, skill eval validation and grading sheet, knowledge/citation link checker, logger/launcher/link-checker tests, GitHub Actions CI, AI SDLC stage map, acceptance tests, Vietnamese user guide, platform architecture, UX north star and research decisions |
 
-## v2.3.0 operating principles
+## v2.4.0 operating principles
 
 - Every new request starts with intake: change class, duplicate/conflict check, owner-confirmed intent and value, and a scope contract that forces reclassification when work grows.
 - For non-trivial tasks, the orchestrator must consolidate evidence from Project Discovery before delegating implementation. Parallel discovery is read-only until material readiness is known.
@@ -22,7 +22,9 @@ Orcasus is a complete, repository-integrated Agent Team System for complex web/m
 - Use the lowest-cost reliable test layer, then a small critical E2E suite where justified.
 - Material debate uses independent proposals, peer challenges, rebuttals, weighted comparison, explicit ballots and a durable ADR.
 - Team Secretary records observable messages and expressed rationale; it does not request or record hidden chain-of-thought.
-- Requirements cite their sources and each citation is checked; uncited or mismatched requirements are owner questions.
+- Requirements cite their sources and each citation is checked; uncited or mismatched requirements are owner questions. Only the owner accepts an assumption, and the checker enforces it.
+- Gate order is provable from git: intake and readiness records are committed before code, reviews are saved in `reports/`, and the closeout exists before the audit. An owner-confirmed hotfix lane reorders records but skips none.
+- Without Agent Teams, debates run in subagent mode with verbatim ballots and capture NOT VERIFIED.
 - Every slice is testable before it is built; the owner sets priority.
 - Every task ends with a closeout; independent governance audits and retros propose process changes for owner approval.
 - Durable knowledge is linked, dated and secret-free, and only a human curator approves it.

@@ -1,4 +1,4 @@
-# Definition of Done — Orcasus v2.3.0
+# Definition of Done — Orcasus v2.4.0
 
 A feature/slice is done only when applicable gates have evidence.
 

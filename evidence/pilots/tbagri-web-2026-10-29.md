@@ -19,7 +19,9 @@ The first run of the full Orcasus v2.3.0 lifecycle on a real production reposito
 - **Proven:** the S0–S10 skills produce usable, linked records on a real codebase. Discovery found more than the owner knew (7 findings, plus 5 more in the debate). Independent review and audit found real defects in the agent's own work, including a build-breaker and weak tests.
 - **Not proven:** that the fix works in production (post-deploy checks pending); Agent Teams debate capture (unavailable in the cloud session, so subagents were used and capture is NOT VERIFIED); auditor independence (same session; the owner should countersign).
 
-## Proposed Orcasus changes from the retro (all PROPOSED, need owner approval)
+## Proposed Orcasus changes from the retro
+
+Adopted or replaced in v2.4.0 (owner approved 2026-10-30); see the dispositions in [EVIDENCE.md](../../docs/EVIDENCE.md). P5 and P6 were replaced by process changes that keep the tool grants and deny rules unchanged.
 
 1. Only the owner may set ASSUMPTION-ACCEPTED; the checker enforces an owner and date.
 2. Subagent-mode debate protocol with verbatim ballots and voter-scored matrix.

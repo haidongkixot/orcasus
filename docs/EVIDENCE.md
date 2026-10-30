@@ -2,7 +2,7 @@
 
 What has been proven by running Orcasus for real, and what has not. Each row links to the evidence; a row without evidence is NOT RUN. Update this page whenever new evidence lands, and rerun before each release and at least monthly.
 
-Last updated: 2026-10-29 (pilot added).
+Last updated: 2026-10-30 (v2.4.0 retro dispositions).
 
 ## Package checks (CI, no model calls)
 
@@ -19,12 +19,14 @@ Proposed thresholds, to be confirmed by the owner: trigger accuracy ≥ 0.90, as
 | Item | Status | Evidence |
 |---|---|---|
 | Smoke run (32 attempts) | NOT RUN | `python3 scripts/live_evals/run_live_evals.py --smoke --budget-total <USD>` |
-| Full run (72 cases × 3) | NOT RUN | owner decides after the smoke run's measured cost |
+| Full run (78 cases × 3) | NOT RUN | owner decides after the smoke run's measured cost |
 | Judge calibration (≥ 30, target 60 human labels) | NOT RUN | `scripts/live_evals/calibrate.py` |
 | Scorecard | NOT RUN | `reports/live-eval-scorecard.md` |
 | SendMessage hook in headless mode | NOT RUN | `python3 scripts/live_evals/hook_probe.py` |
 
 Until a skill reaches PROVEN in the scorecard, treat it as **EXPERIMENTAL**. Today that is all 16 skills.
+
+v2.4.0 changed the `SKILL.md` or `evals.json` of 8 skills: change-intake, closeout-report, efficient-testing, governance-audit, project-discovery, requirements-traceability, team-debate and vertical-slice-delivery, plus the security-reviewer agent. Under the regression rule their live evals must run before merge; they have **not** run, because live evals run only on the owner's machine.
 
 ## Agent Teams runtime (interactive)
 
@@ -39,6 +41,22 @@ Until a skill reaches PROVEN in the scorecard, treat it as **EXPERIMENTAL**. Tod
 | Project | Status | Evidence |
 |---|---|---|
 | tbagri-web (security hotfix, production) | RAN 2026-10-29: 11/11 stage records; 31 tests; independent security review APPROVE WITH CHANGES; governance audit **FAIL** (record fixes applied); PR open, not merged or deployed | [evidence/pilots/tbagri-web-2026-10-29.md](../evidence/pilots/tbagri-web-2026-10-29.md) |
+
+## Retro dispositions (tbagri-web pilot, v2.4.0)
+
+Owner approved the plan on 2026-10-30. "Checked" means a machine check exists; "written" means a rule or procedure with an eval case, not yet proven by a live run.
+
+| ID | Retro proposal | Disposition | Enforcement | Evidence |
+|---|---|---|---|---|
+| P1 | Only the owner sets ASSUMPTION-ACCEPTED | ADOPTED | Checked: `check_knowledge_links.py` fails rows without `accepted by owner: <name> date` or with an agent's name | `test_assumption_accepted_needs_human_owner`; pilot reproduction fails R6 |
+| P2 | Subagent-mode debate | ADOPTED | Written: team-debate, DEBATE_PROTOCOL, ADR template | eval `team-debate/edge-no-agent-teams` |
+| P3 | List domain values before policy questions | ADOPTED | Written: change-intake, intake template | eval `change-intake/edge-policy-question-lists-domain-values` |
+| P4 | Records before code; saved reviews; closeout before audit | ADOPTED | Partly checked: missing record paths warn (`test_dangling_record_path_warns`); gate order is an audit control read from git | evals `governance-audit/edge-gate-order-and-missing-closeout`, `closeout-report/edge-closeout-before-audit` |
+| P5 | Read-only Bash for security-reviewer | REPLACED: evidence pack, no tool grant | Written: security-reviewer agent, vertical-slice-delivery | Bash cannot be limited to read-only (D13) |
+| P6 | Allow reading `.env.example` | REPLACED: env var names from code; deny rules unchanged | Written: project-discovery, readiness template | Deny wins over allow (D13) |
+| P7 | Exact statuses on allowed paths | ADOPTED | Written: efficient-testing, test plan template | eval `efficient-testing/edge-vacuous-allowed-path` |
+| P8 | Draft PR before review | ADOPTED | Written: user guide, operating model, CLAUDE.md | — |
+| P9 | Hotfix lane (from the post-pilot evaluation) | ADOPTED | Written: change-intake, CLAUDE.md, stage map; audit gate-order control | eval `change-intake/edge-hotfix-lane` |
 
 ## Not proven by any of the above
 

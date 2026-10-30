@@ -19,7 +19,7 @@
 Links inside the index are relative to this folder, for example `[ADR-0001](../decisions/ADR-0001.md)`.
 
 ## Checks
-`python3 scripts/check_knowledge_links.py` verifies: required columns, unique IDs, allowed values, absolute dates, curator approval where required, successor IDs that exist, repo-relative links (and `#L<line>` anchors) that resolve, `meeting:` IDs that exist under `meetings/sessions/`, and no secret-like values. It also warns about ADRs in `decisions/` and closeouts in `reports/` that no entry references. A resolving link proves the source exists, not that it says what the entry claims; the curator checks content.
+`python3 scripts/check_knowledge_links.py` verifies: required columns, unique IDs, allowed values, absolute dates, curator approval where required, successor IDs that exist, repo-relative links (and `#L<line>` anchors) that resolve, `meeting:` IDs that exist under `meetings/sessions/`, and no secret-like values. It also warns about ADRs in `decisions/` and closeouts in `reports/` that no entry references. In trace matrices it fails an ASSUMPTION-ACCEPTED row that lacks `accepted by owner: <name> YYYY-MM-DD` or names an agent, and it warns when a lifecycle record names a repository path in backticks that does not exist. A resolving link proves the source exists, not that it says what the entry claims; the curator checks content.
 
 ## Never store
 Secrets, credentials, tokens, connection strings, personal data, in-flight state (open PRs, running jobs) or copies of content the repository already records.

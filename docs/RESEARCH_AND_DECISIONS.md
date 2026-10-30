@@ -1,4 +1,4 @@
-# Research and Design Decisions — Orcasus v2.3.0
+# Research and Design Decisions — Orcasus v2.4.0
 
 ## Research basis
 This package combines the Agent Team architecture from the v2.1.0 distribution with the v1.3.0 discovery/testing gates. Core claims were checked against the official documentation linked below on 2026-10-29.
@@ -45,6 +45,9 @@ Rationale: the skill set grew to 16; without checks, names, descriptions, eval c
 
 ### D11 — Hooks never call a bare interpreter
 Rationale: hooks called `python`. macOS and many Linux systems ship only `python3`, Windows may resolve a Store alias stub, and hook failures are non-blocking by design, so the meeting logger could fail without anyone noticing. All hooks now go through `scripts/hooks/run_python.sh`, which probes `$ORCASUS_PYTHON`, `python3`, `python` and `py -3` by running them. A SessionStart check reports the runtime, and a launch failure is written to `meetings/HOOK_ERRORS.log` and to stderr. Team messaging is still never blocked by the logger.
+
+### D13 — Pilot retro becomes checks, not grants (v2.4.0)
+Rationale: the first real pilot (tbagri-web, 2026-10-29) failed its governance audit because rules existed only in prose. v2.4.0 adds machine checks where a check is possible (owner-only ASSUMPTION-ACCEPTED, dangling record paths) and written procedures elsewhere (subagent-mode debate, records before code, closeout before audit, hotfix lane). Two retro proposals asked for wider permissions: Bash for the security reviewer and reading `.env.example`. Both were replaced. Claude Code cannot restrict Bash to read-only commands, and deny rules win over allow rules, so an exception for `.env.example` needs a narrower deny glob that could expose other env files. Reviewers get an evidence pack instead, and discovery takes env var names from code. Evidence: [pilot record](../evidence/pilots/tbagri-web-2026-10-29.md), [EVIDENCE.md](EVIDENCE.md).
 
 ### D12 — Attribution
 The S0 classification gate, task slicing, closeout structure, governance audit controls and memory write/trust rules were adapted in Orcasus's own words from ideas in Project Aegis (https://github.com/ModernNomad-98/Project-Aegis, Apache License 2.0; reference copy haidongkixot/aegis-ref). No Aegis text or code was copied.
