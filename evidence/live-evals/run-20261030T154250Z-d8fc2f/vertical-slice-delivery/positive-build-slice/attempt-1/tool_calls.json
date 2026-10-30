@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short | head; git log --oneline | head -5; grep -rln \"SL-2\" --include=*.md . | head -20; ls docs/agent-ops 2>/dev/null",
+      "description": "Check repo state and existing SL-2 records"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat projects/demo/BACKLOG.md; ls projects/demo; ls; git ls-files | grep -viE '^(\\.claude|scripts|docs|templates|knowledge|meetings|evidence|decisions|reports|\\.github)/' | head -30",
+      "description": "Read the demo backlog and list application files"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git branch -a; git log --all --oneline | head; cat projects/demo/PRD.md tickets/TICKET-12.md; cat src/invoices.js src/server.js; cat package.json",
+      "description": "Check branches, PRD, ticket and invoice code"
+    }
+  },
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "SL-2: export invoices as CSV end to end"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat templates/INTAKE_RECORD_TEMPLATE.md; ls decisions meetings/sessions reports docs/agent-ops 2>&1 | head -30; grep -n -i \"export\\|csv\\|SL-2\" knowledge/INDEX.md decisions/* 2>/dev/null | head; grep -rn \"role\" src test | head",
+      "description": "Read intake template and search records for conflicts"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-80uosbsj/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — S0\n\n- Intake ID: INTAKE-SL-2\n- Date: 2026-10-30\n- Requested by / owner: hai@eagodi.com (owner confirmation pending)\n- Status: **INTAKE PENDING** — blocked on duplicate check and owner decisions below\n- Lane: normal\n\n## 1. Request (verbatim)\n\n> Implement slice SL-2: export invoices "
+    }
+  }
+]

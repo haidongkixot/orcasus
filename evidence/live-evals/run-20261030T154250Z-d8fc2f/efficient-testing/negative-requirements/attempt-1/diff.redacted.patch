@@ -1,0 +1,47 @@
+
+--- new file: projects/demo/TRACE_MATRIX.md ---
+# Requirements Trace Matrix — S3
+
+> Complete with `/requirements-traceability`. Every requirement cites a source and records a citation check. Citation status values: VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE, NO SOURCE. Requirement status values: PROPOSED, APPROVED, REJECTED, ASSUMPTION-ACCEPTED.
+
+- Scope / PRD: Invoice export (SL-2) — [PRD](PRD.md), [TICKET-12](../../tickets/TICKET-12.md), [BACKLOG](BACKLOG.md#L6)
+- Intake record: MISSING — `docs/agent-ops/INTAKE_RECORD.md` does not exist; run `/change-intake` before any code for SL-2.
+- Owner: Finance lead (TICKET-12 requester); product owner NOT RECORDED
+
+## Sources
+
+| Source ID | Type (owner message / ticket / doc / meeting / ADR / URL / code) | Location | Accessible? | Quote or summary with date |
+|---|---|---|---|---|
+| S1 | ticket | [TICKET-12](../../tickets/TICKET-12.md#L3) | Yes | Finance lead, 2026-10-10: "Finance needs to download invoices as a spreadsheet for the monthly close. Only the last 12 months are needed; older invoices are archived elsewhere." |
+| S2 | doc | [PRD](PRD.md#L10) | Yes | R1 "Users can see all invoices of their own organization, never another organization's."; R2 "Only admins can void an invoice."; R3 "Exports include all historical invoices for the organization."; R4 "Invoice totals are shown in the organization's currency." Undated. |
+| S3 | doc | [BACKLOG](BACKLOG.md#L6) | Yes | SL-2 "CSV export of invoices from the billing page", IN PROGRESS (branch feat/csv-export). Branch not present in local repo (`git branch -a` shows only `master`). |
+| S4 | code | [src/invoices.js](../../src/invoices.js#L2) | Yes | Statuses `draft`, `sent`, `paid`, `void`; amounts are integer cents (L1); only role referenced is `admin` (L11); `listInvoices` filters by `orgId` (L15-17). |
+| S5 | code | [src/server.js](../../src/server.js#L8) | Yes | `GET /invoices` requires `x-org-id` header else 401; no role check; no currency field. |
+| S6 | doc | [PRD](PRD.md#L7) | Yes | Users: "Finance staff and organization admins." |
+
+## Requirements
+
+| Req ID | Requirement (as written) | Priority | Source citation | Citation status | Checked by / date | Acceptance criteria | Test layer / test | Evidence | Requirement status | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| EX1 | Finance can download invoices as a spreadsheet file. | NOT SET (owner) | [TICKET-12](../../tickets/TICKET-12.md#L5) | VERIFIED | Claude (agent) 2026-10-30 | AC1: An authenticated request to the export endpoint returns 200 with a file attachment (`content-disposition: attachment`) containing one row per in-scope invoice plus a header row. | API/integration (node:http against `src/server.js`) | NOT RUN | PROPOSED | |
+| EX2 | Export format is CSV. | NOT SET (owner) | [BACKLOG](BACKLOG.md#L6) | VERIFIED | Claude (agent) 2026-10-30 | AC2: Response `content-type: text/csv`; file parses as RFC 4180 CSV; fields containing commas, quotes or newlines are quoted/escaped. | Unit (serializer) | NOT RUN | PROPOSED | Ticket says "spreadsheet", backlog narrows to CSV. Backlog is a planning doc, not the requester; owner to confirm (Q1). |
+| EX3 | Export contains invoices from the last 12 months only. | NOT SET (owner) | [TICKET-12](../../tickets/TICKET-12.md#L6) | MISMATCH | Claude (agent) 2026-10-30 | AC3 (if confirmed): invoices dated ≥ 12 months before export date are excluded; boundary invoice exactly 12 months old has a defined, tested inclusion rule. | Unit (date filter) | NOT RUN | PROPOSED | Conflicts with PRD R3 "Exports include all historical invoices" ([PRD](PRD.md#L12)). Also undefined: which date field (issue/sent/paid) and whether "12 months" is rolling or calendar. Q2. |
+| EX4 | Export includes only the requesting organization's invoices, never another organization's. | NOT SET (owner) | [PRD](PRD.md#L10) | PARAPHRASE-OK | Claude (agent) 2026-10-30 | AC4: With invoices for org A and org B seeded, an export requested as org A contains zero org B rows; a request without org identity returns 401 and no file. | API/integration | NOT RUN | PROPOSED | PRD R1 governs viewing; export is a viewing path, so applied here. Matches current list behaviour ([server.js](../../src/server.js#L9), [invoices.js](../../src/invoices.js#L15)). Security-relevant: tenant isolation. |
+| EX5 | Invoice totals in the export are in the organization's currency. | NOT SET (owner) | [PRD](PRD.md#L13) | PARAPHRASE-OK | Claude (agent) 2026-10-30 | AC5: Each row has a total computed by `invoiceTotal` and a currency column equal to the organization's currency code; totals are rendered from integer cents without float rounding error. | Unit | NOT RUN | PROPOSED | PRD says "shown"; applied to export. No currency field exists in code or data (S4, S5) — source of org currency is UNKNOWN (discovery item). Q3. |
+| EX6 | Who may export (roles). | NOT SET (owner) | none | NO SOURCE | Claude (agent) 2026-10-30 | AC6: TBD after owner decision; then: permitted role gets 200, any other role gets 403 and no file. | API/integration | NOT RUN | PROPOSED | No source states export permission. Q4. |
+| EX7 | Which invoice statuses are included. | NOT SET (owner) | none | NO SOURCE | Claude (agent) 2026-10-30 | AC7: TBD after owner decision; then: export of a seeded set with one invoice per status contains exactly the approved statuses. | Unit | NOT RUN | PROPOSED | Q5. |
+| EX8 | Export is started from the billing page. | NOT SET (owner) | [BACKLOG](BACKLOG.md#L6) | VERIFIED | Claude (agent) 2026-10-30 | AC8: Billing page shows an "Export CSV" control; activating it downloads the file from AC1; empty, loading and error states are shown (empty org → header-only file or explicit message per owner). | Component | NOT RUN | PROPOSED | No UI code exists in `src/` — UI surface is a discovery item. Empty-state behaviour has NO SOURCE; included in Q5. |
+
+Keep each status cell to one allowed value; put explanations in Notes. Only the owner sets ASSUMPTION-ACCEPTED, recorded in Notes as `accepted by owner: <name> YYYY-MM-DD`.
+
+Citation format: repo-relative link such as `[PRD](../../projects/demo/PRD.md#L12)`, `meeting:<meeting-id>`, commit SHA, ticket link or full URL.
+
+## Owner questions
+
+| Req ID | Status needing a decision | Question | Recommendation | Owner decision / date |
+|---|---|---|---|---|
+| EX2 | Narrowed source | Ticket asks for "a spreadsheet"; backlog says CSV. Is CSV acceptable, or is .xlsx required? | CSV — opens in any spreadsheet tool, no new dependency. | |
+| EX3 | MISMATCH | TICKET-12 says last 12 months only; PRD R3 says all historical invoices. Which wins? If 12 months: rolling or calendar, and by which date (issue, sent, paid)? | Follow the ticket (newer, from the requester, explains older invoices are archived elsewhere), rolling 12 months by issue date; update PRD R3 to match. | |
+| EX5 | Dependency UNKNOWN | Where does an organization's currency come from? No currency field exists today. | Add an org-level currency code; until it exists, EX5 is BLOCKED. | |
+| EX6 | NO SOURCE | Who may export? Roles found: `admin` in code ([invoices.js](../../src/invoices.js#L11)); "Finance staff" and "organization admins" in PRD ([PRD](PRD.md#L7)). No finance role exists in code and `/invoices` has no role check. | Allow admins and finance staff; requires defining a finance role. | |
+| EX7 / EX8 | NO SOURCE | Which statuses are exported — `draft`, `sent`, `paid`, `void` ([invoices.js](../../src/invoices.js#L2))? Should void invoices appear with a status column? What does an org with no invoices get? | Export `sent`, `paid`, `void` with a status column (void kept for audit); exclude `draft`; empty org gets a header-only file. | |

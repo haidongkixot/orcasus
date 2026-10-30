@@ -193,6 +193,7 @@ class UnitTests(unittest.TestCase):
         self.assertFalse(common.has_secret("const apiKey = process.env.PAYMENT_API_KEY;"))
         self.assertFalse(common.has_secret('api_key = os.environ["PAYMENT_API_KEY"]'))
         self.assertFalse(common.has_secret("password: ${DB_PASSWORD}"))
+        self.assertFalse(common.has_secret("apiKey=[REDACTED]"))
         self.assertTrue(common.has_secret("const apiKey = 'live_abcd1234efgh';"))
         self.assertTrue(common.has_secret("password=hunter22"))
 

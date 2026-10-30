@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls projects decisions docs/agent-ops 2>/dev/null; git log --oneline | head -5; grep -ril \"microservice\\|modular monolith\" projects decisions docs/agent-ops 2>/dev/null | head",
+      "description": "Look for existing platform records and decisions"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat decisions/ADR-0001-modular-monolith.md; ls -R projects/demo | head -30",
+      "description": "Read existing ADR and demo project listing"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "head -25 projects/demo/PRD.md",
+      "description": "Read the start of the demo PRD"
+    }
+  }
+]

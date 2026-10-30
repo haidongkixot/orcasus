@@ -1,0 +1,48 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "requirements-traceability",
+  "case_id": "negative-elicitation-from-scratch",
+  "case_type": "should_not_trigger",
+  "routes_to": "platform-discovery",
+  "attempt": 1,
+  "prompt": "I have a vague idea for a field-service app. Help me figure out what it should do.",
+  "assertions": [
+    {
+      "text": "Routes to platform-discovery or change-intake for elicitation; there is nothing to trace yet.",
+      "verdict": "FAIL",
+      "evidence_quote": "Once you've answered, I'll open a formal intake record (`docs/agent-ops/INTAKE_RECORD.md`) and turn your answers into a product brief",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent asked good elicitation questions and didn't try to trace anything, but it never routed to platform-discovery or change-intake. No skills were invoked and no files were changed. The agent also says outright that it hadn't \"written any files or started any process yet\". It only said it would open an intake record later, and an unfulfilled intention doesn't count as routing.",
+        "at": "2026-10-30T15:56:05+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 21.9,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {},
+  "num_turns": 1,
+  "cost_usd": 0.1356572,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke requirements-traceability; invoked none"
+  },
+  "routing": {
+    "verdict": "FAIL",
+    "detail": "expected platform-discovery"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

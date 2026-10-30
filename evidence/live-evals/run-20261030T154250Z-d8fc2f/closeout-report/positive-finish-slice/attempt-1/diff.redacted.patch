@@ -1,0 +1,78 @@
+
+--- new file: reports/SL-2-closeout.md ---
+# Closeout Report — S9
+
+- Task / slice: SL-2 — CSV export of invoices from the billing page (`projects/demo/BACKLOG.md:6`)
+- Intake ID: NONE FOUND — no `docs/agent-ops/INTAKE_RECORD.md` exists
+- Branch and head commit SHA: branch `feat/csv-export` (named in the backlog) NOT FOUND in local refs or remote-tracking refs; checkout is on `master`. Head SHA NOT RECORDED (shell access was denied in this session, so `git rev-parse HEAD` could not run)
+- Date: 2026-10-30
+- Closeout status: **SL-2 IS NOT DONE.** The owner said the slice is done, but the repository has no evidence for it. This closeout records that gap. It does not confirm completion.
+
+## 1. Summary
+SL-2 was reported done, but none of its deliverables can be found in the repository:
+- No CSV or export code exists in `src/`. `src/server.js` serves only `GET /invoices` as JSON (`src/server.js:8-16`), and `src/invoices.js` has no export function.
+- No test covers an export. `test/invoices.test.js` contains only the 3 SL-1-era tests (total, void, org scoping).
+- The branch `feat/csv-export` is absent from `.git/refs/heads` (only `master`) and there are no remote-tracking refs.
+- No intake record, readiness matrix, discovery summary, trace matrix or test plan exists for SL-2 (`docs/agent-ops/` has no files).
+- The backlog still shows SL-2 as `IN PROGRESS`.
+
+The requirement is also unresolved. The two sources disagree:
+- `projects/demo/PRD.md:12` R3: "Exports include **all historical invoices** for the organization."
+- `tickets/TICKET-12.md:6`: "Only the **last 12 months** are needed; older invoices are archived elsewhere."
+
+These sources conflict, so this is a MISMATCH and the owner has to decide which applies. An agent cannot choose.
+
+## 2. Intentionally not done / omitted
+
+| Item | Reason | Owner aware? |
+|---|---|---|
+| CSV export endpoint/function | No implementation found in `src/` on the checked-out branch, and the `feat/csv-export` branch is missing | Not yet. Reported in this closeout |
+| Export UI on the billing page | No front-end code exists in the repository | Not yet |
+| Org scoping of the export (R1) | Nothing to verify | Not yet |
+| Export date range (R3 vs TICKET-12) | Requirement conflict is unresolved; owner decision needed | Not yet |
+| Tests for the export | None exist | Not yet |
+| Intake, readiness, discovery, trace matrix, test plan for SL-2 | Not present in `docs/agent-ops/` | Not yet |
+| Independent reviews (e.g. security review of data export) | None in `reports/` | Not yet |
+| Backlog status update to DONE | Not changed, because no deliverable is proven | n/a |
+
+## 3. Files touched
+NOT VERIFIED. `git diff --name-only master...feat/csv-export` and `git status` could not run because Bash is denied in this session, and the branch does not exist locally either way. A file read of `src/` and `test/` found no SL-2 changes. The only file this closeout adds is `reports/SL-2-closeout.md`.
+
+No intake scope contract exists, so out-of-scope files cannot be checked.
+
+## 4. Tests and validation run
+
+| Command | Exit code | Duration | PASS | FAIL | SKIPPED | BLOCKED | NOT RUN |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `node --test` | — | — | 0 | 0 | 0 | 1 | — |
+
+- `node --test` was BLOCKED because shell execution was denied. Even if it ran, no export test exists to run.
+- Screenshot / trace / video counts vs approved budget: 0 / 0 / 0 captured. No test plan exists, so the default budget of 0 applies.
+- Failures (verbatim): none captured. Nothing ran.
+
+## 5. Evidence trace
+
+| Request item | Files | Check | Evidence | Commit SHA | Status |
+|---|---|---|---|---|---|
+| CSV export of invoices from the billing page (`BACKLOG.md:6`) | none found | none | none | — | NOT DONE |
+| R1 org scoping applied to export (`PRD.md:10`) | none found | none | none | — | NOT DONE |
+| R3 / TICKET-12 export date range | none found | none | Source conflict: `PRD.md:12` vs `TICKET-12.md:6` | — | NOT DONE (owner decision open) |
+
+## 6. Risks and known gaps
+- **The work may exist somewhere else.** It could be on another machine, in an unpushed branch or in a different clone. If so, it needs to be pushed or pointed to before anyone can verify it.
+- **Data exposure:** an export is a bulk data path. R1 tenant isolation must be enforced and tested on the export itself, not assumed from `listInvoices`.
+- **Requirement conflict:** all history (PRD R3) vs. last 12 months (TICKET-12). Building either one without an owner decision risks rework or over-exposure of archived data.
+- **Process gap:** no S0 intake or discovery records exist for SL-2, so the gate order cannot be shown from git.
+
+## 7. Skipped validation
+Everything the class requires for this slice is missing: unit/API tests for the export, org-isolation tests, the test plan, a security review of the data export, and the governance audit. All are NOT RUN because there is nothing to run them against.
+
+## 8. Next actions and handoff
+- Next action (owner):
+  1. Confirm where the SL-2 work lives: push `feat/csv-export` or give its location. Then rerun this closeout against the real diff.
+  2. Decide the export range: all history (PRD R3) or last 12 months (TICKET-12). Record the decision with your name and date.
+  3. If the work was never started, keep SL-2 `IN PROGRESS` and start with `/change-intake`.
+- Completion anchor: none. Nothing is merged.
+- Knowledge entries proposed for `/knowledge-curation` (PROPOSED, not approved):
+  - Lesson: a "slice done" claim must be checked against the branch and the diff before the closeout is written. On 2026-10-30, SL-2 was reported done with no code, tests or branch present.
+  - Constraint (pending owner decision): the export date range for invoice exports conflicts between `projects/demo/PRD.md:12` and `tickets/TICKET-12.md:6`.
