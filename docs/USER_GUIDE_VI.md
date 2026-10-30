@@ -1,4 +1,4 @@
-# Hướng dẫn sử dụng Orcasus — Claude Code Agent Team System v2.3.0
+# Hướng dẫn sử dụng Orcasus — Claude Code Agent Team System v2.4.0
 
 Orcasus không chỉ là hai skill. Đây là **bộ vận hành Agent Teams hoàn chỉnh** dành cho Claude Code: cấu hình, agents, skills, quyền, hooks, Team Secretary, logger, quy trình debate/vote, template, validation và hướng dẫn nghiệm thu.
 
@@ -35,6 +35,10 @@ Không overlay cấu hình lên repository có sẵn một cách mù quáng. Hã
 ### Bước 0 — Intake (S0)
 Gọi /change-intake. Agent trích nguyên văn yêu cầu, phân loại từng hạng mục theo file thực sự bị ảnh hưởng, tìm bản trùng/xung đột trong knowledge/INDEX.md, projects/, decisions/, meetings/, reports/, rồi soạn mục tiêu và giá trị để chị xác nhận. Agent không tự bịa metric hay deadline. Kết quả: docs/agent-ops/INTAKE_RECORD.md với scope contract; nếu làm phát sinh ngoài scope thì phải dừng và phân loại lại.
 
+**Lane hotfix:** với sự cố production hoặc lỗ hổng bảo mật đang bị khai thác được, owner có thể xác nhận đi lane hotfix. Thứ tự là intake tối thiểu, sau đó fix kèm test âm trên PR draft, rồi security review. Readiness, trace matrix, ADR và closeout phải xong trước khi PR rời draft hoặc được merge. Lane này không bỏ gate nào; governance audit kiểm tra thứ tự đó.
+
+**Trước khi hỏi owner về chính sách** (role nào được làm gì, trạng thái nào hợp lệ), agent phải liệt kê đủ mọi giá trị lấy từ code, kèm file:line.
+
 ### Bước 1 — Discovery trước khi thiết kế
 Gọi /project-discovery. Orchestrator có thể phân công các agent khảo sát read-only song song, nhưng chưa được giao coding tasks cho đến khi đã tổng hợp bằng chứng về stack, assets/licences, integrations, permission scopes, môi trường, test runner, fixtures và ngân sách.
 
@@ -59,6 +63,10 @@ Gọi /vertical-slice-delivery. Chốt API/data/UI contracts, dependencies và f
 
 ### Bước 5 — Review và bàn giao
 QA, Security, Design, Performance hoặc Mobile Reviewer kiểm tra phần liên quan. Gọi /delivery-readiness trước mốc bàn giao. Báo cáo lệnh/test thực sự chạy, findings, artifact counts và phạm vi chưa kiểm tra. Việc merge do người quyết định.
+
+- Mở pull request ở dạng **draft** trước. Một số môi trường (stop hook, session cloud) bắt buộc push trước khi kết thúc phiên; PR draft cho thấy rõ việc chưa xong. Chỉ chuyển sang ready khi đã có review, closeout và governance audit.
+- Lưu mỗi review độc lập thành file trong `reports/`, ví dụ `reports/<slice>-security-review.md`. Reviewer không có shell (như security-reviewer) nhận một evidence pack gồm diff và output test, typecheck, build kèm exit code.
+- Test cho đường được phép phải assert đúng status mong đợi. Assert "không phải 401/403" vẫn pass khi handler lỗi 500.
 
 ### Bước 6 — Đóng việc, kiểm toán và cải tiến (S9)
 - /closeout-report cho mọi task/slice: 8 mục, bắt buộc có mục "Intentionally not done" (ghi "None." nếu trống), file thay đổi lấy từ git, lệnh và kết quả thật, bảng truy vết yêu cầu → file → kiểm tra → bằng chứng.

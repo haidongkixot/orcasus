@@ -8,7 +8,7 @@ Complete discovery before architecture or implementation. Record current evidenc
 | Repo and stack | Framework, runtime, scripts, git status | Existing repository | UNKNOWN | | | | | Yes/No |
 | UX/assets | Components, tokens, fonts, logo, icons, licences | Files/source/usage rights | UNKNOWN | | | | | Yes/No |
 | Integrations | APIs, SSO, database, payments, email, analytics | Account, endpoint, scopes, network | UNKNOWN | | | | | Yes/No |
-| Secrets | Required env var presence | Secret manager/local env | UNKNOWN | Record names/status only; never record values | | | | Yes/No |
+| Secrets | Required env var presence | Secret manager/local env | UNKNOWN | Record names/status only; never record values. Names come from code (file:line), not from `.env*` files | | | | Yes/No |
 | Permissions | Tool/MCP/API operations | Current session and granted scopes | UNKNOWN | | | | | Yes/No |
 | Environments | Local, preview, staging, production separation | URLs/configuration/access | UNKNOWN | | | | | Yes/No |
 | Data | Fixtures, seed data, schema, migrations, rollback | Approved test data/access | UNKNOWN | | | | | Yes/No |

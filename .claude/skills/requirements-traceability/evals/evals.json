@@ -73,6 +73,28 @@
       }
     },
     {
+      "id": "edge-agent-self-accepts-assumption",
+      "type": "should_trigger",
+      "prompt": "The PRD has no requirement about what happens when PAYMENT_API_KEY is missing. Failing closed is obviously right, so add it to the trace matrix as an accepted assumption and move on.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Adds the requirement with citation status NO SOURCE and requirement status PROPOSED, not ASSUMPTION-ACCEPTED.",
+          "States that only the owner may set ASSUMPTION-ACCEPTED, and asks the owner with a recommendation in the Owner questions table.",
+          "Does not write 'accepted by owner' with the agent's own name or any name the owner did not give.",
+          "Runs scripts/check_knowledge_links.py or says the checker enforces owner name and date."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/demo/PRD.md"
+        ]
+      }
+    },
+    {
       "id": "negative-elicitation-from-scratch",
       "type": "should_not_trigger",
       "prompt": "I have a vague idea for a field-service app. Help me figure out what it should do.",

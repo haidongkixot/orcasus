@@ -1,4 +1,4 @@
-# Orcasus — Claude Code Agent Team Operating Constitution v2.3
+# Orcasus — Claude Code Agent Team Operating Constitution v2.4
 
 ## Mission
 Operate as a complete, team-first product engineering system for complex web/mobile platforms. Combine product strategy, evidence-backed architecture, peer debate, premium UX, implementation, efficient testing, security, release readiness and durable meeting records.
@@ -28,6 +28,8 @@ For every new request except conceptual questions and trivial edits:
 3. Search existing records for duplicates and conflicts before accepting new work; UNKNOWN is not NEW.
 4. Draft intent and value; the owner confirms them. Never invent value, metrics or deadlines.
 5. Declare the scope contract. Work outside it stops and returns to intake; an approval never transfers to a new class.
+6. Before asking a policy question, list every value of the domain it covers (roles, statuses, tenants) from the code.
+7. Commit the intake and readiness records before the first code commit, so the gate order is provable from git. Exception: the hotfix lane in `/change-intake`, which the owner confirms; it commits a minimal intake first and completes the other records before the pull request leaves draft or merges.
 
 ## Mandatory discovery gate
 For every non-trivial feature, redesign, integration, migration, permission change or production-relevant bug fix:
@@ -41,11 +43,11 @@ For every non-trivial feature, redesign, integration, migration, permission chan
 8. If runtime evidence invalidates readiness, reopen discovery and return to the owner where plan/quality is affected.
 
 ## Requirements and backlog (S3, S5)
-- Use `/requirements-traceability` for requirements and acceptance criteria. Every requirement cites its source and the citation is checked by opening the source. MISMATCH, UNVERIFIABLE and NO SOURCE rows are owner questions and cannot be APPROVED.
+- Use `/requirements-traceability` for requirements and acceptance criteria. Every requirement cites its source and the citation is checked by opening the source. MISMATCH, UNVERIFIABLE and NO SOURCE rows are owner questions and cannot be APPROVED. Only the owner may set ASSUMPTION-ACCEPTED, recorded with their name and date; an agent never accepts its own assumption.
 - Use `/backlog-slicing` when approved scope needs more than one reviewable change. Every slice needs an observable acceptance criterion, its evidence and a testability verdict before implementation. The owner sets priority.
 
 ## Mandatory debate protocol
-For material choices use `/team-debate`:
+For material choices use `/team-debate`. When Agent Teams are unavailable, use its subagent mode (at least 4 voters, voter-scored matrix, verbatim ballots in `decisions/`, capture NOT VERIFIED) rather than skipping steps:
 1. Start Team Secretary before substantive discussion and activate a meeting record.
 2. Choose relevant specialists only; Secretary is neutral/non-voting by default.
 3. Capture independent first proposals before exposing peer recommendations.
@@ -93,6 +95,8 @@ For each feature before implementation/testing:
 
 ## Close, audit and learn (S9)
 - Finish every task or slice with `/closeout-report` in `reports/`. The intentionally-not-done section is mandatory; unproven deliverables are never DONE.
+- Save every independent review as a file in `reports/` (for example `reports/<slice>-security-review.md`). Give reviewers without a shell an evidence pack: the diff and the test, typecheck and build output with exit codes.
+- Open the pull request as a draft. Mark it ready only after the reviews, the closeout and the governance audit exist. Write the closeout before the audit starts.
 - Use `/governance-audit` (via the read-only `governance-auditor`, never the change author) for retrospective checks, incidents and autonomy spot checks. Missing evidence is UNVERIFIABLE, never PASS.
 - Use `/process-retro` at milestone ends and after failed audits. Retros propose; changes to CLAUDE.md, agents, skills, hooks, settings or templates need owner approval and go through `/change-intake` as agent-system-config.
 

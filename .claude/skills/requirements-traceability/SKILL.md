@@ -27,6 +27,8 @@ Record who checked and when. Do not upgrade a status without opening the source 
 ## 4. Resolve gaps with the owner (stays human)
 MISMATCH, UNVERIFIABLE and NO SOURCE rows go to the owner as grouped, concise questions with a recommendation. The owner accepts, corrects or removes each one. Never silently keep an uncited requirement or quietly narrow a cited one.
 
+Only the owner may set ASSUMPTION-ACCEPTED. Record it in the row as `accepted by owner: <name> YYYY-MM-DD` and copy the owner's words into the Owner questions table. An agent, the lead or a reviewer never accepts an assumption, even a sound security default; until the owner answers, the row stays PROPOSED and blocks merge. `check_knowledge_links.py` fails a row whose acceptance is missing or names an agent.
+
 ## 5. Trace forward
 Link each approved requirement to observable acceptance criteria (observable outcome, pass/fail threshold, evidence that will prove it), the lowest-cost reliable test layer from `/efficient-testing`, and the evidence path once tests run. Flag criteria that cannot be observed as UNTESTABLE and rewrite them with the owner.
 

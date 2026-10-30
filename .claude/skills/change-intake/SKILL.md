@@ -43,12 +43,22 @@ Search existing records before accepting the request: `knowledge/INDEX.md`, `pro
 ## 4. Confirm intent and value with the owner (stays human)
 Draft, do not decide: problem, who is affected, expected value, success signal, urgency and non-goals. Ask the owner to confirm or correct it in one concise question. Never invent a value statement, metric or deadline. Without confirmation the record stays INTAKE PENDING.
 
+Before asking any policy question (who may do what, which states are allowed, which tenants are affected), list every value of the domain it covers from the code and schema, with file:line: all roles, statuses, tenants or plans. Put the full list in the question and ask the owner to decide each value. If the values are not defined in one place, say so and mark the list UNKNOWN. A decision that covers only some values leaves the rest open; record them as open questions.
+
 ## 5. Declare the scope contract and route
 Record expected files/modules, classes, validation floors, reviewers, approval path and next gate:
 - every non-trivial class → `/project-discovery`;
 - competing viable options → `/team-debate`;
 - multi-slice or multi-PR scope → `/backlog-slicing`;
 - requirements to be written → `/requirements-traceability`.
+
+## 5a. Hotfix lane (urgent production or security fixes)
+Use it only when the owner confirms the change fixes an active production incident or an exploitable security hole, and the class is auth-permission-security, bug-fix or infra-deploy-release. The lane changes the order in which records are completed, not which gates apply:
+1. Minimal intake (sections 1, 2, 5 and the owner's confirmation that it is a hotfix) committed first.
+2. Fix with negative tests, on a branch with a **draft** pull request.
+3. Security review saved to `reports/<slice>-security-review.md`.
+4. Readiness matrix, trace matrix, ADR (if a material choice was made) and closeout completed **before the pull request leaves draft or is merged**.
+Record "Lane: hotfix" and the owner's confirmation in the intake record. `/governance-audit` checks that every record exists before the merge commit. Without the owner's confirmation, use the normal order.
 
 ## 6. Scope lock
 During work, any file, layer or behavior outside the contract stops the affected work and returns here for reclassification. A previous approval does not transfer to a new class.

@@ -24,7 +24,18 @@
       "expect": {
         "triggers": true,
         "assertions": [
-          "If Agent Teams or messaging is unavailable, reports that limitation instead of simulating a debate."
+          "Reports that Agent Teams or peer messaging are unavailable instead of simulating a team debate.",
+          "Runs subagent mode: at least 4 independent voters including devil-advocate, each scoring the weighted matrix and returning a FINAL_BALLOT.",
+          "Holds one rebuttal round in which voters see the other proposals.",
+          "Saves the ballots and voter scores verbatim to decisions/<adr-id>-ballots.md and links them from the ADR.",
+          "Marks capture status NOT VERIFIED and lists deviations from the full protocol in the ADR; the lead does not score for the voters."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
         ]
       }
     },

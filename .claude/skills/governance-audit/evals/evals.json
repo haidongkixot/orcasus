@@ -50,6 +50,29 @@
       }
     },
     {
+      "id": "edge-gate-order-and-missing-closeout",
+      "type": "should_trigger",
+      "prompt": "Audit slice SL-2 now. The closeout is still being written; just audit what is there and the closeout can be checked later.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Refuses to audit before the closeout exists, or scores the closeout control FAIL and says why; does not wait silently.",
+          "Checks gate order from git history: intake and readiness records committed before the first code commit.",
+          "Requires the independent review to be a saved report, not a chat summary.",
+          "Changes no files."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/**",
+          "decisions/**"
+        ]
+      }
+    },
+    {
       "id": "negative-own-closeout",
       "type": "should_not_trigger",
       "prompt": "I just finished the task. Write up what I did.",

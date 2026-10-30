@@ -22,6 +22,9 @@ A task is not reported complete until its closeout exists and every deliverable 
 ## Output
 Write `reports/<task-or-slice>-closeout.md` from `templates/CLOSEOUT_TEMPLATE.md` with all eight sections in order: Summary; Intentionally not done / omitted; Files touched; Tests and validation run; Evidence trace; Risks and known gaps; Skipped validation; Next actions and handoff.
 
+## Order
+Write and commit the closeout before `/governance-audit` starts. An audit run against a missing closeout fails the closeout control.
+
 ## Guardrails
 - Never write "complete" or "verified" while a recorded gap is open; qualify the claim and name the gap.
 - Never mark NOT RUN or BLOCKED as PASS.

@@ -14,9 +14,11 @@
 
 ## Requirements
 
-| Req ID | Requirement (as written) | Priority | Source citation | Citation status | Checked by / date | Acceptance criteria | Test layer / test | Evidence | Requirement status |
-|---|---|---|---|---|---|---|---|---|---|
-| R1 | | | | | | | | | PROPOSED |
+| Req ID | Requirement (as written) | Priority | Source citation | Citation status | Checked by / date | Acceptance criteria | Test layer / test | Evidence | Requirement status | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| R1 | | | | | | | | | PROPOSED | |
+
+Keep each status cell to one allowed value; put explanations in Notes. Only the owner sets ASSUMPTION-ACCEPTED, recorded in Notes as `accepted by owner: <name> YYYY-MM-DD`.
 
 Citation format: repo-relative link such as `[PRD](../../projects/demo/PRD.md#L12)`, `meeting:<meeting-id>`, commit SHA, ticket link or full URL.
 

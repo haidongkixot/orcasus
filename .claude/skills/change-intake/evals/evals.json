@@ -79,6 +79,47 @@
       }
     },
     {
+      "id": "edge-policy-question-lists-domain-values",
+      "type": "should_trigger",
+      "prompt": "Members keep asking to void invoices. Should members be allowed to change invoice status? Set up the change.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Before asking the owner, lists every invoice status from src/invoices.js (draft, sent, paid, void) with file:line.",
+          "Lists the roles found in code (admin, member) and says the role list is not defined in one place, so it is UNKNOWN whether other roles exist.",
+          "Asks the owner to decide each status transition for each role instead of one yes/no question.",
+          "Classifies the change as auth-permission-security and asks for owner approval before work."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-hotfix-lane",
+      "type": "should_trigger",
+      "prompt": "Production incident: anyone can list another org's invoices by changing the x-org-id header. Fix it now, we can do the paperwork later.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Offers the hotfix lane and asks the owner to confirm it; does not skip intake.",
+          "Writes and commits a minimal intake record (request, classes, scope, owner confirmation) before any code change.",
+          "Classifies the change as auth-permission-security: negative authorization tests and a security review saved under reports/ are required.",
+          "States that readiness, trace matrix and closeout must exist before the pull request leaves draft or merges, and opens the pull request as a draft.",
+          "Does not deploy or merge."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/INTAKE_RECORD.md"
+        ]
+      }
+    },
+    {
       "id": "negative-conceptual-question",
       "type": "should_not_trigger",
       "prompt": "What is the difference between frontend and backend code?",

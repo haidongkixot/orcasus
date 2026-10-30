@@ -17,6 +17,7 @@
 | Independent review | | |
 | Owner approvals | | |
 | Merge/deploy authority | | |
+| Gate order | | |
 | Closeout | | |
 | Knowledge entries | | |
 

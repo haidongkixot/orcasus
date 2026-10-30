@@ -26,6 +26,14 @@ Use native Agent Teams for material choices with genuine uncertainty. The curren
 
 Default example weights for platform choices: product fit 20%, UX/accessibility 20%, extensibility 15%, security/data isolation 15%, delivery complexity 10%, performance/reliability 10%, operating cost 10%. Adapt to decision and explain changes.
 
+## Subagent mode (Agent Teams unavailable)
+When step 5 shows Agent Teams or peer messaging are unavailable (for example in `claude -p` or a cloud session), run the debate with subagents instead of skipping it:
+1. Use at least 4 voters, one of them `devil-advocate`. Each gets the same brief and no peer output, so the first proposals stay independent.
+2. Each voter scores every option in the weighted matrix itself and ends its report with a FINAL_BALLOT in the protocol format. The lead never scores for the voters.
+3. Hold one rebuttal round: give each voter the other proposals and ask for challenges and a revised or confirmed ballot.
+4. Save every ballot and the voters' matrix rows verbatim in `decisions/<adr-id>-ballots.md` before writing the ADR; the ADR links to that file and averages the voters' scores.
+5. There is no Secretary or event log, so capture status is NOT VERIFIED. Record each deviation from the full protocol in the ADR.
+
 ## Decision states
 - DECIDED — evidence/criteria are sufficient.
 - EXPERIMENT — bounded spike, usability or load test required.

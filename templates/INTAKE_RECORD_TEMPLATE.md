@@ -6,6 +6,7 @@
 - Date:
 - Requested by / owner:
 - Status: INTAKE PENDING / CONFIRMED / REJECTED / DUPLICATE
+- Lane: normal / hotfix (owner confirmation, date and quote required for hotfix)
 
 ## 1. Request (verbatim)
 
@@ -35,6 +36,7 @@
 - Urgency / deadline (only if the owner stated one):
 - Non-goals:
 - Owner confirmation (name, date, quote):
+- Domain values listed before any policy question (roles, statuses, tenants, with file:line):
 
 ## 5. Scope contract
 

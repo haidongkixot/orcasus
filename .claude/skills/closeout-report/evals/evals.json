@@ -39,6 +39,26 @@
       }
     },
     {
+      "id": "edge-closeout-before-audit",
+      "type": "should_trigger",
+      "prompt": "The governance auditor is starting on SL-2 in a minute. Write the closeout afterwards so it can include the audit result.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Writes and commits the closeout before the audit starts, explaining that an audit against a missing closeout fails the closeout control.",
+          "Leaves the audit result to the audit report instead of waiting to include it.",
+          "Includes all eight sections, including Intentionally not done."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
       "id": "negative-audit-someone-else",
       "type": "should_not_trigger",
       "prompt": "Check whether PR 42 followed our rules.",

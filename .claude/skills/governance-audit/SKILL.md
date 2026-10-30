@@ -25,10 +25,13 @@ Use git history, diffs, CI runs, test outputs, meeting event files, ADRs, readin
 | Independent review | reviewers required by the class inspected actual evidence; findings resolved or accepted by the owner |
 | Approvals | every crossed approval boundary has an owner approval whose wording covers the action taken |
 | Merge/deploy authority | a human merged or deployed, or a recorded owner grant covers the agent that did |
+| Gate order | git history shows the intake and readiness records committed before the first code commit (hotfix lane: minimal intake first, remaining records before the merge commit); the closeout exists before this audit starts |
 | Closeout | all eight sections present; claims match primary evidence |
 | Knowledge | proposed entries exist for durable decisions; approved entries carry curator approval |
 
 Verdict per control: PASS (evidence cited), FAIL (violation cited) or UNVERIFIABLE (evidence missing or inaccessible — never silently upgraded).
+
+Gate order evidence: `git log --reverse --format='%h %ad %s' --date=iso -- docs/agent-ops/ projects/ decisions/` against `git log --reverse --format='%h %ad %s' --date=iso -- <code paths>`, and `git log --diff-filter=A -- reports/<slice>-closeout.md`. If the closeout does not exist yet, stop and ask for it instead of auditing; a record added after the audit started does not count. The independent review control needs a saved report (`reports/<slice>-security-review.md` or similar), not a chat summary.
 
 ## 4. Overall verdict and findings
 Overall PASS only when every applicable control passes; any FAIL means FAIL; otherwise CONDITIONAL with the UNVERIFIABLE list. For each FAIL state whether it is a policy gap (no rule existed) or a discipline gap (rule existed and was bypassed), and the control, skill or agent rule that would close it. Feed findings to `/process-retro`.

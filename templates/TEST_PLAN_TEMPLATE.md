@@ -17,6 +17,8 @@ Default budgets: screenshots 0, traces 0, videos 0. Non-zero capture requires a 
 |---|---|---|---|---|---|---|---|
 | | | Static / Unit / API / Integration / Component / E2E / Visual | | | | | NOT RUN |
 
+Each assertion names an exact expected result. "Not 401/403" or "no error" alone is not an assertion: it passes on a crash.
+
 Prefer static, unit, API/integration and component tests where they reliably prove the criterion. Use a small E2E set for journeys with cross-layer risk. Visual regression is an exception, not a default. Avoid duplicating identical assertions across layers unless they catch distinct defects.
 
 ## 3. Resource and permission readiness

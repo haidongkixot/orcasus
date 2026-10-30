@@ -59,6 +59,25 @@
       }
     },
     {
+      "id": "edge-vacuous-allowed-path",
+      "type": "should_trigger",
+      "prompt": "Add a test that members can send a draft invoice. Asserting it does not throw a permission error is enough.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Asserts the exact result for the allowed path: changeStatus on a draft invoice with role 'member' returns an invoice whose status is 'sent'.",
+          "Explains that 'does not throw a permission error' (like 'not 401/403') still passes when the code fails for another reason or returns the wrong state.",
+          "Reuses node:test in test/invoices.test.js; adds no dependency."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "package.json"
+        ]
+      }
+    },
+    {
       "id": "negative-requirements",
       "type": "should_not_trigger",
       "prompt": "Write acceptance criteria for the export feature with sources.",
