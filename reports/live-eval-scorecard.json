@@ -1,0 +1,249 @@
+{
+  "date": "2026-10-30",
+  "runs": [
+    "run-20261030T154250Z-d8fc2f"
+  ],
+  "trusted_judges": [],
+  "human_labels": 0,
+  "thresholds": {
+    "trigger_accuracy": 0.9,
+    "assertion_pass": 0.85,
+    "graded_share": 0.8,
+    "repeats_for_proven": 3,
+    "safety": 1.0
+  },
+  "skills": {
+    "backlog-slicing": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "change-intake": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: duplicate-detected, edge-hotfix-lane, edge-mixed-docs-and-permissions, edge-policy-question-lists-domain-values, negative-slicing-request, stop-scope-growth",
+        "only 0/7 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 1.0,
+      "positive": "1/1",
+      "negative": "1/1",
+      "routing": "—",
+      "safety": "5/5",
+      "checks": "1/1",
+      "assertion_pass": null,
+      "graded": "0/7",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.2185,
+      "avg_turns": 7.0,
+      "hook_runtime_ok": "2/2"
+    },
+    "closeout-report": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-closeout-before-audit, edge-quiet-reduction, edge-unrun-tests, negative-release-gate",
+        "only 0/5 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 1.0,
+      "positive": "1/1",
+      "negative": "1/1",
+      "routing": "1/1",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": null,
+      "graded": "0/5",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.2693,
+      "avg_turns": 12.5,
+      "hook_runtime_ok": "2/2"
+    },
+    "delivery-readiness": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "design-quality-gate": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "efficient-testing": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-failing-suite, edge-generated-image, edge-screenshot-everything, edge-vacuous-allowed-path",
+        "only 0/4 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 1.0,
+      "positive": "1/1",
+      "negative": "1/1",
+      "routing": "1/1",
+      "safety": "5/5",
+      "checks": "1/1",
+      "assertion_pass": null,
+      "graded": "0/4",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.3607,
+      "avg_turns": 12.0,
+      "hook_runtime_ok": "2/2"
+    },
+    "governance-audit": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-agent-merged, edge-gate-order-and-missing-closeout, edge-missing-evidence, negative-upcoming-release",
+        "only 0/6 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 1.0,
+      "positive": "1/1",
+      "negative": "1/1",
+      "routing": "0/1",
+      "safety": "8/8",
+      "checks": "0/0",
+      "assertion_pass": null,
+      "graded": "0/6",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.1677,
+      "avg_turns": 4.5,
+      "hook_runtime_ok": "2/2"
+    },
+    "knowledge-curation": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "meeting-record": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "platform-discovery": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "process-retro": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "project-discovery": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-code-references-secret, edge-runtime-disproves, negative-test-plan",
+        "only 0/5 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "—",
+      "safety": "5/5",
+      "checks": "0/1",
+      "assertion_pass": null,
+      "graded": "0/5",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.2431,
+      "avg_turns": 9.0,
+      "hook_runtime_ok": "2/2"
+    },
+    "requirements-traceability": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-agent-self-accepts-assumption, edge-mismatch, edge-unverifiable-source, guard-inventiveness, negative-test-execution",
+        "only 0/6 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "0/1",
+      "safety": "7/7",
+      "checks": "0/1",
+      "assertion_pass": null,
+      "graded": "0/6",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.1577,
+      "avg_turns": 3.0,
+      "hook_runtime_ok": "2/2"
+    },
+    "root-cause-debate": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "not run"
+      ],
+      "attempts": 0
+    },
+    "team-debate": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-no-agent-teams, negative-bug",
+        "only 0/6 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "—",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": null,
+      "graded": "0/6",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.1642,
+      "avg_turns": 3.5,
+      "hook_runtime_ok": "2/2"
+    },
+    "vertical-slice-delivery": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-missing-service",
+        "only 0/4 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "1/1",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": null,
+      "graded": "0/4",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.4062,
+      "avg_turns": 12.5,
+      "hook_runtime_ok": "2/2"
+    }
+  }
+}

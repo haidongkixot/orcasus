@@ -1,0 +1,113 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "closeout-report",
+      "args": "SL-2"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-1hsymswg/project; git status --short; git log --oneline -15; git branch -a; ls docs/agent-ops reports templates projects decisions 2>&1; grep -rl \"SL-2\" --include=*.md . | head -30",
+      "description": "Survey repo state and SL-2 records"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "SL-2",
+      "output_mode": "content",
+      "head_limit": 60
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{docs/agent-ops,reports,projects}/**/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/templates/CLOSEOUT_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": ".git/{HEAD,refs/heads/**,packed-refs}"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)csv|export|invoice",
+      "glob": "!**/{evals,.claude,docs,templates}/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/.git/HEAD"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)csv|export",
+      "path": "/tmp/orcasus-eval-1hsymswg/project/src",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/src/server.js"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": ".git/{refs/remotes/**,FETCH_HEAD,ORIG_HEAD}"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1hsymswg/project/reports/SL-2-closeout.md",
+      "content": "# Closeout Report — S9\n\n- Task / slice: SL-2 — CSV export of invoices from the billing page (`projects/demo/BACKLOG.md:6`)\n- Intake ID: NONE FOUND — no `docs/agent-ops/INTAKE_RECORD.md` exists\n- Branch and head commit SHA: branch `feat/csv-export` (named in the backlog) NOT FOUND in local refs or re"
+    }
+  }
+]

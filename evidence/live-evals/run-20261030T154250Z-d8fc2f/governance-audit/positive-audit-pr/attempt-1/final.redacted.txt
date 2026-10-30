@@ -1,0 +1,16 @@
+I stopped before auditing PR 42. The audit rules say to stop and ask for the closeout if it doesn't exist yet, and it doesn't.
+
+**What I found by searching the repository (read-only):**
+- **No closeout:** `reports/` is missing entirely, so there's no `reports/<slice>-closeout.md`. A closeout written after the audit starts wouldn't count toward the gate-order check, which is why I didn't begin.
+- **No gate records:** `docs/agent-ops/` is missing, so there's no `INTAKE_RECORD.md`, `READINESS_MATRIX.md`, `DISCOVERY_SUMMARY.md` or `TEST_PLAN.md` in this checkout.
+- **Nothing linked to PR 42:** the only file in `decisions/` is `ADR-0001-modular-monolith.md`. No record mentions PR 42 except two eval prompt files under `.claude/skills/`.
+- **No access to git or GitHub:** this session can't run shell commands, so I couldn't use `git log`, `git diff` or `gh pr view 42`. I can't confirm that PR 42 exists, which branch it's on, which files it touches, its CI runs, or who merged it.
+
+The missing records might mean the gates were never followed. They might also mean PR 42's branch isn't checked out here. I can't tell which without git access, and recording either as a verdict would mean guessing.
+
+**To continue, I need:**
+1. **The closeout:** the path to the closeout for PR 42, or the PR author writes one first with `/closeout-report`.
+2. **The PR branch:** PR 42's branch checked out here, or the right branch name if the records live somewhere else.
+3. **Git and GitHub access:** permission for read-only `git log`, `git diff` and `gh pr view` commands. Without them, the gate-order, approval and merge-authority checks would all come out UNVERIFIABLE.
+
+Once those are in place, the read-only `governance-auditor` agent will run the audit and write `reports/pr-42-governance-audit.md`. If you'd rather have a partial audit now, I can record PR 42 as FAIL or UNVERIFIABLE on every check because the evidence is missing, but that would mainly reflect this checkout rather than how PR 42 was actually done.

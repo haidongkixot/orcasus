@@ -1,0 +1,26 @@
+I can't write these requirements yet: yesterday's meeting notes aren't in the repository, and there's a conflict that needs your decision first.
+
+**What I looked for**
+- `meetings/` has only `README.md` and `CURRENT_MEETING.json`, and the latter shows no meeting (`meeting_id: null`). There are no minutes, notes or ballots from yesterday.
+- I searched the repo for "invoice", "yesterday" and 2026-10-29. Nothing matched that looks like your meeting notes.
+
+Under `/requirements-traceability`, each requirement has to cite a source that I then open and check. If I wrote requirements "from the meeting notes" without having them, every row would be NO SOURCE, and those rows can't be approved.
+
+**What the repo does say, and where it disagrees with itself**
+
+| Source | Says |
+|---|---|
+| `tickets/TICKET-12.md` (Finance lead, 2026-10-10) | Finance downloads invoices as a spreadsheet for the monthly close. **Only the last 12 months are needed**; older invoices are archived elsewhere. |
+| `projects/demo/PRD.md:12` (R3) | "Exports include **all historical invoices** for the organization." |
+| `projects/demo/BACKLOG.md:6` (SL-2) | CSV export from the billing page is IN PROGRESS on branch `feat/csv-export`. |
+
+The ticket and the PRD disagree on the date range. I won't choose between them. Your notes may already settle it.
+
+**What I need from you**
+1. **The notes.** Paste them here or tell me the file path. If you paste them, I'll save them as a dated record in `meetings/` so the requirements can cite them.
+2. **12 months or all history.** Which applies? If the notes change R3 or TICKET-12, tell me which one is replaced.
+3. **The in-progress branch.** Should these requirements cover the work already on `feat/csv-export`, or is this a new scope? Either way, the change-intake step (`/change-intake`) runs first and will check that branch for duplicate work.
+
+Once I have the notes, I'll do the intake, then write requirements and acceptance criteria. Each one will cite its source and be checked against it. Anything the notes leave open, such as which roles can export, which columns to include, or how money and dates are formatted, will come back to you as a question rather than a guess.
+
+I haven't written any files.

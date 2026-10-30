@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "def .*date|datetime|date_util|dateutil",
+      "-i": true,
+      "output_mode": "files_with_matches",
+      "head_limit": 20
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "date",
+      "-i": true,
+      "output_mode": "content",
+      "glob": "scripts/{log_team_message,skill_evals}.py",
+      "head_limit": 20
+    }
+  }
+]

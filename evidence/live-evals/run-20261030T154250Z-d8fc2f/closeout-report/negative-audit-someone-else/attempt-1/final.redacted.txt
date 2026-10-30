@@ -1,0 +1,12 @@
+I haven't audited PR 42 yet. Our audit rule says that if the closeout doesn't exist, I stop and ask for it rather than audit, and I couldn't find one.
+
+**What I checked:**
+- **Closeout:** there's no closeout report. The `reports/` folder has no files at all, so there's also no saved security review or other independent review.
+- **PR 42 in the repo:** it only comes up in the eval files `.claude/skills/closeout-report/evals/evals.json` and `.claude/skills/governance-audit/evals/evals.json`. Those are test cases for the skills, not records of this PR.
+- **Git and GitHub:** I couldn't look at the PR itself or its commit history. Shell commands are denied in this session, so `gh pr view 42` and `git log` didn't run. That means I haven't seen its changed files, intake and readiness records, commit order or merge history.
+
+**What would let the audit go ahead:**
+1. **A closeout for PR 42:** if one exists somewhere else (another branch, or not committed yet), point me to it. If not, the change author writes one with `/closeout-report` in `reports/`. The rules say it must exist before the audit starts, so one added during the audit wouldn't count.
+2. **Shell access, or the evidence pasted in:** I need `gh pr view 42` (files, commits, who merged it) and the `git log` gate-order checks to look at the PR's commits and records.
+
+There's already one finding to report: a pull request with no closeout and no saved reviews in `reports/` breaks the close-out rules. Under those rules the PR shouldn't have left draft. Once the closeout and access are in place, the full audit runs through the read-only `governance-auditor` agent and gets saved as `reports/pr-42-governance-audit.md`.

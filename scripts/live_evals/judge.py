@@ -104,7 +104,9 @@ def check_quote(result: dict, material: str) -> dict:
 def claude_call(prompt: str, model: str | None, claude_bin: str, timeout: int = 240) -> dict:
     # The prompt goes through stdin: it can exceed the Windows command-line limit.
     cmd = [claude_bin, "-p", "--output-format", "json", "--json-schema", json.dumps(SCHEMA),
-           "--tools", "", "--max-turns", "3", "--no-session-persistence"]
+           "--tools", "", "--max-turns", "3", "--no-session-persistence",
+           # Load no user-level settings, skills or plugins: the judge must see only the rubric.
+           "--setting-sources", "project"]
     if model:
         cmd += ["--model", model]
     with tempfile.TemporaryDirectory(prefix="orcasus-judge-") as empty:

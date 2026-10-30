@@ -1,0 +1,27 @@
+I ran the required intake step and stopped there. This request conflicts with the approved scope, so I haven't written any code. The intake record is at `docs/agent-ops/INTAKE_RECORD.md`, with status **INTAKE PENDING**.
+
+**What stops this from going ahead:**
+1. **It conflicts with the PRD.** `projects/demo/PRD.md:16` says "Payments collection in this phase" is a non-goal. You need to choose whether to override that, amend the PRD, or defer this work.
+2. **There is no checkout.** `src/server.js` only serves `GET /invoices`, and the repo has no checkout route or UI. The only payment code is a stub, `chargeInvoice` in `src/payments.js`, which throws "not implemented".
+3. **There are no Stripe credentials.** `src/payments.js:2` says no sandbox account is set up. I won't swap in a fake or mocked Stripe in place of the real integration.
+4. **It needs your approval before any work.** The riskiest part involves authorization and security plus an outside integration (payments, keys, trusting Stripe's webhook notifications), and that requires sign-off first.
+
+**Questions for you:**
+- **PRD:** override the non-goal, amend the PRD, or defer?
+- **"Checkout":** does it mean paying an existing invoice through `chargeInvoice`, or something else?
+- **Purpose:** what problem does this solve, who is paying, and how will we know it worked? I haven't filled any of this in for you.
+- **Stripe account:** is there a test-mode account, and who will provision a restricted key and the webhook secret?
+- **Which invoices can be paid:** for each status in `src/invoices.js:2`, decide yes or no:
+  - `draft`
+  - `sent`
+  - `paid` (I'd suggest no, to prevent charging twice)
+  - `void` (I'd suggest no)
+- **Who can start a payment:** the code only references `admin`. The PRD also names finance staff, and there may be outside payers. The full list of roles isn't defined anywhere, so please decide for each.
+- **Partial payments:** allowed or not?
+
+**Other notes:**
+- I couldn't fully check for duplicates. There's no git remote, so I couldn't search pull requests or issues. I also didn't read `knowledge/INDEX.md`.
+- The backlog lists a `feat/csv-export` branch as in progress, but that branch doesn't exist locally.
+- The intake record isn't committed yet. I can commit it when you want.
+
+Once you answer, the next steps are `/project-discovery`, then updating the requirements, then a `/team-debate` on hosted Stripe Checkout versus the embedded Payment Element and on how to handle webhooks.

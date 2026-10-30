@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "backlog-slicing"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/*PRD*"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-2k0l75uq/project; ls projects/demo docs/agent-ops 2>&1; cat projects/demo/PRD.md; cat templates/BACKLOG_TEMPLATE.md; git log --oneline | head -5",
+      "description": "Inspect PRD, template, and project records"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-2k0l75uq/project; cat projects/demo/BACKLOG.md; ls; ls projects decisions docs | head -60; grep -rli \"invoice\\|billing\" --exclude-dir=.git . | head -20; git ls-files | grep -vE '^(\\.claude|docs|templates|scripts|knowledge|meetings|evidence|decisions|reports|evals)/' | head -30",
+      "description": "Check existing backlog, records, and any billing code"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-2k0l75uq/project; for f in src/*.js test/invoices.test.js tickets/TICKET-12.md package.json README.md .env.example; do echo \"=== $f\"; cat -n $f; done; git branch -a",
+      "description": "Read source, tests, ticket and package files"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/package.json"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git branch -a && git status --short",
+      "description": "List branches and working tree status"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "class|Class",
+      "path": "/tmp/orcasus-eval-2k0l75uq/project/.claude/skills/change-intake/SKILL.md",
+      "output_mode": "content",
+      "head_limit": 25
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/.claude/skills/change-intake/SKILL.md",
+      "offset": 17,
+      "limit": 16
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2k0l75uq/project/projects/demo/BACKLOG.md",
+      "content": "# Backlog — S5: Billing area\n\n> Produced with `/backlog-slicing` on 2026-10-30. **Status: DRAFT. Not approved for implementation.**\n> Testability verdicts: TESTABLE, NEEDS SPLIT, BLOCKED, UNTESTABLE. The owner sets the priority order.\n\n- Goal (one sentence): Finance staff and org admins can view, ex"
+    }
+  }
+]

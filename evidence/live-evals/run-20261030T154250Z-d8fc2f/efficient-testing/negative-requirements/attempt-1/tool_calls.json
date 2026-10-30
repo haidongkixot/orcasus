@@ -1,0 +1,90 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "requirements-traceability",
+      "args": "acceptance criteria for the export feature"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export",
+      "glob": "!{.claude/**,scripts/**,evals/**}",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export",
+      "path": "/tmp/orcasus-eval-wonh1bjg/project",
+      "glob": "{projects/demo/*.md,src/*.js,docs/RESEARCH_AND_DECISIONS.md}",
+      "output_mode": "content",
+      "-C": 2
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/templates/TRACE_MATRIX_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git branch -a && git log --oneline -5 && ls projects/demo",
+      "description": "Show branches, recent commits, demo project files"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wonh1bjg/project/projects/demo/TRACE_MATRIX.md",
+      "content": "# Requirements Trace Matrix — S3\n\n> Complete with `/requirements-traceability`. Every requirement cites a source and records a citation check. Citation status values: VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE, NO SOURCE. Requirement status values: PROPOSED, APPROVED, REJECTED, ASSUMPTION-ACCEP"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "python3 scripts/check_knowledge_links.py; echo \"exit=$?\"",
+      "description": "Check citation links and status vocabulary"
+    }
+  }
+]
