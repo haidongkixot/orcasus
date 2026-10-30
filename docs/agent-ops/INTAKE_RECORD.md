@@ -58,3 +58,4 @@ The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilo
 
 | Date | Trigger (file/layer/behavior outside contract) | New class | Approval obtained |
 |---|---|---|---|
+| 2026-10-30 | Version titles (README, INITIALIZE_AGENTS, DEFINITION_OF_DONE), D13 in RESEARCH_AND_DECISIONS, STATIC_VALIDATION_RESULTS, knowledge/README, the pilot record, and the intake and audit templates were edited to carry the same P1–P9 text | docs-only (lower than the governing class) | Covered by the approved plan; no new class |
