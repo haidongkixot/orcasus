@@ -11,6 +11,7 @@ Changes from the tbagri-web pilot retro (P1–P9). Dispositions are in docs/EVID
 - Pull requests open as drafts until reviews, closeout and audit exist (P8).
 - Owner-confirmed hotfix lane: same gates, records completed before the pull request leaves draft or merges (P9).
 - 6 new eval cases and 1 rewritten (16 skills, 78 cases); 2 new checker tests.
+- Live evals: the first smoke run on the 8 changed skills (evidence in docs/EVIDENCE.md). Harness fixes: Orcasus's own records are kept out of the eval workspace; env references and redaction markers are not secrets; the judge loads no user-level settings. The judge no longer calls the model for assertions of attempts whose trigger check failed: they are marked FAIL as `auto:trigger-fail` and are never sampled for calibration.
 
 ### Live evidence tooling (shipped in the same pull request)
 - Added a live skill eval pipeline run locally with `claude -p`: sample-app fixture with deliberate traps, deterministic checks per case (`checks` in evals.json), LLM judge whose PASS must quote real evidence, calibration against human labels (trusted only at ≥ 80% agreement, ≤ 5% false-PASS), and a per-skill scorecard. Tests use a fake `claude`, so CI makes no model calls.

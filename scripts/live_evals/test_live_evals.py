@@ -39,7 +39,8 @@ FAKE_CLAUDE = textwrap.dedent('''\
     def emit(event): print(json.dumps(event))
     emit({{"type": "system", "subtype": "init"}})
     emit({{"type": "system", "subtype": "hook_response", "output": "Orcasus hook runtime: OK (python3, Python 3.x)."}})
-    emit({{"type": "assistant", "message": {{"content": [{{"type": "tool_use", "name": "Skill", "input": {{"skill": "change-intake"}}}}]}}}})
+    if mode != "no_skill":
+        emit({{"type": "assistant", "message": {{"content": [{{"type": "tool_use", "name": "Skill", "input": {{"skill": "change-intake"}}}}]}}}})
     Path("docs/agent-ops").mkdir(parents=True, exist_ok=True)
     Path("docs/agent-ops/INTAKE_RECORD.md").write_text("Verdict: EXTENDS SL-2 (projects/demo/BACKLOG.md)\\n")
     emit({{"type": "assistant", "message": {{"content": [{{"type": "tool_use", "name": "Write", "input": {{"file_path": "docs/agent-ops/INTAKE_RECORD.md"}}}}]}}}})
@@ -114,6 +115,27 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(intake["graded"], f"{total}/{total}")
         self.assertEqual(intake["status"], "INSUFFICIENT EVIDENCE")  # only one of six cases ran
         self.assertIn("cases not run", "; ".join(intake["reasons"]))
+
+    def test_trigger_fail_is_graded_without_a_model_call(self):
+        run_dir = self.run_main(mode="no_skill")
+        [v] = self.verdicts(run_dir)
+        self.assertEqual(v["trigger"]["verdict"], "FAIL")
+        calls = []
+        counts = judge.judge_run([run_dir], lambda p: calls.append(p) or {}, None)
+        total = len(v["assertions"])
+        self.assertEqual(calls, [])
+        self.assertEqual((counts["FAIL"], counts["auto_fail"], counts["graded"]), (total, total, 0))  # graded = model calls
+        [v] = self.verdicts(run_dir)
+        self.assertTrue(all(a["verdict"] == "FAIL" and a["judge"]["model"] == common.AUTO_FAIL_MODEL
+                            for a in v["assertions"]))
+        self.assertEqual(calibrate.judged_items([run_dir]), [])  # never sampled for human calibration
+        intake = scorecard.build([run_dir])["skills"]["change-intake"]
+        self.assertEqual(intake["graded"], f"{total}/{total}")  # counted without a trusted judge
+        # --no-auto-fail sends them to the model instead.
+        counts = judge.judge_run([run_dir], lambda p: calls.append(p) or {"verdict": "FAIL", "evidence_quote": "x"},
+                                 None, rejudge=True, auto=False)
+        self.assertEqual(len(calls), total)
+        self.assertEqual(counts["auto_fail"], 0)
 
     def test_judge_quote_not_in_evidence_becomes_unclear(self):
         run_dir = self.run_main()

@@ -20,7 +20,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, iter_attempts, load_cases, write_json  # noqa: E402
+from common import AUTO_FAIL_MODEL, ROOT, iter_attempts, load_cases, write_json  # noqa: E402
 
 # Proposed thresholds; the owner confirms or changes them (docs/EVIDENCE.md records the decision).
 MIN_TRIGGER_ACCURACY = 0.90
@@ -99,6 +99,8 @@ def build(run_dirs, calibrations=None, label_files=None) -> dict:
                 final = human
             elif judge and (judge.get("model"), judge.get("rubric_hash")) in trusted and a["verdict"] in ("PASS", "FAIL"):
                 final = a["verdict"]
+            elif judge.get("model") == AUTO_FAIL_MODEL and a["verdict"] == "FAIL":
+                final = "FAIL"  # decided by the deterministic trigger check, not by a model
             else:
                 final = None
             if final:
