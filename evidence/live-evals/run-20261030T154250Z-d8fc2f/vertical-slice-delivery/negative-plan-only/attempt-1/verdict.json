@@ -1,0 +1,59 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "vertical-slice-delivery",
+  "case_id": "negative-plan-only",
+  "case_type": "should_not_trigger",
+  "routes_to": "backlog-slicing",
+  "attempt": 1,
+  "prompt": "Break the PRD into slices.",
+  "assertions": [
+    {
+      "text": "Routes to backlog-slicing.",
+      "verdict": "PASS",
+      "evidence_quote": "Skills invoked: backlog-slicing",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent called the backlog-slicing skill as its first tool call. It then wrote BACKLOG.md and labelled it \"Produced with `/backlog-slicing`\".",
+        "at": "2026-10-30T15:57:12+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 89.2,
+  "status": "RAN",
+  "skills_invoked": [
+    "backlog-slicing"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Glob": 1,
+    "Bash": 4,
+    "Read": 7,
+    "Grep": 1,
+    "Write": 1
+  },
+  "num_turns": 17,
+  "cost_usd": 0.4840425,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "projects/demo/BACKLOG.md": "M"
+  },
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke vertical-slice-delivery; invoked ['backlog-slicing']"
+  },
+  "routing": {
+    "verdict": "PASS",
+    "detail": "expected backlog-slicing"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

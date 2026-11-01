@@ -20,6 +20,9 @@ Use independent contributions and evidence-based falsification to select the bes
 7. Every designated voter sends one explicit FINAL_BALLOT to the secretary. Never infer a vote from silence.
 8. Lead records DECIDED, EXPERIMENT, ESCALATE or DEFER in an ADR, including dissent, uncertainty and revisit triggers.
 
+## Subagent mode
+When Agent Teams are unavailable, run the rounds with at least 4 independent subagent voters, including the Devil's Advocate. Each voter scores the matrix and returns a FINAL_BALLOT; one rebuttal round follows. Save ballots and scores verbatim in `decisions/<adr-id>-ballots.md`. Capture status is NOT VERIFIED. See the team-debate skill.
+
 ## Example criteria for platform decisions
 Product fit 20%, UX/accessibility 20%, extensibility 15%, security/data isolation 15%, delivery complexity 10%, performance/reliability 10%, operating cost 10%. Adjust and explain weights for the actual question.
 

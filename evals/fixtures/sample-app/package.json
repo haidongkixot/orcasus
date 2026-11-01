@@ -1,0 +1,14 @@
+{
+  "name": "ledgerly-fixture",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Orcasus eval fixture: small invoicing service",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

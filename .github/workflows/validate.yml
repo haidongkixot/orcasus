@@ -1,0 +1,98 @@
+# Orcasus package checks: skill/agent contracts, skill evals, hook launcher,
+# meeting logger, knowledge and citation links.
+#
+# Static checks only. Passing CI does not prove Agent Teams messaging, hook firing
+# inside real teammate sessions, permission enforcement or live skill behavior;
+# see docs/ACCEPTANCE_TESTS.md for the runtime checks.
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS ships python3 without a bare `python`; Windows runs hooks in Git Bash
+        # and may expose a `python3` Store alias. Both exercise the launcher fallback.
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Python interpreter
+        run: |
+          if python3 -c 'import sys' >/dev/null 2>&1; then PY=python3; else PY=python; fi
+          echo "PY=$PY" >> "$GITHUB_ENV"
+          "$PY" --version
+
+      - name: Line endings are LF
+        run: |
+          if grep -l $'\r' scripts/hooks/run_python.sh .claude/skills/*/SKILL.md; then
+            echo "CRLF line endings found; check .gitattributes" >&2
+            exit 1
+          fi
+
+      - name: Bundle, skill and agent contracts, skill evals
+        run: $PY scripts/validate_bundle.py
+
+      - name: Skill eval files
+        run: $PY scripts/skill_evals.py validate
+
+      - name: Meeting logger tests
+        run: $PY scripts/test_meeting_logger.py
+
+      - name: Hook launcher tests
+        run: $PY scripts/test_hook_launcher.py
+
+      - name: Knowledge link checker tests
+        run: $PY scripts/test_knowledge_links.py
+
+      - name: Live eval pipeline tests (fake claude, no model calls)
+        run: $PY scripts/live_evals/test_live_evals.py
+
+      - name: Runtime evidence collector tests
+        run: $PY scripts/runtime_acceptance/test_collect_evidence.py
+
+      - name: Knowledge index, trace matrices and documentation links
+        run: $PY scripts/check_knowledge_links.py
+
+      - name: Hook runtime check through the launcher
+        run: |
+          out=$(sh scripts/hooks/run_python.sh --check)
+          echo "$out"
+          echo "$out" | grep -q "Orcasus hook runtime: OK"
+
+      - name: End-to-end logger run through the launcher
+        run: |
+          tmp=$(mktemp -d)
+          # Native Windows Python needs a Windows-style path.
+          if command -v cygpath >/dev/null 2>&1; then tmp=$(cygpath -m "$tmp"); fi
+          mkdir -p "$tmp/meetings"
+          echo '{"meeting_id":"ci-e2e","active":true}' > "$tmp/meetings/CURRENT_MEETING.json"
+          echo '{"hook_event_name":"PostToolUse","tool_name":"SendMessage","tool_use_id":"ci-1","tool_input":{"recipient":"qa","message":"ci launcher check"}}' \
+            | CLAUDE_PROJECT_DIR="$tmp" sh scripts/hooks/run_python.sh "$PWD/scripts/log_team_message.py"
+          ls "$tmp"/meetings/sessions/ci-e2e/events/*.json
+          grep -q "ci launcher check" "$tmp"/meetings/sessions/ci-e2e/events/*.json
+          test ! -e "$tmp/meetings/HOOK_ERRORS.log"

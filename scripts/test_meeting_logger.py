@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run: python scripts/test_meeting_logger.py"""
+"""Run: python3 scripts/test_meeting_logger.py"""
 import json
 import sys
 import tempfile

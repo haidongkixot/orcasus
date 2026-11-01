@@ -13,7 +13,7 @@ description: Plan and deliver a small complete workflow across UI, API, domain r
 6. Do not add optional architecture or major dependencies without evidence and approval.
 7. Run targeted unit/API/integration/component tests; use a small E2E journey only when needed.
 8. Do not substitute mock services/assets or local-only behavior for required production capabilities without owner approval.
-9. Ask QA, security, design and performance reviewers to inspect relevant risk areas independently.
+9. Ask QA, security, design and performance reviewers to inspect relevant risk areas independently. Give reviewers without a shell an evidence pack: the diff against the base and the test, typecheck and build commands with output and exit codes, all at one named commit. Save each review to `reports/<slice>-<lens>-review.md` (for example `reports/<slice>-security-review.md`) on a draft pull request, before it is marked ready.
 10. Fix findings and rerun affected plus required regression tests. Record commands/results/artifact counts.
 11. Update ADR/PRD and extract abstractions only when the slice demonstrates their need.
 

@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Add Stripe payments to the checkout."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short | head; git branch -a; ls; ls docs/agent-ops projects decisions reports 2>&1 | head -40; grep -rli -E \"stripe|checkout|payment\" --exclude-dir=.git --exclude-dir=node_modules . | head -30",
+      "description": "Survey repo, records, and checkout/payment references"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat src/payments.js .env.example package.json; ls src test tickets projects/demo; grep -n -i -E \"stripe|checkout|payment\" projects/demo/PRD.md decisions/ADR-0001-modular-monolith.md README.md; cat knowledge/INDEX.md | head -30; ls meetings meetings/sessions 2>/dev/null; cat templates/INTAKE_RECORD_T",
+      "description": "Read payment code, env, PRD and ADR references, template"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)stripe|checkout|payment",
+      "path": "/tmp/orcasus-eval-151xthzx/project",
+      "glob": "{projects/**,decisions/**,README.md,package.json,tickets/**,src/**,test/**,knowledge/**}",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{src,test,tickets,projects,meetings}/**/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/templates/INTAKE_RECORD_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-151xthzx/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — S0\n\n- Intake ID: INT-2026-10-30-stripe-checkout\n- Date: 2026-10-30\n- Requested by / owner: hai@eagodi.com\n- Status: INTAKE PENDING (CONFLICTS with approved PRD non-goal; owner decision required)\n- Lane: normal\n\n## 1. Request (verbatim)\n\n> Add Stripe payments to the checkout.\n\n## 2."
+    }
+  }
+]

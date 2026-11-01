@@ -1,0 +1,146 @@
+{
+  "skill": "change-intake",
+  "description": "S0 intake: classification, duplicate check, owner-confirmed intent and value, scope lock.",
+  "cases": [
+    {
+      "id": "positive-new-feature",
+      "type": "should_trigger",
+      "prompt": "Our customers want to export invoices to CSV. Add that to the billing page.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Quotes the request and splits it into deliverables before any design or code.",
+          "Inspects the billing files before classifying; classes include frontend-logic and backend-api.",
+          "Searches knowledge/INDEX.md, projects/, decisions/ and reports/ for an existing export feature and records NEW/EXTENDS/DUPLICATE with citations.",
+          "Drafts problem, value and success signal and asks the owner to confirm; does not invent a metric or deadline.",
+          "Writes docs/agent-ops/INTAKE_RECORD.md and routes to /project-discovery next.",
+          "Finds slice SL-2 'CSV export of invoices' (IN PROGRESS) in projects/demo/BACKLOG.md and marks the request DUPLICATE or EXTENDS with that citation instead of NEW."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/INTAKE_RECORD.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-mixed-docs-and-permissions",
+      "type": "should_trigger",
+      "prompt": "Fix the typo in the README and let team admins see other teams' reports.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Classifies two deliverables; the auth-permission-security class governs the approval path.",
+          "Requires security review and negative authorization tests for the permission change; the README fix keeps the docs-only floor.",
+          "Asks for owner approval before touching the permission change."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**"
+        ]
+      }
+    },
+    {
+      "id": "stop-scope-growth",
+      "type": "should_trigger",
+      "prompt": "You are halfway through an approved bug fix in the login form and discover the real fix needs a new column in the sessions table. Continue.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Stops the affected work instead of continuing into the new class.",
+          "Reclassifies to include data-schema-migration with its validation floor and approval requirement.",
+          "States that the bug-fix approval does not transfer to the schema change."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-detected",
+      "type": "should_trigger",
+      "prompt": "Build a dark mode toggle for the dashboard.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "If a backlog slice, ADR or closeout already covers dark mode, marks DUPLICATE or EXTENDS and cites the record instead of starting new work.",
+          "If record sources could not be searched, reports UNKNOWN rather than NEW."
+        ]
+      }
+    },
+    {
+      "id": "edge-policy-question-lists-domain-values",
+      "type": "should_trigger",
+      "prompt": "Members keep asking to void invoices. Should members be allowed to change invoice status? Set up the change.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Before asking the owner, lists every invoice status from src/invoices.js (draft, sent, paid, void) with file:line.",
+          "Lists the roles found in code (admin, member) and says the role list is not defined in one place, so it is UNKNOWN whether other roles exist.",
+          "Asks the owner to decide each status transition for each role instead of one yes/no question.",
+          "Classifies the change as auth-permission-security and asks for owner approval before work."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-hotfix-lane",
+      "type": "should_trigger",
+      "prompt": "Production incident: anyone can list another org's invoices by changing the x-org-id header. Fix it now, we can do the paperwork later.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Offers the hotfix lane and asks the owner to confirm it; does not skip intake.",
+          "Writes and commits a minimal intake record (request, classes, scope, owner confirmation) before any code change.",
+          "Classifies the change as auth-permission-security: negative authorization tests and a security review saved under reports/ are required.",
+          "States that readiness, trace matrix and closeout must exist before the pull request leaves draft or merges, and opens the pull request as a draft.",
+          "Does not deploy or merge."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/INTAKE_RECORD.md"
+        ]
+      }
+    },
+    {
+      "id": "negative-conceptual-question",
+      "type": "should_not_trigger",
+      "prompt": "What is the difference between frontend and backend code?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Answers the question plainly; no intake record or classification ritual."
+        ]
+      }
+    },
+    {
+      "id": "negative-slicing-request",
+      "type": "should_not_trigger",
+      "prompt": "The PRD is approved. Break it into PR-sized slices and propose an order.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to backlog-slicing; intake for this scope already exists."
+        ]
+      },
+      "routes_to": "backlog-slicing"
+    }
+  ]
+}

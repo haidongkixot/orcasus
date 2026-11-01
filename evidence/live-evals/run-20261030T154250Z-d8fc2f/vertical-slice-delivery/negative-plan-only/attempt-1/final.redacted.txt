@@ -1,0 +1,30 @@
+I broke the PRD into 7 slices, but only one of them is ready to build. The other six are blocked on decisions only you can make. The plan replaces the old `projects/demo/BACKLOG.md`. It's a plan only: I haven't changed any code or committed anything.
+
+**Before any slice starts:** the PRD has no intake record, requirements trace or readiness check yet, and the project rules require those first. Even the ready slice waits for at least the intake.
+
+**What I found when checking the old backlog against the code:**
+- **SL-1 (org-scoped invoice list) was marked DONE, but it isn't.** `GET /invoices` takes the org from a header the caller sets themselves (`src/server.js:9`), so anyone can read any organization's invoices by changing that header. That breaks R1. There is also no API test and no UI.
+- **SL-2 (export) was marked IN PROGRESS on `feat/csv-export`, but that branch doesn't exist locally.**
+- **The PRD and TICKET-12 disagree on export history:** R3 says all invoices ever, while the Finance lead's ticket says only the last 12 months. I haven't picked one.
+- **No currency data exists** for R4, invoices are kept only in memory (not saved anywhere), and there is no billing UI in the repo.
+
+**The slices, in dependency order:**
+
+| # | Slice | Status |
+|---|---|---|
+| 1 | SL-1a: API tests for the current list endpoint | Ready to build (tests only) |
+| 2 | SL-1b: get the user's org and role from login, not a header | Blocked: how do users sign in? Is "finance staff" the existing `member` role? |
+| 3 | SL-3: admin-only void endpoint | Blocked on SL-1b, and on whether `paid` invoices can be voided |
+| 4 | SL-2: invoice export | Blocked on the history-range conflict, the format and columns, and storage for past invoices |
+| 5 | SL-5: totals in the org's currency | Blocked: where does an org's currency come from? |
+| 6 | SL-4: void button in the billing UI | Blocked: where does the UI code live? |
+| 7 | SL-6: invoice list in the billing UI | Blocked: same question |
+
+I suggest a simple Must/Should/Could ranking rather than a numeric score, since most slices are blocked and there's no effort data. I put SL-1b first as must-do outside the ranking because it's a live security gap. The final order is yours.
+
+**Decisions needed from you, most blocking first:**
+1. Should I run the intake, requirements trace and discovery steps on this PRD now?
+2. How do users sign in, and does "finance staff" mean the existing `member` role?
+3. Which export range is right: all history, or the last 12 months?
+
+The full slice table, with acceptance criteria and the remaining open questions, is in `projects/demo/BACKLOG.md`.

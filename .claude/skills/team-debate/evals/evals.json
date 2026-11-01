@@ -1,0 +1,66 @@
+{
+  "skill": "team-debate",
+  "description": "Structured debate with independent proposals, critique, ballots and ADR.",
+  "cases": [
+    {
+      "id": "positive-architecture-choice",
+      "type": "should_trigger",
+      "prompt": "Should our new platform be a modular monolith or microservices? Get the team to decide.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Runs project-discovery first and starts Team Secretary with an active meeting record.",
+          "Collects independent first proposals before peers see each other's views.",
+          "Requires peer challenge, rebuttal and a Devil's Advocate alternative.",
+          "Scores with an explicit weighted matrix and collects explicit FINAL_BALLOT messages; never infers votes from silence.",
+          "Records the decision state, dissent and revisit triggers in an ADR."
+        ]
+      }
+    },
+    {
+      "id": "edge-no-agent-teams",
+      "type": "should_trigger",
+      "prompt": "Run a team debate on the database choice.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Reports that Agent Teams or peer messaging are unavailable instead of simulating a team debate.",
+          "Runs subagent mode: at least 4 independent voters including devil-advocate, each scoring the weighted matrix and returning a FINAL_BALLOT.",
+          "Holds one rebuttal round in which voters see the other proposals.",
+          "Saves the ballots and voter scores verbatim to decisions/<adr-id>-ballots.md and links them from the ADR.",
+          "Marks capture status NOT VERIFIED and lists deviations from the full protocol in the ADR; the lead does not score for the voters."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "negative-obvious-choice",
+      "type": "should_not_trigger",
+      "prompt": "Should I use the existing date utility or write a new one?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Answers directly; no debate for a choice without genuine competing options."
+        ]
+      }
+    },
+    {
+      "id": "negative-bug",
+      "type": "should_not_trigger",
+      "prompt": "The checkout intermittently fails; find the cause.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to root-cause-debate."
+        ]
+      },
+      "routes_to": "root-cause-debate"
+    }
+  ]
+}

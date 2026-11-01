@@ -1,0 +1,42 @@
+{
+  "skill": "platform-discovery",
+  "description": "Turn a platform idea into brief, capability map, options and a slice roadmap.",
+  "cases": [
+    {
+      "id": "positive-platform-idea",
+      "type": "should_trigger",
+      "prompt": "I want to build an enterprise work-management platform with ERP and mobile. Where do we start?",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Runs project-discovery first and does not assume greenfield.",
+          "Defines users, jobs-to-be-done, workflows, constraints and success metrics, separating primitives from modules.",
+          "Picks one end-to-end vertical slice that tests the riskiest assumption and records MVP non-goals."
+        ]
+      }
+    },
+    {
+      "id": "edge-blocked-resource",
+      "type": "should_trigger",
+      "prompt": "Plan the platform; we have no access to the legacy ERP API yet.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Records the missing ERP access as a blocker with options rather than papering over it."
+        ]
+      }
+    },
+    {
+      "id": "negative-small-change",
+      "type": "should_not_trigger",
+      "prompt": "Add a filter to the existing task list.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to change-intake and normal discovery; no platform discovery for a small change."
+        ]
+      },
+      "routes_to": "change-intake"
+    }
+  ]
+}

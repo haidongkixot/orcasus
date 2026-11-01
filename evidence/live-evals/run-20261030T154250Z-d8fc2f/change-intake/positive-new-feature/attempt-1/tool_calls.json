@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Customers want to export invoices to CSV. Add that to the billing page."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-qhobmhq6/project; git status -s | head; git branch -a; ls; ls docs/agent-ops projects 2>/dev/null; grep -rli \"invoice\\|billing\\|csv\" --include=*.md --include=*.ts --include=*.tsx --include=*.js --include=*.py . 2>/dev/null | grep -v node_modules | head -30",
+      "description": "Inspect repo layout and search for billing/invoice references"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice|billing|csv export",
+      "path": "/tmp/orcasus-eval-qhobmhq6/project",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{docs/agent-ops/*,projects/**/*.md,src/**/*,app/**/*,package.json,templates/INTAKE_RECORD_TEMPLATE.md}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/templates/INTAKE_RECORD_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)role|export|csv|12 months|admin|finance",
+      "path": "/tmp/orcasus-eval-qhobmhq6/project",
+      "glob": "{projects/**,decisions/**,src/**,test/**,README.md,knowledge/**,reports/**,meetings/sessions/**}",
+      "output_mode": "content",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qhobmhq6/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — S0\n\n- Intake ID: INTAKE-2026-10-30-csv-export\n- Date: 2026-10-30\n- Requested by / owner: hai@eagodi.com (owner confirmation pending)\n- Status: INTAKE PENDING (probable DUPLICATE of SL-2, awaiting owner)\n- Lane: normal\n\n## 1. Request (verbatim)\n\n> Our customers want to export invoic"
+    }
+  }
+]

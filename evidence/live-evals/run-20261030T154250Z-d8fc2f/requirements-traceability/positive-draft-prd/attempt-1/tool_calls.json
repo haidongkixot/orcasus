@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls meetings docs/agent-ops 2>/dev/null; git log --oneline -5",
+      "description": "List meeting records and recent commits"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat meetings/CURRENT_MEETING.json; echo ---; cat tickets/TICKET-12.md; echo ---; grep -rn -i \"export\" projects/demo/PRD.md projects/demo/BACKLOG.md tickets/ | head -20; ls tickets",
+      "description": "Read current meeting pointer, ticket, and export mentions"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "2026-10-29|yesterday|owner notes",
+      "-i": true,
+      "glob": "!.claude/**",
+      "output_mode": "files_with_matches"
+    }
+  }
+]

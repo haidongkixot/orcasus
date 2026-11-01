@@ -1,0 +1,47 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "change-intake",
+  "case_id": "negative-conceptual-question",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "What is the difference between frontend and backend code?",
+  "assertions": [
+    {
+      "text": "Answers the question plainly; no intake record or classification ritual.",
+      "verdict": "PASS",
+      "evidence_quote": "**Frontend** code runs on the user's device, usually in the browser or a mobile app. It handles what the user sees and interacts with:",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The answer starts with the explanation right away. It has no intake record, no classification step and no tool calls, and it gives a clear explanation of frontend versus backend.",
+        "at": "2026-10-30T15:53:13+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 10.9,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {},
+  "num_turns": 1,
+  "cost_usd": 0.1216996,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke change-intake; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

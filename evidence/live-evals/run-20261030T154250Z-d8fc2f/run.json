@@ -1,0 +1,170 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "started_utc": "20261030T154250Z",
+  "claude_version": "2.1.314 (Claude Code)",
+  "model": "default",
+  "platform": "Linux 6.18.44-fc-v185",
+  "python": "3.13.17",
+  "orcasus_commit": "f27550ecd43ab59bd9da35e4332a22da4c3e18bb",
+  "args": {
+    "skill": [
+      "change-intake",
+      "closeout-report",
+      "efficient-testing",
+      "governance-audit",
+      "project-discovery",
+      "requirements-traceability",
+      "team-debate",
+      "vertical-slice-delivery"
+    ],
+    "case": null,
+    "smoke": true,
+    "repeats": 1,
+    "budget_total": 8.0,
+    "budget_per_run": 1.0,
+    "max_runs": 0,
+    "max_turns": 25,
+    "timeout": 900,
+    "model": null,
+    "claude_bin": "claude",
+    "out": "/home/user/orcasus/evidence/live-evals",
+    "dry_run": false
+  },
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Agent",
+    "SendMessage",
+    "TodoWrite",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)",
+    "Bash(git show *)",
+    "Bash(ls *)",
+    "Bash(python3 scripts/*)",
+    "Bash(node --test *)",
+    "Bash(npm test *)"
+  ],
+  "planned_attempts": 16,
+  "finished_utc": "20261030T155231Z",
+  "reported_spend_usd": 3.9749,
+  "results": [
+    {
+      "skill": "change-intake",
+      "case_id": "positive-new-feature",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.31539399999999995
+    },
+    {
+      "skill": "change-intake",
+      "case_id": "negative-conceptual-question",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1216996
+    },
+    {
+      "skill": "closeout-report",
+      "case_id": "positive-finish-slice",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.35357750000000004
+    },
+    {
+      "skill": "closeout-report",
+      "case_id": "negative-audit-someone-else",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1850164
+    },
+    {
+      "skill": "efficient-testing",
+      "case_id": "positive-plan-tests",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.33566050000000003
+    },
+    {
+      "skill": "efficient-testing",
+      "case_id": "negative-requirements",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.38583140000000005
+    },
+    {
+      "skill": "governance-audit",
+      "case_id": "positive-audit-pr",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1825021
+    },
+    {
+      "skill": "governance-audit",
+      "case_id": "negative-own-closeout",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1529903
+    },
+    {
+      "skill": "project-discovery",
+      "case_id": "positive-new-integration",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.34700830000000005
+    },
+    {
+      "skill": "project-discovery",
+      "case_id": "negative-typo",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1391101
+    },
+    {
+      "skill": "requirements-traceability",
+      "case_id": "positive-draft-prd",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1797924
+    },
+    {
+      "skill": "requirements-traceability",
+      "case_id": "negative-elicitation-from-scratch",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1356572
+    },
+    {
+      "skill": "team-debate",
+      "case_id": "positive-architecture-choice",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.174741
+    },
+    {
+      "skill": "team-debate",
+      "case_id": "negative-obvious-choice",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1535787
+    },
+    {
+      "skill": "vertical-slice-delivery",
+      "case_id": "positive-build-slice",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.32831050000000006
+    },
+    {
+      "skill": "vertical-slice-delivery",
+      "case_id": "negative-plan-only",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.4840425
+    }
+  ],
+  "not_run": 0
+}

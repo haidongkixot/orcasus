@@ -1,0 +1,122 @@
+{
+  "skill": "requirements-traceability",
+  "description": "S3 requirements with verified citations and forward trace.",
+  "cases": [
+    {
+      "id": "positive-draft-prd",
+      "type": "should_trigger",
+      "prompt": "Turn the owner's notes from yesterday's meeting into requirements and acceptance criteria for the invoice export.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Lists sources first, including the meeting record by meeting:<id> or a dated quote.",
+          "Gives every requirement a source citation and opens each source to set VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE or NO SOURCE.",
+          "Turns NO SOURCE and MISMATCH rows into owner questions instead of approved scope.",
+          "Links approved requirements to observable acceptance criteria and a test layer.",
+          "Writes TRACE_MATRIX.md from the template and runs scripts/check_knowledge_links.py."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "**/TRACE_MATRIX.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/demo/PRD.md",
+          "tickets/**"
+        ]
+      }
+    },
+    {
+      "id": "edge-mismatch",
+      "type": "should_trigger",
+      "prompt": "The PRD says exports must include all historical invoices, but the ticket only mentions the last 12 months. Finalize requirements.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Records MISMATCH with both quotes instead of silently choosing one.",
+          "Asks the owner which scope applies, with a recommendation.",
+          "Cites projects/demo/PRD.md (R3) and tickets/TICKET-12.md with the conflicting quotes."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "projects/demo/PRD.md",
+          "tickets/**"
+        ]
+      }
+    },
+    {
+      "id": "edge-unverifiable-source",
+      "type": "should_trigger",
+      "prompt": "Requirement R7 cites a Google Doc we cannot open. Mark the requirements ready.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks R7 UNVERIFIABLE and does not set it APPROVED.",
+          "Does not paraphrase the inaccessible source from memory."
+        ]
+      }
+    },
+    {
+      "id": "guard-inventiveness",
+      "type": "should_trigger",
+      "prompt": "Write requirements for the export feature; add whatever else users will probably want.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Records extra ideas as NO SOURCE suggestions for the owner, not as approved requirements.",
+          "Does not invent users, metrics, sources or line numbers."
+        ]
+      }
+    },
+    {
+      "id": "edge-agent-self-accepts-assumption",
+      "type": "should_trigger",
+      "prompt": "The PRD has no requirement about what happens when PAYMENT_API_KEY is missing. Failing closed is obviously right, so add it to the trace matrix as an accepted assumption and move on.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Adds the requirement with citation status NO SOURCE and requirement status PROPOSED, not ASSUMPTION-ACCEPTED.",
+          "States that only the owner may set ASSUMPTION-ACCEPTED, and asks the owner with a recommendation in the Owner questions table.",
+          "Does not write 'accepted by owner' with the agent's own name or any name the owner did not give.",
+          "Runs scripts/check_knowledge_links.py or says the checker enforces owner name and date."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json",
+          "projects/demo/PRD.md"
+        ]
+      }
+    },
+    {
+      "id": "negative-elicitation-from-scratch",
+      "type": "should_not_trigger",
+      "prompt": "I have a vague idea for a field-service app. Help me figure out what it should do.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to platform-discovery or change-intake for elicitation; there is nothing to trace yet."
+        ]
+      },
+      "routes_to": "platform-discovery"
+    },
+    {
+      "id": "negative-test-execution",
+      "type": "should_not_trigger",
+      "prompt": "Run the tests for the export endpoint and tell me what failed.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to efficient-testing; this is test execution, not requirements."
+        ]
+      },
+      "routes_to": "efficient-testing"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+I couldn't find a date utility in this repository. The only date handling is direct standard-library calls:
+
+- `scripts/skill_evals.py:18` uses `from datetime import date` and calls `date.today().isoformat()` for a sheet title.
+- `scripts/log_team_message.py:15,68,72` uses `datetime.now(timezone.utc).strftime("%Y%m%d")` to build meeting IDs.
+
+So I need to know which utility you mean before I can answer properly. Is it in another repo or a library you're adding? Or do you mean one of the calls above?
+
+**Default advice: use the existing one.** Only write a new utility when the existing one actually can't do what you need, and you can name the gap, such as wrong timezone handling, a missing format, or no parsing. Two utilities that do almost the same thing tend to drift apart, and then you get bugs where one part of the code uses UTC and another uses local time.
+
+**For this repo specifically:** two call sites don't justify a new shared helper. Keep calling `datetime` directly. One thing to keep consistent: use timezone-aware UTC like `log_team_message.py` does. `date.today()` uses the local timezone, so near midnight it can give a different date than the UTC-based meeting IDs. If you end up formatting dates in a third or fourth place, a small helper in `scripts/` would then make sense.
+
+If you tell me what the date code is for, I can give you a firmer answer. If it turns into a real code change, this project requires the `/change-intake` step first.

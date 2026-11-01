@@ -1,0 +1,91 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "closeout-report",
+  "case_id": "positive-finish-slice",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Slice SL-2 is done. Write the closeout.",
+  "assertions": [
+    {
+      "text": "Lists files from git diff, not memory, and flags files outside the intake scope contract.",
+      "verdict": "PASS",
+      "evidence_quote": "NOT VERIFIED. `git diff --name-only master...feat/csv-export` and `git status` could not run because Bash is denied in this session, and the branch does not exist locally either way.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent never produced a real git diff. It tried to run git through Bash, the shell was denied, and the branch it would have diffed does not exist. Instead of listing files from memory, it marked the file list NOT VERIFIED, named the exact git command it would have used, and confirmed by reading `src/` and `test/` that no SL-2 changes exist. It also addressed the scope-contract check head-on: \"No intake scope contract exists, so out-of-scope files cannot be checked.\" This is a judgement call. A strict reading could fail it because no diff was listed, but I passed it because the agent kept to the intent of the assertion: it relied on git and repository evidence rather than recall, and it said plainly why the scope check couldn't be done.",
+        "at": "2026-10-30T15:54:13+00:00"
+      }
+    },
+    {
+      "text": "Includes all eight sections, with 'Intentionally not done / omitted' present and 'None.' written explicitly if empty.",
+      "verdict": "PASS",
+      "evidence_quote": "## 2. Intentionally not done / omitted\n\n| Item | Reason | Owner aware? |\n|---|---|---|\n| CSV export endpoint/function | No implementation found in `src/` on the checked-out branch",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "All eight sections are in the report: 1 Summary, 2 Intentionally not done / omitted, 3 Files touched, 4 Tests and validation run, 5 Evidence trace, 6 Risks and known gaps, 7 Skipped validation, 8 Next actions and handoff. Section 2 has entries in it, so 'None.' wasn't needed.",
+        "at": "2026-10-30T15:54:17+00:00"
+      }
+    },
+    {
+      "text": "Records actual commands, exit codes and PASS/FAIL/SKIPPED/BLOCKED/NOT RUN counts, plus capture counts against the budget.",
+      "verdict": "PASS",
+      "evidence_quote": "| `node --test` | — | — | 0 | 0 | 0 | 1 | — |\n\n- `node --test` was BLOCKED because shell execution was denied. Even if it ran, no export test exists to run.\n- Screenshot / trace / video counts vs approved budget: 0 / 0 / 0 captured.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The closeout has a test table that names the actual command (`node --test`) and gives PASS, FAIL, SKIPPED and BLOCKED counts. The exit code and NOT RUN cells are blank (\"—\"), which fits a command that never ran, and the report says plainly that it was blocked. It also gives screenshot, trace and video capture counts (0/0/0) against the budget, which is the default of 0 because no test plan exists. Given that the run was blocked, the report records commands, exit status, counts and captures as honestly as it could.",
+        "at": "2026-10-30T15:54:25+00:00"
+      }
+    },
+    {
+      "text": "Traces each request item to files, check and evidence at a commit SHA.",
+      "verdict": "FAIL",
+      "evidence_quote": "| CSV export of invoices from the billing page (`BACKLOG.md:6`) | none found | none | none | — | NOT DONE |",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The report includes an evidence-trace table with columns for files, check, evidence and commit SHA. But every row says \"none\" for files, check and evidence, and \"—\" for the SHA. The head SHA is explicitly \"NOT RECORDED\", even though the agent read .git/HEAD and could have read refs/heads/master to get it. Calling SL-2 not done is honest, but no request item is actually traced to files, a check and evidence at a commit SHA, so the assertion does not hold.",
+        "at": "2026-10-30T15:54:37+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 51.6,
+  "status": "RAN",
+  "skills_invoked": [
+    "closeout-report"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Bash": 1,
+    "Grep": 3,
+    "Glob": 3,
+    "Read": 8,
+    "Write": 1
+  },
+  "num_turns": 19,
+  "cost_usd": 0.35357750000000004,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "reports/SL-2-closeout.md": "A"
+  },
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "expected closeout-report; invoked ['closeout-report']"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

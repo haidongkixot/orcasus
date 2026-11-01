@@ -1,0 +1,14 @@
+I can't write this up yet. Nothing in this repository shows what you did, and a closeout can only describe work the evidence supports.
+
+Here's what the repository shows:
+- **Git:** there is one branch (`master`) with one commit, `3a5af05 baseline`, which adds the Orcasus package files. There are no later commits, no other branches and no stashes.
+- **Working tree:** clean, with no uncommitted changes.
+- **Records:** none of the records a finished task would leave exist. There is no `docs/agent-ops/` (intake, readiness or test plan) and no `reports/`.
+
+So the task may have been done somewhere else, such as another clone, another branch or worktree, or a remote you haven't fetched. Or it may not have left anything in git.
+
+To write it up, I need one of these:
+1. **Where the work is:** a branch, PR, commit range or path, and I'll trace it from the git history.
+2. **A description from you:** what you were asked to do, what you changed, and which tests or checks you ran and their results.
+
+Once I have that, I'll write it with `/closeout-report` into `reports/`. That covers what changed, what you deliberately left out, files touched, checks run with their real results, risks and what was not verified. Anything I can't confirm from evidence will be marked NOT VERIFIED rather than DONE.

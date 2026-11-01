@@ -1,0 +1,79 @@
+
+--- new file: docs/agent-ops/TEST_PLAN.md ---
+# TEST PLAN — Invoice export endpoint and button (SL-2 / TICKET-12)
+
+Status: DRAFT — not approved. Blocked on the owner questions in section 2.
+Author: Main Agent, 2026-10-30. Skill: `/efficient-testing` v1.3.0.
+
+## 0. Gate status (read first)
+| Gate | State | Evidence |
+|---|---|---|
+| S0 intake (`docs/agent-ops/INTAKE_RECORD.md`) | MISSING | file does not exist |
+| Discovery (`READINESS_MATRIX.md`, `DISCOVERY_SUMMARY.md`) | MISSING | files do not exist |
+| Requirements traceability | NOT DONE | the sources conflict, see Q1 |
+| Endpoint code | NOT FOUND | `src/server.js` routes only `GET /invoices`; the backlog says `feat/csv-export` is IN PROGRESS, but I did not inspect that branch (no shell access) |
+| Button / UI code | NOT FOUND | the repo has no frontend (`src/` holds only `invoices.js`, `payments.js`, `server.js`) |
+
+This plan is written against the intended behaviour. Test cases are final only after the owner answers section 2 and the intake and discovery records exist.
+
+## 1. Resources inspected
+- Runner: `node --test test/` (`package.json` `scripts.test`), Node >= 20, built-in `node:test` + `node:assert/strict`. There are no other test dependencies. **Reuse it; add nothing.**
+- Existing tests: `test/invoices.test.js` has 3 unit tests (total, void permission, org scoping).
+- HTTP surface: `src/server.js` exports the `http.Server` unscoped, auth = `x-org-id` header (missing → 401), in-memory `invoices` array.
+- Domain: `STATUSES = draft, sent, paid, void` (`src/invoices.js:2`). The only role named in code is `admin` (`src/invoices.js:11`). `member` appears only in tests. PRD users: finance staff and org admins.
+- UI test tooling: none (no Playwright, jsdom or browser config).
+- Baseline run: NOT RUN (shell denied this session).
+
+## 2. Owner questions (blocking)
+| # | Question | Why it blocks tests |
+|---|---|---|
+| Q1 | Date window: does the export cover **all historical invoices** (PRD R3, `projects/demo/PRD.md:12`) or only the **last 12 months** (`tickets/TICKET-12.md`)? | This is a direct conflict and decides the core assertion. I have not picked one. |
+| Q2 | Which roles may export? Code knows `admin` (and `member` in tests); the PRD names "finance staff" with no matching role in code. | Decides the expected status for each role (200 vs 403). |
+| Q3 | Which statuses are included: `draft`, `sent`, `paid`, `void`? | Decides the row-set assertion. |
+| Q4 | Format and columns: CSV (backlog SL-2) or a spreadsheet file (ticket)? Column order, header row, date format, encoding/BOM? | Decides the exact body assertion. |
+| Q5 | Currency (R4): invoices carry no currency field today. Is there a currency column? From where? | This may need a data-model change, which goes back to discovery. |
+| Q6 | Is there a frontend at all, and where does the button live? | Without one, the component and E2E layers are BLOCKED. |
+| Q7 | Is there a size limit or streaming requirement (row cap, timeout)? | Decides whether a volume test is needed. |
+
+## 3. Acceptance criteria → cheapest layer
+Values in ⟨⟩ depend on the owner answers.
+
+| AC | Behaviour | Layer | Test (exact assertion) |
+|---|---|---|---|
+| AC1 | Export contains only the caller's org (R1) | Unit + API | Unit: the export builder given org-a and org-b data returns only org-a ids. API: `GET /invoices/export` with `x-org-id: org-a` → **200**, body has no org-b id. |
+| AC2 | Missing org header | API | → **exactly 401**, empty body, no CSV content-type. |
+| AC3 | Role permission ⟨Q2⟩ | API | Allowed role → **exactly 200** plus the expected rows (not "≠ 403"). Each disallowed role → **exactly 403**. Test every role value in the domain. |
+| AC4 | Date window ⟨Q1⟩ | Unit | Use an injected fixed clock. Invoices at the boundary (exactly 12 months, plus or minus 1 day) are in or out as decided. If Q1 = all-history, assert that an old invoice is included. |
+| AC5 | Status filter ⟨Q3⟩ | Unit | One fixture per status (`draft`, `sent`, `paid`, `void`). Assert the exact included set. |
+| AC6 | Row content and format ⟨Q4, Q5⟩ | Unit | Exact header line plus exact row string. `totalCents` comes from `invoiceTotal` (2×1500 → 3000, rendered per Q4). Currency per Q5. |
+| AC7 | Spreadsheet-safe escaping | Unit | Values containing `,` `"` and newlines are quoted correctly. Cells starting with `=` `+` `-` `@` are neutralised (formula/CSV injection). |
+| AC8 | Download headers | API | `content-type: text/csv; charset=utf-8` (or per Q4) and `content-disposition: attachment; filename="…"`. |
+| AC9 | Empty result | Unit + API | → **200**, header row only (or per Q4). Not 404, not 500. |
+| AC10 | Wrong method / route | API | `POST /invoices/export` → the exact status the code defines (currently the 404 fallthrough). Document it. |
+| AC11 | Button triggers the download ⟨Q6⟩ | Component | Button found by role/name "Export invoices". Click sends a request carrying the org header. Shows a disabled/loading state during the request. Shows an error message on 401/403/500. Keyboard activation works. **BLOCKED: no UI or component tooling.** |
+| AC12 | Critical path end to end | E2E (1 test max) | Only if a UI exists and the component layer can't prove the download wiring. **BLOCKED / likely NOT NEEDED.** |
+
+No assertion is repeated across layers unless it catches a different failure. Unit tests cover the rules; API tests cover wiring, auth and headers.
+
+## 4. Files (proposed)
+- `test/invoice-export.test.js`: unit tests for the export builder (AC1, AC4–AC7, AC9).
+- `test/invoice-export.api.test.js`: starts `server` on port 0 in `before` and closes it in `after`, then uses `fetch` (AC1–AC3, AC8–AC10). Needs a way to seed the in-memory `invoices` array, either an exported seed function or a factory. That is a testability change to agree with the backend owner.
+- Fixtures: synthetic only, inline. No production data.
+
+## 5. Capture budget
+Screenshots 0 · traces 0 · videos 0. No visual question is named, so no capture is requested.
+
+## 6. Run order
+1. Baseline: `npm test` (the existing 3 tests must pass first).
+2. Focused: `node --test test/invoice-export.test.js test/invoice-export.api.test.js`.
+3. Full: `npm test` before review.
+Report the exact commands, exit codes, durations and PASS/FAIL/SKIPPED/BLOCKED/NOT RUN counts in the closeout.
+
+## 7. Current results
+All tests: NOT RUN. AC11 and AC12: BLOCKED (Q6). Baseline: NOT RUN (no shell this session).
+
+## 8. Risks and gaps
+- The PRD and the ticket conflict on the date window (Q1). A test written against either one encodes an unapproved requirement.
+- Possible data-model gap for currency (Q5).
+- The `feat/csv-export` branch was not inspected. An existing implementation may differ from this plan.
+- No dependency additions are proposed.

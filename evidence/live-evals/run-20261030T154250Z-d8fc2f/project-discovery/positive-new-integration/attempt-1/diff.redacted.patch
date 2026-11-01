@@ -1,0 +1,69 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — S0
+
+- Intake ID: INT-2026-10-30-stripe-checkout
+- Date: 2026-10-30
+- Requested by / owner: hai@eagodi.com
+- Status: INTAKE PENDING (CONFLICTS with approved PRD non-goal; owner decision required)
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> Add Stripe payments to the checkout.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | Stripe integration for charging (replace the stub `chargeInvoice`) | `src/payments.js:1-8`, `README.md:8`, `decisions/ADR-0001-modular-monolith.md:8` | integration | contract tests + failure-path tests; real Stripe test-mode account and key scopes verified | integration, security | **Yes**: new credentials, scopes and paid usage |
+| D2 | A "checkout" flow that uses D1 (route or UI to pay an invoice) | `src/server.js:6-19` (only `GET /invoices`; there is no checkout route or UI) | backend-api, plus auth-permission-security (who may pay, org isolation, webhook signature trust) | unit + API tests; negative/authorization tests; security review | QA, security | **Yes** |
+| D3 | Persist the payment outcome (`invoice.status` → `paid`, store the Stripe payment reference) | `src/invoices.js:2,8-13`, `src/server.js:4` (in-memory array, no DB) | backend-api; becomes data-schema-migration if a persistent store is added | unit tests on the status transition; migration plan if a store is added | QA (+ data, security if schema) | Yes if a schema is added |
+
+- Governing class (highest risk): **auth-permission-security + integration** (payments, external credentials, webhook trust). Owner approval is required before work starts.
+- Suggestions recorded but NOT in scope: Stripe Checkout (hosted page) vs Payment Element (embedded); refunds; saved payment methods; multi-currency (relates to PRD R4); webhooks for asynchronous confirmation.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1–D3 | `projects/demo/PRD.md`, `projects/demo/BACKLOG.md`, `decisions/`, `tickets/`, `src/`, `test/`, `README.md` | **CONFLICTS** | `projects/demo/PRD.md:15-16`: "Non-goals: Payments collection in this phase." |
+| D1 | same | EXTENDS | `src/payments.js:1-7`: stub provider client; "no sandbox account is configured for this repository yet" |
+| D1–D3 | `docs/agent-ops/` (did not exist before this record), `reports/` (does not exist), `meetings/sessions/` (does not exist) | NEW within these sources | — |
+| D1–D3 | `knowledge/INDEX.md`, open PRs/issues, remote branches | **UNKNOWN** | INDEX.md not read in this pass; there is no git remote, so PRs and issues can't be searched. Local branches: only `master`. Note: BACKLOG lists `feat/csv-export` as IN PROGRESS, but that branch does not exist locally. |
+
+## 4. Intent and value (owner-confirmed)
+
+Draft only. None of this is confirmed.
+- Problem: UNKNOWN. The PRD problem is about invoice listing and export (`PRD.md:3-4`), not collecting payment.
+- Who is affected: UNKNOWN. Is it the paying customers of an organization? They are not a user group in `PRD.md:6-7`.
+- Expected value / success signal / urgency: not stated, so none are invented here.
+- Non-goals: UNKNOWN.
+- Owner confirmation: PENDING
+- Domain values listed before any policy question:
+  - Invoice statuses: `draft`, `sent`, `paid`, `void` (`src/invoices.js:2`)
+  - Roles: only `admin` is referenced (`src/invoices.js:11`). The PRD names "finance staff" and "organization admins" (`PRD.md:7`). No role list is defined in code, so the full role set is **UNKNOWN**.
+  - Tenants: organizations, keyed by the `x-org-id` header (`src/server.js:9`). There is no tenant registry.
+
+## 5. Scope contract
+
+- Expected files/modules (provisional): `src/payments.js`, `src/server.js`, `src/invoices.js`, new tests under `test/`, `.env.example` (variable names only), `README.md`.
+- Out of scope until the owner decides: any checkout UI (none exists), refunds, subscriptions, a persistent datastore.
+- Approval path: owner approval of (a) overriding or amending the PRD non-goal, (b) Stripe test-mode account and key provisioning, (c) the policy answers below; then security review.
+- Next gate: `/project-discovery` (credentials, Stripe account, runtime, test runner), then `/requirements-traceability` (amend the PRD), then `/team-debate` (Checkout Session vs Payment Element; webhook design), then `/efficient-testing`.
+
+## Open questions for the owner
+
+1. The PRD lists "Payments collection in this phase" as a non-goal (`PRD.md:16`). Should this request override or amend that, or should it be deferred?
+2. What "checkout" means here: there is no checkout route or UI in this repo. Is it paying an invoice (`chargeInvoice`), or is it some other surface?
+3. Problem, payer and success signal for this work.
+4. Stripe account: is there a test-mode account, and who provisions a restricted key and webhook secret? `src/payments.js:2` says no sandbox exists.
+5. Policy, for each value:
+   - Which invoice statuses can be paid: `draft`, `sent`, `paid` (no; prevents double charge), `void` (no)?
+   - Which roles may start a payment: `admin`, finance staff, external payer?
+   - Are partial payments allowed?
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|

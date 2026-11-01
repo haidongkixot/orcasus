@@ -1,0 +1,65 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — S0
+
+- Intake ID: INTAKE-2026-10-30-csv-export
+- Date: 2026-10-30
+- Requested by / owner: hai@eagodi.com (owner confirmation pending)
+- Status: INTAKE PENDING (probable DUPLICATE of SL-2, awaiting owner)
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> Our customers want to export invoices to CSV. Add that to the billing page.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | CSV export endpoint for an org's invoices | `src/server.js:8-17` (only route: `GET /invoices`, org from `x-org-id` header), `src/invoices.js:15-17` (`listInvoices` org filter) | backend-api (provisional; becomes auth-permission-security if export is role-restricted) | unit + API/integration tests, incl. cross-org negative test | QA (+ security if role-gated) | No (Yes if role-gated) |
+| D2 | Export control on the billing page | No billing page or frontend code found (Glob `src/**`, `app/**`: only `server.js`, `invoices.js`, `payments.js`) | frontend-logic (provisional) | unit/component tests + build | QA | No |
+
+- Governing class (highest risk): backend-api provisionally; **auth-permission-security** if the owner restricts export by role (approval + security review required).
+- Suggestions recorded but NOT in scope: none.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1, D2 | projects/, decisions/, tickets/, src/, test/, README.md (Grep for invoice/billing/csv/export) | **DUPLICATE** | `projects/demo/BACKLOG.md:6`: SL-2 "CSV export of invoices from the billing page", IN PROGRESS on branch `feat/csv-export` |
+| D1 | as above | **CONFLICTS** (within existing records) | `projects/demo/PRD.md:12` R3 "Exports include all historical invoices", but `tickets/TICKET-12.md:6` says "Only the last 12 months are needed" |
+| D1, D2 | git branches/status, open PRs | **UNKNOWN** | No shell access in this session, so I couldn't inspect `feat/csv-export` or open PRs |
+| D1, D2 | knowledge/INDEX.md, reports/, meetings/sessions/, docs/agent-ops/ | NO MATCH found by Grep (I didn't read these files individually) | — |
+
+## 4. Intent and value (draft, not confirmed)
+
+- Problem (draft): users rebuild invoice lists by hand in spreadsheets (`projects/demo/PRD.md:4`).
+- Who is affected: **conflicting sources**. The request says "customers". PRD:7 says "Finance staff and organization admins". TICKET-12:3 says the Finance lead.
+- Expected value / success signal: not stated by the owner, so I haven't invented one.
+- Urgency / deadline: none stated.
+- Non-goals: none stated.
+- Owner confirmation: PENDING
+- Domain values listed before any policy question:
+  - Roles: `admin` (`src/invoices.js:11`), `member` (`test/invoices.test.js:12`). They aren't defined in one place, so the full role list is **UNKNOWN**.
+  - Statuses: `draft`, `sent`, `paid`, `void` (`src/invoices.js:2`).
+  - Tenants: scoped by `orgId` (`src/invoices.js:16`), taken from the `x-org-id` header (`src/server.js:9`).
+
+## 5. Scope contract (proposed, not active)
+
+- Expected files/modules: `src/server.js`, `src/invoices.js`, `test/invoices.test.js`, plus a billing page that doesn't exist yet.
+- Out of scope: payments (`src/payments.js`), void UI (SL-3).
+- Approval path: decided by the owner's answers in section 7.
+- Next gate: once the owner answers, either resume SL-2 on `feat/csv-export` or run `/project-discovery`, then `/requirements-traceability` to resolve R3 vs TICKET-12.
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
+
+## 7. Open questions for the owner
+
+1. SL-2 is already IN PROGRESS on `feat/csv-export`. Should this request continue that work, or is it something separate?
+2. Date range: should exports cover all history (PRD R3) or the last 12 months (TICKET-12)?
+3. Who may export, per role: `admin`, `member` and any other roles? Which statuses go in the export: `draft`, `sent`, `paid`, `void`?
+4. "Customers" vs finance staff/admins: who is the intended user?
+5. There's no billing page in the repo. Is the UI in another repository, or should the page be built here?

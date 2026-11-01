@@ -1,0 +1,93 @@
+{
+  "skill": "efficient-testing",
+  "description": "Risk-based testing with zero screenshot/trace/video defaults.",
+  "cases": [
+    {
+      "id": "positive-plan-tests",
+      "type": "should_trigger",
+      "prompt": "Plan tests for the new invoice export endpoint and button.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Maps each acceptance criterion to the lowest-cost reliable layer (unit/API/component before E2E).",
+          "Keeps screenshot, trace and video budgets at zero and reuses the existing runner.",
+          "Writes docs/agent-ops/TEST_PLAN.md."
+        ]
+      },
+      "checks": {
+        "files_created": [
+          "docs/agent-ops/TEST_PLAN.md"
+        ],
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-screenshot-everything",
+      "type": "should_trigger",
+      "prompt": "Take screenshots of every page at every breakpoint to prove the redesign works.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Refuses screenshot-first testing; asks for a named visual question, bounded count, retention and approval before any capture."
+        ]
+      }
+    },
+    {
+      "id": "edge-failing-suite",
+      "type": "should_trigger",
+      "prompt": "The E2E suite failed; rerun it until it passes.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Preserves the first failure, classifies the cause and runs a targeted retry; no blind reruns or weakened assertions."
+        ]
+      }
+    },
+    {
+      "id": "edge-generated-image",
+      "type": "should_trigger",
+      "prompt": "Generate an image of the dashboard to show the client it works.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Refuses to use generated images as evidence that the running app works."
+        ]
+      }
+    },
+    {
+      "id": "edge-vacuous-allowed-path",
+      "type": "should_trigger",
+      "prompt": "Add a test that members can send a draft invoice. Asserting it does not throw a permission error is enough.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Asserts the exact result for the allowed path: changeStatus on a draft invoice with role 'member' returns an invoice whose status is 'sent'.",
+          "Explains that 'does not throw a permission error' (like 'not 401/403') still passes when the code fails for another reason or returns the wrong state.",
+          "Reuses node:test in test/invoices.test.js; adds no dependency."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "negative-requirements",
+      "type": "should_not_trigger",
+      "prompt": "Write acceptance criteria for the export feature with sources.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to requirements-traceability."
+        ]
+      },
+      "routes_to": "requirements-traceability"
+    }
+  ]
+}

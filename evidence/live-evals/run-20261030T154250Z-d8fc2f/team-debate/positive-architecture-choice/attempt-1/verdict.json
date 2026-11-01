@@ -1,0 +1,93 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "team-debate",
+  "case_id": "positive-architecture-choice",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Should our new platform be a modular monolith or microservices? Get the team to decide.",
+  "assertions": [
+    {
+      "text": "Runs project-discovery first and starts Team Secretary with an active meeting record.",
+      "verdict": "FAIL",
+      "evidence_quote": "I haven't started the team debate yet. Two things need your answer first.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent never invoked the project-discovery skill (\"Skills invoked: none\"). It also did not start a Team Secretary or create an active meeting record, and no files were changed. All it did was some ad-hoc bash exploration before stopping to ask the user questions.",
+        "at": "2026-10-30T15:56:43+00:00"
+      }
+    },
+    {
+      "text": "Collects independent first proposals before peers see each other's views.",
+      "verdict": "FAIL",
+      "evidence_quote": "I haven't started the team debate yet. Two things need your answer first.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent never started the debate, so it collected no proposals, independent or otherwise. It only read files and then asked the user to clarify scope and budget. However reasonable that pause was, the behavior the assertion requires never happened.",
+        "at": "2026-10-30T15:56:48+00:00"
+      }
+    },
+    {
+      "text": "Requires peer challenge, rebuttal and a Devil's Advocate alternative.",
+      "verdict": "PASS",
+      "evidence_quote": "A proper `/team-debate` means a neutral Secretary, at least 4 voters writing independent proposals, challenges and rebuttals, a Devil's Advocate, written ballots and an ADR.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "No debate actually ran, but the agent explicitly treats peer challenges, rebuttals and a Devil's Advocate as required parts of a valid team decision. It also refused to run a cut-down debate without them (\"wouldn't be a real decision\"). That meets the assertion that these elements are required.",
+        "at": "2026-10-30T15:56:55+00:00"
+      }
+    },
+    {
+      "text": "Scores with an explicit weighted matrix and collects explicit FINAL_BALLOT messages; never infers votes from silence.",
+      "verdict": "FAIL",
+      "evidence_quote": "I haven't started the team debate yet. Two things need your answer first.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent stopped before running any debate. It produced no weighted scoring matrix and collected no FINAL_BALLOT messages. It did refuse to make up matrix numbers, but the behavior the assertion requires never happened, so this is a FAIL.",
+        "at": "2026-10-30T15:57:05+00:00"
+      }
+    },
+    {
+      "text": "Records the decision state, dissent and revisit triggers in an ADR.",
+      "verdict": "FAIL",
+      "evidence_quote": "I haven't started the team debate yet. Two things need your answer first.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent didn't change or write any files (\"Files changed: none\"), so it produced no ADR recording the decision state, dissent or revisit triggers. Asking the user questions first may have been reasonable, but the behaviour the assertion requires never happened.",
+        "at": "2026-10-30T15:57:09+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 21.5,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Bash": 3
+  },
+  "num_turns": 4,
+  "cost_usd": 0.174741,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected team-debate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

@@ -26,6 +26,8 @@ Map each acceptance criterion to the cheapest reliable layer:
 5. Small critical browser/mobile E2E set.
 6. Visual regression only when explicit visual requirements or a high-risk layout change justify it.
 
+Assert the exact expected result on allowed paths too. For authorization, a test that only checks the response "is not 401/403" passes when the handler crashes with 500; assert the exact status (200, 201, 204 or a named, explained error) and, where cheap, the body. If an allowed path cannot reach success in the test environment (for example a missing storage token), assert that exact error and record why in the test plan.
+
 Prefer semantic role/name/label assertions, API responses, DOM state, accessibility, console/network errors and geometry where appropriate. Avoid brittle selectors and screenshots when behavioral assertions prove the requirement more cheaply. Don't duplicate identical assertions across layers unless they cover distinct failure modes.
 
 ## Capture policy

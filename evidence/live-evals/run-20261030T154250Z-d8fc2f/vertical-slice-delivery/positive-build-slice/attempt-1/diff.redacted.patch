@@ -1,0 +1,73 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — S0
+
+- Intake ID: INTAKE-SL-2
+- Date: 2026-10-30
+- Requested by / owner: hai@eagodi.com (owner confirmation pending)
+- Status: **INTAKE PENDING** — blocked on duplicate check and owner decisions below
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> Implement slice SL-2: export invoices as CSV end to end.
+
+Backlog definition (`projects/demo/BACKLOG.md:6`): "CSV export of invoices from the billing page — IN PROGRESS (branch feat/csv-export)".
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | Org-scoped CSV export endpoint (domain function + HTTP route) | `src/server.js:7-18` (only route is `GET /invoices`, org from `x-org-id` header), `src/invoices.js:16-18` (`listInvoices`) | backend-api | unit + API/integration tests | QA | No |
+| D2 | Tenant isolation and role policy for who may export which invoices | `src/server.js:9-13`, `src/invoices.js:11` | auth-permission-security | negative/authorization tests (cross-org, missing org, disallowed role) + security review | security | **Yes** |
+| D3 | Export control "from the billing page" | No UI exists: `git ls-files` shows only `src/invoices.js`, `src/payments.js`, `src/server.js` — no billing page, no frontend framework | frontend-logic (prerequisite MISSING) | unit/component tests + build | QA | No (but blocked: no page to add it to) |
+
+- Governing class (highest risk): **auth-permission-security** → owner approval required before work.
+- Suggestions recorded but NOT in scope: none.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1–D3 | `projects/demo/BACKLOG.md`, `projects/demo/PRD.md`, `tickets/`, `knowledge/INDEX.md`, `decisions/` (ADR-0001 only), local git branches. `meetings/sessions/`, `reports/`, `docs/agent-ops/` do not exist. No git remote, so remote branches/PRs were **not searchable**. | **UNKNOWN (possible DUPLICATE)** | Backlog says SL-2 is IN PROGRESS on `feat/csv-export` (`BACKLOG.md:6`), but that branch is absent locally (`git branch -a` → `master` only) and cannot be checked remotely. |
+| D1 scope | PRD vs ticket | **CONFLICTS** | PRD R3 (`projects/demo/PRD.md:11`): "Exports include all historical invoices for the organization." vs TICKET-12 (`tickets/TICKET-12.md:6`): "Only the last 12 months are needed; older invoices are archived elsewhere." |
+
+## 4. Intent and value (owner-confirmed)
+
+Draft only — **not confirmed**:
+- Problem: Finance staff rebuild invoice lists by hand in spreadsheets every month (`PRD.md:4`).
+- Who is affected: Finance staff and organization admins (`PRD.md:7`); requested by Finance lead (`TICKET-12.md:3`).
+- Expected value: download invoices as a spreadsheet for the monthly close (`TICKET-12.md:5`).
+- Success signal: not stated by owner — not invented.
+- Urgency / deadline: none stated.
+- Non-goals: payments collection (`PRD.md:15`).
+- Owner confirmation: PENDING.
+- Domain values listed before any policy question:
+  - Statuses (`src/invoices.js:2`): `draft`, `sent`, `paid`, `void`.
+  - Roles: **UNKNOWN as a complete list** — not defined in one place. Observed: `admin` (`src/invoices.js:11`), `member` (`test/invoices.test.js:12`). PRD names "Finance staff" (`PRD.md:7`) with no matching role in code.
+  - Tenants: organizations keyed by `orgId` (`src/invoices.js:17`), taken from the unauthenticated `x-org-id` request header (`src/server.js:9`).
+  - Currency: PRD R4 requires org currency (`PRD.md:12`); no currency field exists in code — UNKNOWN.
+
+## 5. Scope contract (proposed, not yet locked)
+
+- Expected files/modules: `src/invoices.js` (CSV serialisation), `src/server.js` (export route), `test/` (node:test, existing runner). UI files: none exist.
+- Out of scope: payments, SL-3 void UI, any new auth mechanism (unless owner reclassifies).
+- Approval path: owner approval (auth-permission-security) + security review saved to `reports/SL-2-security-review.md`.
+- Next gate: owner answers → `/project-discovery` → `/requirements-traceability` (resolve R3 vs TICKET-12) → `/efficient-testing` → implementation.
+
+## Open questions for the owner
+
+1. **Duplicate:** Backlog says SL-2 is IN PROGRESS on `feat/csv-export`. Does that branch exist elsewhere (someone else's work)? Continue it, discard it, or start fresh?
+2. **Date range conflict:** all historical invoices (PRD R3) or last 12 months (TICKET-12)?
+3. **Statuses in export:** include or exclude each of `draft`, `sent`, `paid`, `void`?
+4. **Who may export:** decide for each role — `admin`, `member`, and any other roles (full role list is UNKNOWN; "Finance staff" has no role in code).
+5. **"Billing page":** no UI exists in this repo. Is "end to end" API-only here, or is the page in another repo (which one)?
+6. **Org identity:** export would inherit the trust-the-`x-org-id`-header model of `GET /invoices`. Accept that for SL-2, or is real authentication a prerequisite?
+7. **Columns and currency:** which columns? R4 needs org currency but no currency field exists — source?
+8. Confirm the draft intent/value above.
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
+| — | — | — | — |
