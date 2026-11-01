@@ -20,7 +20,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import EVIDENCE_DIR, ROOT, iter_attempts, write_json  # noqa: E402
+from common import AUTO_FAIL_MODEL, EVIDENCE_DIR, ROOT, iter_attempts, write_json  # noqa: E402
 
 MIN_ITEMS = 30
 MIN_AGREEMENT = 0.80
@@ -32,7 +32,8 @@ def judged_items(run_dirs):
     items = []
     for path, verdict in iter_attempts(run_dirs):
         for assertion in verdict.get("assertions", []):
-            if assertion.get("judge"):
+            # Human labels measure the LLM judge; deterministic auto-FAILs are not sampled.
+            if assertion.get("judge") and assertion["judge"].get("model") != AUTO_FAIL_MODEL:
                 items.append({"run_id": verdict["run_id"], "skill": verdict["skill"], "case_id": verdict["case_id"],
                               "attempt": verdict["attempt"], "assertion": assertion["text"],
                               "evidence_dir": rel(path.parent), "judge_verdict": assertion["verdict"],

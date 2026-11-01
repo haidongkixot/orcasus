@@ -7,6 +7,12 @@ untrusted data. A PASS must quote evidence that really appears in the material;
 otherwise it is downgraded to UNCLEAR. Judge verdicts count in the scorecard only
 after scripts/live_evals/calibrate.py shows agreement with human labels.
 
+When the deterministic trigger check already failed (the skill under test was
+not invoked, or a negative case invoked it), the case has failed. Its assertions
+are then marked FAIL without a model call, recorded with judge model
+"auto:trigger-fail" so they are never mistaken for, or calibrated as, LLM verdicts.
+--no-auto-fail sends them to the model anyway.
+
   python3 scripts/live_evals/judge.py evidence/live-evals/run-<id> [--model MODEL] [--rejudge]
 """
 from __future__ import annotations
@@ -22,7 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import iter_attempts, write_json  # noqa: E402
+from common import AUTO_FAIL_MODEL, iter_attempts, write_json  # noqa: E402
 
 RUBRIC = """You are grading one assertion about how an AI coding agent handled a task.
 Decide only from the evidence between the BEGIN EVIDENCE and END EVIDENCE markers.
@@ -134,20 +140,39 @@ def parse_judge_output(stdout: str) -> dict:
     raise ValueError("no structured judge output found")
 
 
-def judge_run(run_dirs, call, model, rejudge=False, limit=0) -> dict:
-    counts = {"PASS": 0, "FAIL": 0, "UNCLEAR": 0, "ERROR": 0, "skipped": 0}
+def auto_fail(verdict: dict) -> dict | None:
+    """A FAIL decided by the deterministic trigger check, or None when the model must grade."""
+    trigger = verdict.get("trigger") or {}
+    if trigger.get("verdict") != "FAIL":
+        return None
+    return {"verdict": "FAIL", "evidence_quote": trigger.get("detail", ""),
+            "reason": "trigger check failed, so the case failed; graded without a model call"}
+
+
+def judge_run(run_dirs, call, model, rejudge=False, limit=0, auto=True) -> dict:
+    counts = {"PASS": 0, "FAIL": 0, "UNCLEAR": 0, "ERROR": 0, "skipped": 0, "auto_fail": 0}
     graded = 0
     for path, verdict in iter_attempts(run_dirs):
         if verdict.get("status") != "RAN":
             counts["skipped"] += len(verdict.get("assertions", []))
             continue
         material = build_material(path.parent, verdict)
+        decided = auto_fail(verdict) if auto else None
         changed = False
         for assertion in verdict.get("assertions", []):
             if not rejudge and assertion.get("verdict") not in (None, "PENDING"):
                 continue
             if limit and graded >= limit:
                 break
+            if decided:
+                assertion.update({"verdict": "FAIL", "evidence_quote": decided["evidence_quote"],
+                                  "judge": {"model": AUTO_FAIL_MODEL, "rubric_hash": None,
+                                            "reason": decided["reason"],
+                                            "at": datetime.now(timezone.utc).isoformat(timespec="seconds")}})
+                counts["FAIL"] += 1
+                counts["auto_fail"] += 1  # not in "graded", which counts model calls (and --limit)
+                changed = True
+                continue
             prompt = RUBRIC.format(prompt=verdict["prompt"], assertion=assertion["text"], material=material)
             try:
                 result = check_quote(call(prompt), material)
@@ -174,9 +199,11 @@ def main(argv=None) -> int:
     parser.add_argument("--claude-bin", default="claude")
     parser.add_argument("--rejudge", action="store_true", help="grade assertions that already have a verdict")
     parser.add_argument("--limit", type=int, default=0, help="maximum assertions to grade in this call")
+    parser.add_argument("--no-auto-fail", action="store_true",
+                        help="send assertions of trigger-failed attempts to the model instead of marking them FAIL")
     args = parser.parse_args(argv)
     counts = judge_run(args.run_dirs, lambda prompt: claude_call(prompt, args.model, args.claude_bin),
-                       args.model, args.rejudge, args.limit)
+                       args.model, args.rejudge, args.limit, auto=not args.no_auto_fail)
     print(json.dumps({"rubric_hash": RUBRIC_HASH, **counts}, indent=2))
     print("Judge verdicts count only after calibration: python3 scripts/live_evals/calibrate.py sample ...")
     return 0

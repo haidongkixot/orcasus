@@ -11,6 +11,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from log_team_message import SECRET_PATTERNS, redact_text  # noqa: E402,F401
 
 EVIDENCE_DIR = ROOT / "evidence" / "live-evals"
+# Judge "model" recorded on assertions failed by the deterministic trigger check, without a model call.
+AUTO_FAIL_MODEL = "auto:trigger-fail"
 FIXTURE_DIR = ROOT / "evals" / "fixtures" / "sample-app"
 HOOK_OK = "Orcasus hook runtime: OK"
 HOOK_WARNING = "Orcasus hook runtime: WARNING"
