@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+/* Thai Binh Corporation — slide components. Class prefix: tb- */
+.tb-root{font-family:var(--font-sans);color:var(--text-body);background:var(--surface)}
+.tb-slide-header{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3)}
+.tb-slide-header h2{margin:0;font-size:32px;line-height:41px;font-weight:600;text-transform:uppercase}
+.tb-slide-header .tb-title{display:block;color:var(--text-title)}
+.tb-slide-header .tb-subtitle{display:block;color:var(--text-subtitle)}
+.tb-slide-header img{height:56px;width:auto;flex:none}
+.tb-divider{position:relative;background:var(--royal);color:var(--white);overflow:hidden}
+.tb-divider .tb-num{font-size:70px;line-height:80px;font-weight:700;color:var(--cyan);margin:0}
+.tb-divider .tb-sec{font-size:52px;line-height:62px;font-weight:700;text-transform:uppercase;margin:0;color:var(--white)}
+.tb-card{background:var(--card);border-radius:var(--radius-card);box-shadow:var(--shadow-card);padding:var(--space-3);text-align:center;color:var(--ink)}
+.tb-card h3{margin:0;font-size:27.8px;line-height:34px;font-weight:700;text-transform:uppercase;color:var(--heading)}
+.tb-underline{display:block;width:72px;height:2px;margin:var(--space-1) auto var(--space-2);background:var(--red-signal);position:relative}
+.tb-underline::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:var(--radius-full);background:var(--red-signal)}
+.tb-card p{margin:0;font-size:16px;line-height:27px;font-weight:700;color:var(--ink-soft)}
+.tb-card ul{margin:0;padding-left:1.1em;text-align:left;font-size:16px;line-height:30px;font-weight:700;color:var(--navy-deep)}
+.tb-card li::marker{color:var(--red-signal)}
+.tb-milestone{position:relative;padding-top:var(--space-3)}
+.tb-milestone::before{content:"";position:absolute;left:0;right:0;top:7px;height:2px;background:var(--navy)}
+.tb-milestone .tb-dot{position:absolute;left:var(--space-2);top:0;width:16px;height:16px;border-radius:var(--radius-full);background:var(--white);border:3px solid var(--red-signal);box-sizing:border-box}
+.tb-milestone .tb-year{font-size:23.1px;line-height:28px;font-weight:700;color:var(--heading);margin:var(--space-1) 0 4px}
+.tb-milestone .tb-cap{font-size:11px;line-height:13.5px;font-weight:500;color:var(--ink);margin:0}
+.tb-tag{display:inline-block;background:var(--red-signal);color:var(--white);font-size:17px;line-height:22px;font-weight:500;padding:4px 10px;border-radius:var(--radius-none)}
+.tb-banner{background:var(--ice);color:var(--navy);text-align:center;font-size:17px;line-height:22px;font-weight:500;text-transform:uppercase;padding:9px var(--space-2);border-radius:var(--radius-none)}
+.tb-sector .tb-kicker{display:block;font-size:37px;line-height:46px;font-weight:400;text-transform:uppercase;color:var(--navy)}
+.tb-sector .tb-name{display:block;font-size:55.8px;line-height:66px;font-weight:600;text-transform:uppercase;color:var(--navy)}
+.tb-sector p{font-size:15px;line-height:18.75px;color:var(--ink);max-width:360px}

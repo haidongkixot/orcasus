@@ -6,10 +6,13 @@ const React = require("react");
 const ReactDOMServer = require("react-dom/server");
 const sharp = require("sharp");
 const lu = require("react-icons/lu");
-const { applyTheme } = require(process.env.PPTX_SKILL + "/scripts/apply_theme.js");
+// Optional: the pptx skill's apply_theme.js writes theme colours into the file (nice for editing in PowerPoint).
+const applyTheme = process.env.PPTX_SKILL
+  ? require(process.env.PPTX_SKILL + "/scripts/apply_theme.js").applyTheme
+  : null;
 
-const LOGOS = process.env.LOGO_DIR;
-const OUT = process.env.OUT_FILE;
+const LOGOS = process.env.LOGO_DIR || path.join(__dirname, "logos");
+const OUT = process.env.OUT_FILE || path.join(__dirname, "..", "Thai-Binh-Social-Hub-BOD-Pitch-VI.pptx");
 
 // ---- Design-system tokens (exact hex from tokens.json) ----
 const T = {
@@ -443,6 +446,6 @@ async function icon(name, hex, px = 256) {
   s.addNotes("Xin cảm ơn Hội đồng. Marcom sẵn sàng trả lời các câu hỏi và mong nhận được phê duyệt để bắt đầu Giai đoạn 0 ngay trong tháng này.");
 
   await pres.writeFile({ fileName: OUT });
-  await applyTheme(OUT, THEME);
+  if (applyTheme) await applyTheme(OUT, THEME);
   console.log("wrote", OUT);
 })().catch((e) => { console.error(e); process.exit(1); });
