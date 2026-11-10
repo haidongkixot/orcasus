@@ -59,3 +59,54 @@ The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilo
 | Date | Trigger (file/layer/behavior outside contract) | New class | Approval obtained |
 |---|---|---|---|
 | 2026-10-30 | Version titles (README, INITIALIZE_AGENTS, DEFINITION_OF_DONE), D13 in RESEARCH_AND_DECISIONS, STATIC_VALIDATION_RESULTS, knowledge/README, the pilot record, and the intake and audit templates were edited to carry the same P1–P9 text | docs-only (lower than the governing class) | Covered by the approved plan; no new class |
+
+---
+
+# Intake Record — S0 (focus rule)
+
+- Intake ID: ORC-2026-11-10-focus
+- Date: 2026-11-10
+- Requested by / owner: repository owner (haidongkixot)
+- Status: CONFIRMED
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> "Theo quan điểm của tôi, số lượng skill tăng lên sẽ làm giảm sức mạnh của sự tập trung của triết lý" (owner, 2026-11-10). Asked whether to make it a rule with validator checks, the owner chose "Có, thêm luật", then approved the plan.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| F1 | "Skill admission and focus" rule | `CLAUDE.md` | agent-system-config | validator | governance-auditor | Yes (given 2026-11-10) |
+| F2 | Validator checks: core skill cap, description budget, stage-map entry, "Do NOT use" boundary | `scripts/validate_bundle.py`, `scripts/skill_evals.py` | agent-system-config | unit tests + validator | governance-auditor | Yes (given) |
+| F3 | Boundary clause added to the 9 skill descriptions that lack one; `root-cause-debate` added to the stage map | 9 `SKILL.md` and 2 mirrors, `docs/AI_SDLC_STAGE_MAP.md` | agent-system-config | evals valid + validator; live evals required by the regression rule | governance-auditor | Yes (given) |
+| F4 | Decision D14, user guide, README, changelog, closeout | docs | docs-only | link check | — | No |
+
+- Governing class: agent-system-config. No permission, hook or tool grant changes.
+- Suggestions NOT in scope: creating optional skill packs; removing or merging any current skill.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| F1–F4 | knowledge/INDEX.md (K-0001, K-0002), decisions/ (empty), docs/RESEARCH_AND_DECISIONS.md (D1–D13), open PR #3 | NEW | No existing rule caps core skills or requires boundary clauses; `validate_bundle.py` checks only the exact skill set and the 1024-character limit per description |
+
+## 4. Intent and value (owner-confirmed)
+
+- Problem: every added skill costs every session context tokens and routing ambiguity, and spreads the core rules across more texts. Measured: Orcasus has 16 skills and 5,771 description characters; Aegis has 194 skills, 173,285 characters and 990 routing edges.
+- Expected value: the core stays small and each skill has a clear boundary, so routing and the core rules stay sharp.
+- Success signal: the validator fails a bundle that exceeds the cap or budget, or that has a skill without a stage-map entry or a boundary clause.
+- Urgency: none stated. Non-goals: shrinking the current set.
+- Owner confirmation: answer "Có, thêm luật (Khuyến nghị)" and plan approval, 2026-11-10.
+
+## 5. Scope contract
+
+- Expected files: those in section 2, `scripts/test_skill_focus.py`, `.github/workflows/validate.yml` (to run the new test), `docs/RESEARCH_AND_DECISIONS.md`, `docs/USER_GUIDE_VI.md`, `README.md`, `CHANGELOG.md`, `reports/v2.4-closeout.md`.
+- Out of scope: settings, hooks, agent tool lists, live eval runs (they cost money above the approved cap; recorded as NOT RUN).
+- Next gate: implementation. Changed descriptions require live evals before merge, under the regression rule.
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
