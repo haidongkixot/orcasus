@@ -111,3 +111,52 @@ The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilo
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
 | 2026-11-10 | Owner agreed to fix the smoke-run eval findings and run the pending live evals: live-eval harness (overlays, per-case budget, harness note) and three eval cases | agent-system-config (same class) | Owner "Đồng ý", 2026-11-10; live eval spend capped at $6 |
+
+---
+
+# Intake Record — S0 (audit follow-up)
+
+- Intake ID: ORC-2026-11-10-audit
+- Date: 2026-11-10
+- Requested by / owner: repository owner (haidongkixot)
+- Status: CONFIRMED
+- Lane: normal
+
+## 1. Request (verbatim owner answers, 2026-11-10)
+
+> Email in public history: "Viết lại lịch sử branch (Khuyến nghị)". F2 hook redaction fix: "Duyệt giữ bản sửa (Khuyến nghị)". Next steps: "Chuyển PR #3 về draft", "Chạy /process-retro cho F1–F12", "Chạy lại eval còn thiếu (F13)".
+
+The source is the independent audit [v2.4-governance-audit.md](../../reports/v2.4-governance-audit.md) (verdict FAIL).
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| A1 | Remove the owner's e-mail address from branch history (done before this record: rewrite of `8ad462e..1b7f998`, force-push with lease) | git history of `ccr-6f83693d-3hxz8f` | infra-deploy-release (destructive history change) | no commit contains the address; final tree unchanged | owner | Yes (given above) |
+| A2 | Record the owner's approval of the F2 hook-script change (`scripts/log_team_message.py`, in `ed3142c`) | this record | agent-system-config (hooks) | logger tests | governance-auditor | Yes (given above) |
+| A3 | PR #3 back to draft until findings are handled | GitHub PR state | — | PR shows draft | — | Yes (given above) |
+| A4 | Re-run the eval cases named in F13 | `evidence/live-evals/`, `docs/EVIDENCE.md` | test-only | runs recorded with spend | — | Yes; spend cap $3.50 (the estimate given was about $3) |
+| A5 | `/process-retro` over F1–F12 | `reports/v2.4-retro.md` | docs-only (proposals) | link check | — | No (proposals only) |
+| A6 | Closeout refresh for this follow-up | `reports/v2.4-closeout.md` | docs-only | link check | — | No |
+
+## 3. Readiness (short form, audit F4)
+
+| Area | Status | Evidence |
+|---|---|---|
+| Eval runtime | AVAILABLE | `claude` 2.1.314 in the container; nested runs worked on 2026-10-30 and 2026-11-10 |
+| Eval budget | AVAILABLE, capped | $3.50 for A4; runner `--budget-total` per invocation |
+| Reviewer availability | PARTIAL | governance-auditor runs in this session only (audit F11) |
+| CI | AVAILABLE | GitHub Actions on 3 OSes; results read through the PR checks |
+| GitHub write for PR state | AVAILABLE | GitHub tools in this session |
+
+## 4. Scope contract
+
+- **Expected files:** `docs/agent-ops/INTAKE_RECORD.md`, `docs/EVIDENCE.md`, `reports/v2.4-closeout.md`, `reports/v2.4-retro.md`, `reports/live-eval-scorecard.*`, `evidence/live-evals/**`.
+- **SHA references:** records that cite commits rewritten in A1 are updated to the new SHAs: `8ad462e`→`85fc342`, `c17c589`→`b304f28`, `4ff4fe8`→`f7567a8`, `3455dfb`→`29988b0`, `c8907d6`→`3d5c5fa`, `130d6c1`→`73e1642`, `1b7f998`→`ed3142c`. The audit report keeps its original SHAs, with a note.
+- **Out of scope:** any process change itself. The retro only proposes; each proposal needs its own approval.
+- **Known limit of A1:** GitHub may keep the old commits reachable by SHA, for example from the PR timeline, until garbage collection or a support request. That is outside this session's control.
+
+## 5. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
