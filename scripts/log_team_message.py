@@ -22,17 +22,22 @@ SECRET_PATTERNS = [
     (re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"), "[REDACTED_API_KEY]"),
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "[REDACTED_AWS_KEY]"),
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"), "[REDACTED_PRIVATE_KEY]"),
-    # A value that only reads the environment (process.env.X, os.environ[...], getenv) is a reference, not a secret;
-    # an already redacted value is skipped so redaction is idempotent.
-    (re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*(['\"]?)(?!\[REDACTED|process\.env\b|os\.environ\b|os\.getenv\b|getenv\b|env\(|\$\{|\$[A-Z_])[^\s,;\"']{4,}\2"), r"\1=[REDACTED]"),
+    # Only exact environment lookups are skipped (process.env.X, os.environ[...], getenv(...), a whole ${VAR}),
+    # plus already redacted values so redaction is idempotent. Any other value, "$..." included, is redacted.
+    (re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret)\s*[:=]\s*(['\"]?)"
+                r"(?!\[REDACTED\]|process\.env\.[a-z_]|os\.environ\b|(?:os\.)?getenv\(|\$\{[a-z_][a-z0-9_]*\}(?=[\s,;\"']|$))"
+                r"[^\s,;\"']{4,}\2"), r"\1=[REDACTED]"),
 ]
+# Personal data is redacted from every record but is not a secret; RFC 2606 example addresses are kept.
+EMAIL_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@(?!(?:[A-Za-z0-9-]+\.)*(?:example\.(?:com|net|org)|invalid|test|example)\b)"
+                      r"[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}\b")
 ALLOWED_TASK_EVENTS = {"TaskCreated", "TaskCompleted", "TeammateIdle"}
 
 
 def redact_text(value: str) -> str:
     for pattern, replacement in SECRET_PATTERNS:
         value = pattern.sub(replacement, value)
-    return value
+    return EMAIL_RE.sub("[REDACTED_EMAIL]", value)
 
 
 def redact_object(value: Any, key: str = "") -> Any:

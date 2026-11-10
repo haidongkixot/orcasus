@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
-from log_team_message import SECRET_PATTERNS, redact_text  # noqa: E402,F401
+from log_team_message import EMAIL_RE, SECRET_PATTERNS, redact_text  # noqa: E402,F401
 
 EVIDENCE_DIR = ROOT / "evidence" / "live-evals"
 # Judge "model" recorded on assertions failed by the deterministic trigger check, without a model call.
@@ -123,6 +123,10 @@ def matches(path: str, pattern: str) -> bool:
 
 def has_secret(text: str) -> bool:
     return any(pattern.search(text) for pattern, _ in SECRET_PATTERNS)
+
+
+def has_personal_data(text: str) -> bool:
+    return bool(EMAIL_RE.search(text))
 
 
 def iter_attempts(run_dirs):
