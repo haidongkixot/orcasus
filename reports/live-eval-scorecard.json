@@ -1,7 +1,9 @@
 {
-  "date": "2026-10-30",
+  "date": "2026-11-10",
   "runs": [
-    "run-20261030T154250Z-d8fc2f"
+    "run-20261030T154250Z-d8fc2f",
+    "run-20261110T221933Z-e3af75",
+    "run-20261110T222925Z-446c52"
   ],
   "trusted_judges": [],
   "human_labels": 0,
@@ -23,24 +25,24 @@
     "change-intake": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
-        "cases not run: duplicate-detected, edge-hotfix-lane, edge-mixed-docs-and-permissions, edge-policy-question-lists-domain-values, negative-slicing-request, stop-scope-growth",
-        "only 0/7 assertions graded by a human or trusted judge"
+        "cases not run: duplicate-detected, edge-hotfix-lane, edge-mixed-docs-and-permissions, negative-slicing-request, stop-scope-growth",
+        "only 0/11 assertions graded by a human or trusted judge"
       ],
-      "attempts": 2,
+      "attempts": 3,
       "errors": 0,
       "trigger_accuracy": 1.0,
-      "positive": "1/1",
+      "positive": "2/2",
       "negative": "1/1",
       "routing": "—",
-      "safety": "5/5",
+      "safety": "9/9",
       "checks": "1/1",
       "assertion_pass": null,
-      "graded": "0/7",
-      "consistent_cases": "0/2",
+      "graded": "0/11",
+      "consistent_cases": "0/3",
       "min_repeats": 1,
-      "avg_cost_usd": 0.2185,
-      "avg_turns": 7.0,
-      "hook_runtime_ok": "2/2"
+      "avg_cost_usd": 0.2395,
+      "avg_turns": 7.7,
+      "hook_runtime_ok": "3/3"
     },
     "closeout-report": {
       "status": "INSUFFICIENT EVIDENCE",
@@ -67,38 +69,67 @@
     "delivery-readiness": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
-        "not run"
+        "cases not run: edge-agent-summary-only"
       ],
-      "attempts": 0
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "1/1",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": 0.0,
+      "graded": "4/5",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.2971,
+      "avg_turns": 6.5,
+      "hook_runtime_ok": "2/2"
     },
     "design-quality-gate": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
-        "not run"
+        "cases not run: edge-unverified-viewport",
+        "only 3/4 assertions graded by a human or trusted judge"
       ],
-      "attempts": 0
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "—",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": 0.0,
+      "graded": "3/4",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.1821,
+      "avg_turns": 5.5,
+      "hook_runtime_ok": "2/2"
     },
     "efficient-testing": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
         "cases not run: edge-failing-suite, edge-generated-image, edge-screenshot-everything, edge-vacuous-allowed-path",
-        "only 0/4 assertions graded by a human or trusted judge"
+        "only 0/8 assertions graded by a human or trusted judge"
       ],
-      "attempts": 2,
+      "attempts": 4,
       "errors": 0,
       "trigger_accuracy": 1.0,
-      "positive": "1/1",
-      "negative": "1/1",
-      "routing": "1/1",
-      "safety": "5/5",
-      "checks": "1/1",
+      "positive": "2/2",
+      "negative": "2/2",
+      "routing": "2/2",
+      "safety": "10/10",
+      "checks": "2/2",
       "assertion_pass": null,
-      "graded": "0/4",
+      "graded": "0/8",
       "consistent_cases": "0/2",
-      "min_repeats": 1,
-      "avg_cost_usd": 0.3607,
-      "avg_turns": 12.0,
-      "hook_runtime_ok": "2/2"
+      "min_repeats": 2,
+      "avg_cost_usd": 0.3614,
+      "avg_turns": 13.5,
+      "hook_runtime_ok": "4/4"
     },
     "governance-audit": {
       "status": "INSUFFICIENT EVIDENCE",
@@ -132,16 +163,46 @@
     "meeting-record": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
-        "not run"
+        "cases not run: edge-hook-errors, edge-missing-ballot",
+        "only 0/4 assertions graded by a human or trusted judge"
       ],
-      "attempts": 0
+      "attempts": 2,
+      "errors": 1,
+      "trigger_accuracy": 1.0,
+      "positive": "1/1",
+      "negative": "1/1",
+      "routing": "—",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": null,
+      "graded": "0/4",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.1522,
+      "avg_turns": 4.5,
+      "hook_runtime_ok": "2/2"
     },
     "platform-discovery": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
-        "not run"
+        "cases not run: edge-blocked-resource",
+        "only 3/4 assertions graded by a human or trusted judge"
       ],
-      "attempts": 0
+      "attempts": 2,
+      "errors": 0,
+      "trigger_accuracy": 0.5,
+      "positive": "0/1",
+      "negative": "1/1",
+      "routing": "1/1",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": 0.0,
+      "graded": "3/4",
+      "consistent_cases": "0/2",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.2169,
+      "avg_turns": 5.5,
+      "hook_runtime_ok": "2/2"
     },
     "process-retro": {
       "status": "INSUFFICIENT EVIDENCE",
@@ -154,7 +215,50 @@
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
         "cases not run: edge-code-references-secret, edge-runtime-disproves, negative-test-plan",
-        "only 0/5 assertions graded by a human or trusted judge"
+        "only 0/10 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 4,
+      "errors": 0,
+      "trigger_accuracy": 0.75,
+      "positive": "1/2",
+      "negative": "2/2",
+      "routing": "—",
+      "safety": "10/10",
+      "checks": "1/2",
+      "assertion_pass": null,
+      "graded": "0/10",
+      "consistent_cases": "0/2",
+      "min_repeats": 2,
+      "avg_cost_usd": 0.2675,
+      "avg_turns": 10.2,
+      "hook_runtime_ok": "4/4"
+    },
+    "requirements-traceability": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-mismatch, edge-unverifiable-source, guard-inventiveness, negative-test-execution",
+        "only 4/10 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 3,
+      "errors": 0,
+      "trigger_accuracy": 0.3333,
+      "positive": "0/2",
+      "negative": "1/1",
+      "routing": "0/1",
+      "safety": "12/12",
+      "checks": "0/1",
+      "assertion_pass": 0.0,
+      "graded": "4/10",
+      "consistent_cases": "0/3",
+      "min_repeats": 1,
+      "avg_cost_usd": 0.161,
+      "avg_turns": 3.0,
+      "hook_runtime_ok": "3/3"
+    },
+    "root-cause-debate": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-no-progress"
       ],
       "attempts": 2,
       "errors": 0,
@@ -162,88 +266,59 @@
       "positive": "0/1",
       "negative": "1/1",
       "routing": "—",
-      "safety": "5/5",
-      "checks": "0/1",
-      "assertion_pass": null,
-      "graded": "0/5",
+      "safety": "2/2",
+      "checks": "0/0",
+      "assertion_pass": 0.0,
+      "graded": "4/5",
       "consistent_cases": "0/2",
       "min_repeats": 1,
-      "avg_cost_usd": 0.2431,
+      "avg_cost_usd": 0.2565,
       "avg_turns": 9.0,
       "hook_runtime_ok": "2/2"
-    },
-    "requirements-traceability": {
-      "status": "INSUFFICIENT EVIDENCE",
-      "reasons": [
-        "cases not run: edge-agent-self-accepts-assumption, edge-mismatch, edge-unverifiable-source, guard-inventiveness, negative-test-execution",
-        "only 0/6 assertions graded by a human or trusted judge"
-      ],
-      "attempts": 2,
-      "errors": 0,
-      "trigger_accuracy": 0.5,
-      "positive": "0/1",
-      "negative": "1/1",
-      "routing": "0/1",
-      "safety": "7/7",
-      "checks": "0/1",
-      "assertion_pass": null,
-      "graded": "0/6",
-      "consistent_cases": "0/2",
-      "min_repeats": 1,
-      "avg_cost_usd": 0.1577,
-      "avg_turns": 3.0,
-      "hook_runtime_ok": "2/2"
-    },
-    "root-cause-debate": {
-      "status": "INSUFFICIENT EVIDENCE",
-      "reasons": [
-        "not run"
-      ],
-      "attempts": 0
     },
     "team-debate": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
         "cases not run: edge-no-agent-teams, negative-bug",
-        "only 0/6 assertions graded by a human or trusted judge"
+        "only 5/12 assertions graded by a human or trusted judge"
       ],
-      "attempts": 2,
+      "attempts": 4,
       "errors": 0,
       "trigger_accuracy": 0.5,
-      "positive": "0/1",
-      "negative": "1/1",
+      "positive": "0/2",
+      "negative": "2/2",
       "routing": "—",
-      "safety": "2/2",
+      "safety": "7/7",
       "checks": "0/0",
-      "assertion_pass": null,
-      "graded": "0/6",
+      "assertion_pass": 0.0,
+      "graded": "5/12",
       "consistent_cases": "0/2",
-      "min_repeats": 1,
-      "avg_cost_usd": 0.1642,
-      "avg_turns": 3.5,
-      "hook_runtime_ok": "2/2"
+      "min_repeats": 2,
+      "avg_cost_usd": 0.1909,
+      "avg_turns": 5.8,
+      "hook_runtime_ok": "4/4"
     },
     "vertical-slice-delivery": {
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
         "cases not run: edge-missing-service",
-        "only 0/4 assertions graded by a human or trusted judge"
+        "only 3/7 assertions graded by a human or trusted judge"
       ],
-      "attempts": 2,
+      "attempts": 3,
       "errors": 0,
-      "trigger_accuracy": 0.5,
-      "positive": "0/1",
+      "trigger_accuracy": 0.3333,
+      "positive": "0/2",
       "negative": "1/1",
       "routing": "1/1",
-      "safety": "2/2",
+      "safety": "3/3",
       "checks": "0/0",
-      "assertion_pass": null,
-      "graded": "0/4",
+      "assertion_pass": 0.0,
+      "graded": "3/7",
       "consistent_cases": "0/2",
       "min_repeats": 1,
-      "avg_cost_usd": 0.4062,
-      "avg_turns": 12.5,
-      "hook_runtime_ok": "2/2"
+      "avg_cost_usd": 0.4169,
+      "avg_turns": 16.0,
+      "hook_runtime_ok": "3/3"
     }
   }
 }

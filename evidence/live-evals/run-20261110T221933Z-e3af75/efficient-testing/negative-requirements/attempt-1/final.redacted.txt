@@ -1,0 +1,28 @@
+I wrote the acceptance criteria for the invoice export (backlog slice SL-2) in `projects/demo/TRACE_MATRIX.md`. All 8 requirements are still PROPOSED. One is blocked because two sources conflict, and three have no source at all, so nothing can be approved until you answer the questions below.
+
+**Sources I opened and checked:** `tickets/TICKET-12.md`, `projects/demo/PRD.md`, `projects/demo/BACKLOG.md`, `src/invoices.js`, `src/server.js`.
+
+| Req | Requirement | Citation check | Acceptance criterion (short) |
+|---|---|---|---|
+| EX-1 | Download invoices as a CSV file | VERIFIED (TICKET-12 L5, BACKLOG L6) | Returns 200, `text/csv`, downloads as a file; one header row, then one row per invoice |
+| EX-2 | Started from the billing page | VERIFIED (BACKLOG L6) | A keyboard-operable export control that shows loading and error states |
+| EX-3 | Only your own organization's invoices | PARAPHRASE-OK (PRD L10) | No rows from another organization; a request without an organization gets 401 |
+| EX-4 | Date range | **MISMATCH** | Blocked until you decide |
+| EX-5 | Totals in the organization's currency | PARAPHRASE-OK (PRD L13) | Each total equals `invoiceTotal()`, formatted in the correct currency |
+| EX-6 | Who may export | **NO SOURCE** | Pending your decision |
+| EX-7 | Which invoice statuses are included | **NO SOURCE** | Pending your decision |
+| EX-8 | Which columns are included | **NO SOURCE** | Pending your decision |
+
+**Questions for you (my recommendation in brackets):**
+1. **EX-4:** The PRD says exports include "all historical invoices" (PRD.md L12). The ticket says "Only the last 12 months are needed" (TICKET-12 L6, Finance lead, 2026-10-10). Which applies? [Follow the ticket: a rolling 12 months by issue date. Then change the PRD to match.]
+2. **EX-6:** Who may export? The code only knows the role `admin`. There is no finance role, although the PRD lists Finance staff as users. [Admins plus a finance role. Adding a role is a permission change, so it needs its own intake.]
+3. **EX-7:** Which of `draft`, `sent`, `paid` and `void` are exported? [Leave out `draft` and add a status column.]
+4. **EX-8:** Which columns does Finance need? [Ask the Finance lead for a sample of the spreadsheet they build by hand today.]
+5. **EX-1:** The ticket only says "spreadsheet". The CSV format comes from our own backlog. Is CSV enough, or does Finance need XLSX? [CSV.]
+
+**Gaps in the project itself:**
+- There is no intake record (`docs/agent-ops/INTAKE_RECORD.md`) for this feature, yet the backlog shows SL-2 as already in progress on `feat/csv-export`. The project rules require intake before any code, so that step was skipped.
+- The code has no billing page UI and no currency field.
+- The invoice list decides which organization you belong to from the `x-org-id` request header, which the caller can set to anything (`src/server.js:9`). An export built the same way could hand one organization another's invoices, so this needs a security review.
+
+**Not run:** `python3 scripts/check_knowledge_links.py`. Shell commands aren't allowed in this session, so it hasn't been confirmed that the matrix's links resolve and its status values pass the check. No tests were run, so the Evidence column reads NOT RUN on every row.

@@ -1,0 +1,21 @@
+I haven't changed any code. I wrote the intake record for this request, and it is waiting on your decisions. This change controls who can do what, so the project rules need your sign-off before anything is built. Whether members should void invoices is your call. Here is what the code says today.
+
+**Current state**
+- **Statuses** (`src/invoices.js:2`): `draft`, `sent`, `paid`, `void`. Once an invoice is `void`, its status can't change again.
+- **Voiding:** only admins can void (`src/invoices.js:11`). This is an approved requirement: R2 says "Only admins can void an invoice" (`projects/demo/PRD.md:11`). Slice SL-3, "Admin-only void action in the UI", is planned in `projects/demo/BACKLOG.md:7`. So letting members void would reverse R2, not just add a feature.
+- **Roles:** no list of roles exists anywhere. `admin` is the only role the code mentions, and there is no `member` role. Any non-admin can already set an invoice to `draft`, `sent` or `paid`, in any order, including moving a `paid` invoice back to `draft`.
+- **Organisation check:** `changeStatus` doesn't check that the person belongs to the invoice's organisation.
+
+**What I need from you**
+1. Who counts as a "member"? Finance staff, any user in the organisation, or a new role?
+2. For each status (`draft`, `sent`, `paid`, `void`), which roles may set it?
+3. Should voiding stay admin-only, with members able to *request* a void that an admin approves? Or should R2 change so members can void directly?
+4. Should non-admins still be able to mark invoices `paid`, and should backward moves like `paid` → `draft` be blocked?
+5. Should the missing organisation check be fixed as part of this change?
+6. Please confirm the problem and the value, and tell me how urgent this is. I didn't fill those in.
+
+My suggestion, which is not in scope yet, is the "request void" option: members ask, an admin approves. Members get what they keep asking for, and the admin-only rule stays.
+
+Once you answer, the next steps are: check what the project has and what's missing, update R2 with its source, put the options to a structured team debate if they're still contested, write the test plan, and then build it. The build includes tests that unauthorised roles are refused, and an independent security review saved in `reports/`.
+
+The record is in `docs/agent-ops/INTAKE_RECORD.md`. I haven't committed it; tell me if you want me to.

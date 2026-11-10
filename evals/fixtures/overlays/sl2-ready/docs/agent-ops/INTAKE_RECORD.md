@@ -32,6 +32,6 @@ This service has no UI; the billing page lives in another repository and is out 
 
 ## 5. Scope contract
 
-- Expected files: `src/server.js`, `src/invoices.js`, `test/`.
+- Expected files: `src/server.js`, `src/invoices.js`, `test/`. Includes adding an `issuedAt` (ISO date) field to invoices (owner decision 2026-10-21).
 - Out of scope: UI, other organizations' data, invoices older than 12 months.
 - Next gate: build (readiness READY, test plan approved).

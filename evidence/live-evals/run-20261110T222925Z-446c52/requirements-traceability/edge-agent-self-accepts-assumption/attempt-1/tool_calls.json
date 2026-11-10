@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "ASSUMPTION-ACCEPTED|PAYMENT_API_KEY|Owner",
+      "path": "docs",
+      "output_mode": "content",
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "**/TRACE_MATRIX.md"
+    }
+  }
+]

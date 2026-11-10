@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)settings",
+      "glob": "**/*.{tsx,jsx,ts,js,vue,html,svelte,css}"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -5 --stat"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short --untracked-files=all"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git branch -a"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)settings page|preferences|/settings",
+      "glob": "!.claude/**",
+      "output_mode": "content"
+    }
+  }
+]

@@ -1,0 +1,54 @@
+
+--- new file: docs/agent-ops/DISCOVERY_SUMMARY.md ---
+# Discovery Summary — Stripe card payment of open invoices
+
+- Intake: LED-2026-10-20-stripe (CONFIRMED 2026-10-20). Reused; no new intake was created.
+- Date: 2026-11-10
+- Verdict: **BLOCKED**. Details are in `docs/agent-ops/READINESS_MATRIX.md`.
+
+## What exists
+- `src/payments.js`: a stub `chargeInvoice` that always throws. There's no Stripe account, SDK or webhook.
+- `src/server.js`: a single `GET /invoices` route with header-only org scoping. Storage is in memory.
+- `src/invoices.js`: statuses draft, sent, paid and void. "Open" is not defined, and invoices have no currency field.
+- Test runner: `node --test` (AVAILABLE).
+
+## Blockers (dependent work stopped)
+1. No Stripe test account or key (matrix #1), and no webhook secret (#2).
+2. There's no access model for who may pay an invoice (#5). This risks payment initiation across orgs and data exposure.
+3. Owner policy decisions are open: which statuses are payable (#4), currency (#6) and persistence (#7).
+4. Approval is needed for the first runtime dependency, `stripe` (#3).
+
+## Scope/class warnings
+- Picking customer login (#5 B) adds auth-permission-security.
+- Adding persistence or currency (#6 A, #7 A) adds data-schema-migration.
+- Both of those classes need owner approval before work, and the approval for the integration class does not carry over to them.
+
+## Independent, reversible work possible now
+- None started. A pure `isPayable(invoice)` rule plus unit tests could go ahead once item #4 is decided.
+
+## Next gates once unblocked
+`/team-debate` (Stripe-hosted Checkout vs Payment Element, plus the pay-link model) → ADR → `/requirements-traceability` → `/efficient-testing` (TEST_PLAN, capture budget 0) → `/vertical-slice-delivery`.
+
+--- new file: docs/agent-ops/READINESS_MATRIX.md ---
+# Readiness Matrix — Stripe card payment of open invoices
+
+- Intake: LED-2026-10-20-stripe, deliverable D1 (class: integration)
+- Date: 2026-11-10
+- Overall verdict: **BLOCKED**
+- Base: commit `2e315a3`, clean working tree (`git status --short` empty)
+
+| # | Requirement | Resource / permission | Status | Evidence | Impact | Options | Recommendation | Owner decision needed |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Real Stripe integration (intake floor: "real account/scope verified") | Stripe test-mode account and restricted test secret key | **MISSING / BLOCKED** | `src/payments.js:1-2` "no sandbox account is configured for this repository yet"; key read from `PAYMENT_API_KEY` at `src/payments.js:3`. A key name in code does not mean a key exists. | Contract and failure-path tests against Stripe cannot run; acceptance signal ("paid by card in test mode") cannot be met | A) Owner creates a Stripe test account and gives a restricted test key (scopes for PaymentIntents/Checkout Sessions only). B) Build only isolated pieces now, with mocks limited to unit tests; the integration stays NOT DONE | A | Yes: provide the account and key, and confirm which environments set `PAYMENT_API_KEY` |
+| 2 | Paid status set from Stripe confirmation | Webhook signing secret and a reachable webhook endpoint | **MISSING** | No webhook secret env var or webhook route in `src/` (`src/server.js:6-19` serves only `GET /invoices`) | Without webhooks, the paid status depends on a client redirect, which can be faked or lost | A) Stripe webhook + signing secret (local: Stripe CLI forwarding). B) Poll the payment status on return | A | Yes: approve a new secret env var and a public webhook URL per environment |
+| 3 | Stripe client library | `stripe` npm package | **MISSING** | `package.json` has no dependencies and there's no lockfile | Adds the repo's first runtime dependency and lockfile | A) Add the official `stripe` SDK (pinned). B) Call the REST API with `fetch` (Node ≥20, `package.json:11-13`) | A, because the SDK verifies webhook signatures and that's security-critical | Yes: approve the dependency |
+| 4 | Defined "open invoice" | Status policy | **UNKNOWN** | `STATUSES = ["draft","sent","paid","void"]` (`src/invoices.js:2`). Nothing defines "open". | Wrong statuses become payable | Decide for each of: draft, sent, paid, void | sent = payable; draft, paid, void = not payable (proposal only) | Yes: decide each value |
+| 5 | Who may pay, and authentication on the pay route | Customer identity / auth | **UNKNOWN / BLOCKED** | No customer actor exists. The only auth is an `x-org-id` header presence check (`src/server.js:9-12`). Roles are not defined in one place; only `"admin"` appears (`src/invoices.js:11`). Role list: UNKNOWN. | Anyone who knows an invoice id could start a payment, and could see another org's invoice amount (breaks PRD R1) | A) Signed, expiring pay link per invoice. B) Customer login (new auth scope, so the class becomes auth-permission-security) | A, pending a security review | Yes: choose the access model |
+| 6 | Charge amount and currency | Invoice currency field | **UNKNOWN** | Totals are integer cents (`src/invoices.js:1,4-6`). Invoices have no currency field, though PRD R4 requires the org currency. | Charging in the wrong currency | A) Add currency per org/invoice (data-schema change). B) Fix one currency for this phase | Owner decides | Yes |
+| 7 | Durable paid status and webhook idempotency | Persistence | **MISSING** | Invoices live in an in-memory array (`src/server.js:4`) | Paid status and processed-event IDs are lost on restart; a duplicate webhook could double-process | A) Add persistence (data-schema-migration class, needs approval). B) Accept in-memory storage for the test-mode demo only, as a recorded risk | Owner decides; this is a scope/class change | Yes (would reclassify) |
+| 8 | Status transition rule for "paid" | Domain rule | **AVAILABLE (gap noted)** | `changeStatus` (`src/invoices.js:8-13`) allows any status to move to `paid`, including `draft`, and needs an `actor.role` that a webhook doesn't have | A system actor and a sent→paid rule are needed | Decided after item 4 | — | Covered by item 4 |
+| 9 | Test runner | `node --test` | **AVAILABLE** | `package.json:9`, `test/invoices.test.js` | — | Reuse it; no new framework | Reuse | No |
+| 10 | Checkout UI | Front end | **NOT NEEDED (to confirm)** | The repo has no UI. The intake says the "checkout" is a new pay-invoice route (`INTAKE_RECORD.md:17`). | Stripe-hosted Checkout would avoid building a card UI and reduce PCI scope | Hosted Checkout vs Payment Element is a material choice, so it goes to `/team-debate` | Debate after the blockers clear | Yes, via the ADR |
+| 11 | Environment-variable presence | Env config | **UNKNOWN** | `.env.example` is denied by the permission rules and was not read. Names come from code only: `PAYMENT_API_KEY` (`src/payments.js:3`), `PORT` (`src/server.js:22`) | — | — | — | Yes: confirm which are set in local, preview and production |
+| 12 | Network egress to api.stripe.com from dev/CI | Network | **UNKNOWN** | Not tested (no key) | Live contract tests may fail in CI | Verify once a key exists | — | No |
+| 13 | Budget / paid usage | Stripe fees | **NOT NEEDED (test mode)** | Test mode has no charges; live mode is out of this scope | Going live needs separate approval | — | — | Going live is a separate approval |

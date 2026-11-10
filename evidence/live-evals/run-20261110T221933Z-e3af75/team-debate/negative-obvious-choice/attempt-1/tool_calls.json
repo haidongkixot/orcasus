@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "def .*date|datetime|function .*[Dd]ate|formatDate|parseDate",
+      "output_mode": "files_with_matches",
+      "head_limit": 20
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "date|datetime",
+      "output_mode": "content",
+      "path": "scripts",
+      "glob": "{skill_evals.py,log_team_message.py,test_knowledge_links.py}",
+      "head_limit": 30
+    }
+  }
+]

@@ -23,6 +23,9 @@
           "package.json"
         ],
         "max_budget_usd": 3
+      },
+      "setup": {
+        "overlay": "sl2-ready"
       }
     },
     {

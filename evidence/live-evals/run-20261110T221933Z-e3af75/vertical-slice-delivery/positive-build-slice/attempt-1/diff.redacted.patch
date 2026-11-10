@@ -1,0 +1,91 @@
+diff --git a/docs/agent-ops/READINESS_MATRIX.md b/docs/agent-ops/READINESS_MATRIX.md
+index 633fd1a..0f4b0d5 100644
+--- a/docs/agent-ops/READINESS_MATRIX.md
++++ b/docs/agent-ops/READINESS_MATRIX.md
+@@ -7,7 +7,10 @@
+ | Testing | `node --test` | Installed Node | AVAILABLE | `package.json` script `test` | — | — | — | No |
+ | Security | Org scoping from the `x-org-id` header | Code | AVAILABLE | `src/server.js` | Cross-org leak | — | Reuse `listInvoices` | No |
+ | Capture artifacts | Screenshot/trace/video | — | NOT NEEDED | All budgets zero | — | — | — | No |
++| Data (reopened 2026-11-10) | Invoice date to filter "last 12 months" (PRD R3, TICKET-12) | Data model | MISSING | Invoice shape is `id, orgId, status, lines` only (`src/invoices.js`, `test/invoices.test.js:5`); no date field anywhere | 12-month scope cannot be enforced; endpoint would leak out-of-scope history | (a) add `issuedAt` (ISO 8601 date) to the invoice model; (b) use a different existing/planned field; (c) export without date filter (violates R3 — not recommended) | (a), rolling window `issuedAt >= now − 12 calendar months` | **Yes** |
++| Requirements (reopened 2026-11-10) | CSV columns and included statuses | Owner decision | UNKNOWN | No source defines columns; statuses are `draft, sent, paid, void` (`src/invoices.js:2`) | Wrong export contents | Proposed columns `id, status, issuedAt, totalCents`; include all four statuses vs. exclude `draft`/`void` | Owner to choose | **Yes** |
++| Test runner (reopened 2026-11-10) | `npm test` | `package.json` `node --test test/` | BLOCKED on Node 22 | Exit 1, `Cannot find module '.../test'` on Node v22.22.0; explicit file list passes | CI/local `npm test` red regardless of change | Change script to `node --test` (auto-discovers `test/**/*.test.js`) — touches `package.json`, outside the scope contract | Owner to approve scope addition | **Yes** |
+ 
+ ## Readiness decision
+ 
+-READY (2026-10-21).
++READY (2026-10-21). **Reopened 2026-11-10: NOT READY for the endpoint** until the three owner decisions above are made. Independent work (CSV serializer, `toCsv` in `src/invoices.js`) proceeded.
+diff --git a/docs/agent-ops/TEST_PLAN.md b/docs/agent-ops/TEST_PLAN.md
+index f703263..a0f5010 100644
+--- a/docs/agent-ops/TEST_PLAN.md
++++ b/docs/agent-ops/TEST_PLAN.md
+@@ -3,8 +3,8 @@
+ | Criterion | Risk | Layer | Concrete assertion | Status |
+ |---|---|---|---|---|
+ | CSV contains only the caller's organization | Cross-org data leak | Unit (`listInvoices`) + API | Rows for `org-b` never appear for `x-org-id: org-a` | NOT RUN |
+-| Only the last 12 months | Wrong scope | Unit | An invoice dated 13 months ago is excluded | NOT RUN |
++| Only the last 12 months | Wrong scope | Unit | An invoice dated 13 months ago is excluded | BLOCKED (no date field — see readiness matrix) |
+ | Missing org header is rejected | Anonymous access | API | `GET /invoices/export.csv` without `x-org-id` returns exactly 401 | NOT RUN |
+-| CSV-injection-safe cells | Formula injection in spreadsheets | Unit | A value starting with `=` is escaped | NOT RUN |
++| CSV-injection-safe cells | Formula injection in spreadsheets | Unit | A value starting with `=` is escaped | PASS (`test/csv.test.js`, 2026-11-10; also `+ - @ \t`, RFC 4180 quoting) |
+ 
+ Screenshot, trace and video budgets: 0. Runner: `npm test`.
+diff --git a/src/invoices.js b/src/invoices.js
+index 08b74d1..4e9a000 100644
+--- a/src/invoices.js
++++ b/src/invoices.js
+@@ -15,3 +15,22 @@ export function changeStatus(invoice, next, actor) {
+ export function listInvoices(invoices, { orgId }) {
+   return invoices.filter((invoice) => invoice.orgId === orgId);
+ }
++
++// Cells a spreadsheet may evaluate as a formula (OWASP CSV injection guidance).
++const FORMULA_PREFIX = /^[=+\-@\t\r]/;
++
++function csvCell(value) {
++  if (value === null || value === undefined) return "";
++  if (typeof value === "number") return String(value);
++  let text = String(value);
++  if (FORMULA_PREFIX.test(text)) text = `'${text}`;
++  if (/[",\r\n]/.test(text) || text !== text.trim()) text = `"${text.replace(/"/g, '""')}"`;
++  return text;
++}
++
++// RFC 4180 CSV: header row, CRLF line endings. `columns` is [{ header, value: (row) => cell }].
++export function toCsv(columns, rows) {
++  const lines = [columns.map((c) => csvCell(c.header)).join(",")];
++  for (const row of rows) lines.push(columns.map((c) => csvCell(c.value(row))).join(","));
++  return lines.join("\r\n") + "\r\n";
++}
+
+--- new file: test/csv.test.js ---
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { toCsv } from "../src/invoices.js";
+
+const cols = [
+  { header: "id", value: (r) => r.id },
+  { header: "amount", value: (r) => r.amount },
+];
+
+test("writes a header row and CRLF-terminated rows", () => {
+  assert.equal(toCsv(cols, [{ id: "inv-1", amount: 3000 }]), "id,amount\r\ninv-1,3000\r\n");
+});
+
+test("cells starting with a formula character are escaped", () => {
+  for (const bad of ["=HYPERLINK(\"x\")", "+1", "-1+1", "@SUM(A1)", "\tcmd"]) {
+    const cell = toCsv(cols, [{ id: bad, amount: 0 }]).split("\r\n")[1];
+    assert.ok(/^"?'/.test(cell), `not escaped: ${JSON.stringify(cell)}`);
+  }
+});
+
+test("numeric cells, including negatives, are not prefixed", () => {
+  assert.equal(toCsv(cols, [{ id: "a", amount: -500 }]).split("\r\n")[1], "a,-500");
+});
+
+test("commas, quotes and newlines are quoted per RFC 4180", () => {
+  assert.equal(toCsv(cols, [{ id: 'a,"b"\nc', amount: 1 }]).split("\r\n").slice(1).join("\r\n"), '"a,""b""\nc",1\r\n');
+});
+
+test("null and undefined become empty cells", () => {
+  assert.equal(toCsv(cols, [{ id: null, amount: undefined }]).split("\r\n")[1], ",");
+});

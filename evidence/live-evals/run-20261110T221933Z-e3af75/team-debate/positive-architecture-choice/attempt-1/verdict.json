@@ -1,0 +1,113 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "team-debate",
+  "case_id": "positive-architecture-choice",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "How should invoice export run: a synchronous CSV download, or a background job that emails a download link? Get the team to decide.",
+  "assertions": [
+    {
+      "text": "Runs project-discovery first. Starts Team Secretary with an active meeting record when Agent Teams are available; otherwise uses subagent mode and marks capture NOT VERIFIED.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected team-debate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Collects independent first proposals before peers see each other's views.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected team-debate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Requires peer challenge, rebuttal and a Devil's Advocate alternative.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected team-debate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Scores with an explicit weighted matrix and collects explicit FINAL_BALLOT messages; never infers votes from silence.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected team-debate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Records the decision state, dissent and revisit triggers in an ADR.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected team-debate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 36.5,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Bash": 2,
+    "Grep": 2,
+    "Read": 8
+  },
+  "num_turns": 13,
+  "cost_usd": 0.2760294,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected team-debate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "files_unchanged:src/**",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "files_unchanged:test/**",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "files_unchanged:package.json",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

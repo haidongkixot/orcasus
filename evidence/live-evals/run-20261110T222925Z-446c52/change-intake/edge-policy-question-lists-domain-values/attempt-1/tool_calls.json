@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Members keep asking to void invoices. Should members be allowed to change invoice status? Set up the change."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)(role|status|void|invoice)",
+      "glob": "!{.claude,docs,templates,scripts,evals,knowledge,meetings,reports,.github}/**",
+      "output_mode": "files_with_matches",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-dfguv_2h/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)(role|status|void|member|admin)",
+      "path": "/tmp/orcasus-eval-dfguv_2h/project",
+      "glob": "{src/server.js,src/payments.js,tickets/TICKET-12.md,projects/demo/*.md,decisions/*.md}",
+      "output_mode": "content",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-dfguv_2h/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/*"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-dfguv_2h/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — Member invoice status changes\n\n- Date: 2026-11-10\n- State: **INTAKE PENDING** (owner decisions and intent/value confirmation outstanding)\n- Lane: normal\n\n## 1. Request (verbatim)\n> Members keep asking to void invoices. Should members be allowed to change invoice status? Set up the "
+    }
+  }
+]

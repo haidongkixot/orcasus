@@ -1,0 +1,64 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — Member invoice status changes
+
+- Date: 2026-11-10
+- State: **INTAKE PENDING** (owner decisions and intent/value confirmation outstanding)
+- Lane: normal
+
+## 1. Request (verbatim)
+> Members keep asking to void invoices. Should members be allowed to change invoice status? Set up the change.
+
+Deliverables:
+- D1: Policy decision — which roles may move invoices to which statuses (owner decision; agent does not decide).
+- D2: Implement the decided policy in `changeStatus` (`src/invoices.js:8-13`) with negative authorization tests in `test/invoices.test.js`.
+- D3: Update PRD requirement R2 (`projects/demo/PRD.md:11`) and, if affected, backlog slice SL-3 (`projects/demo/BACKLOG.md:7`).
+
+## 2. Classification
+| Deliverable | Files | Class |
+|---|---|---|
+| D1 | — (decision) | auth-permission-security |
+| D2 | `src/invoices.js`, `test/invoices.test.js` | auth-permission-security |
+| D3 | `projects/demo/PRD.md`, `projects/demo/BACKLOG.md` | docs-only |
+
+**Governing class: auth-permission-security** → owner approval required before work; negative/authorization tests + independent security review (saved to `reports/`).
+
+## 3. Duplicates and conflicts
+| Deliverable | Verdict | Citation |
+|---|---|---|
+| D1/D2 | **CONFLICTS** | PRD R2 "Only admins can void an invoice." (`projects/demo/PRD.md:11`); code enforces it (`src/invoices.js:11`); slice SL-3 "Admin-only void action in the UI" PLANNED (`projects/demo/BACKLOG.md:7`). Letting members void reverses an approved requirement. |
+| D3 | EXTENDS | `projects/demo/PRD.md`, `projects/demo/BACKLOG.md` |
+
+Searched: `src/`, `test/`, `projects/demo/`, `decisions/` (only ADR-0001, unrelated), `tickets/` (TICKET-12 export, unrelated), `docs/agent-ops/` (empty). Not searched: open issues/PRs, `meetings/sessions/`, `reports/` → UNKNOWN for those sources.
+
+## 4. Domain values (from code)
+**Statuses** — `src/invoices.js:2`: `draft`, `sent`, `paid`, `void`. `void` is terminal (`src/invoices.js:10`).
+
+**Roles** — **UNKNOWN / not defined in one place.** The only role referenced in code is `admin` (`src/invoices.js:11`). No role enum, and no `member` role, exists in the codebase. PRD names actors "Finance staff and organization admins" (`projects/demo/PRD.md:7`). Today *any non-admin actor* can make every transition except to `void` — i.e. "members" can already change status draft/sent/paid.
+
+**Tenancy** — invoices are scoped by `orgId` (`src/invoices.js:15-16`), but `changeStatus` does not check that the actor belongs to the invoice's org.
+
+## 5. Intent / value (DRAFT — owner to confirm)
+- Problem: members request voids they cannot perform; admins handle them.
+- Affected: members (undefined role), org admins.
+- Value / success signal / urgency: **not stated — owner to supply; not invented.**
+- Non-goals: UI changes (SL-3), export (TICKET-12).
+
+## Owner questions (must all be answered)
+1. Who is a "member"? Finance staff, any org user, or a new role? (No role list exists.)
+2. For each status, which roles may set it: `draft` / `sent` / `paid` / `void`?
+3. Should `void` stay admin-only (keep R2) with a member "request void" flow instead, or should R2 change?
+4. Should non-admins keep the current ability to mark `paid`, and should backward moves (e.g. `paid`→`draft`) be allowed at all? Today no transition order is enforced.
+5. Should `changeStatus` enforce actor org == invoice org? (Existing gap, out of scope unless you add it.)
+6. Confirm the problem/value statement and urgency.
+
+## 6. Scope contract
+- Files: `src/invoices.js`, `test/invoices.test.js`, `projects/demo/PRD.md`, `projects/demo/BACKLOG.md`, `docs/agent-ops/*`, `decisions/ADR-*` (if debated), `reports/*`.
+- Validation floor: negative authorization tests per role × status; existing test suite passes.
+- Reviewers: security-reviewer (independent, report in `reports/`).
+- Approval: owner approval of the policy before any code change.
+- Next gates: owner answers → `/project-discovery` → `/requirements-traceability` (amend R2) → `/team-debate` if options remain contested (direct void vs. request-void) → `/efficient-testing` → implement.
+- Anything outside these files (UI, server routes, role model) returns to intake.
+
+## Suggestions (not scope)
+- A "request void" workflow (member requests, admin approves) would satisfy members without reversing R2.

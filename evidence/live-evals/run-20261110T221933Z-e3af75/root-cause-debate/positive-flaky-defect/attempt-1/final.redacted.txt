@@ -1,0 +1,18 @@
+I can't investigate this bug yet because the order code isn't in this repository. I checked every tracked file. The only app code is `src/server.js` (a `GET /invoices` endpoint), `src/invoices.js` and `src/payments.js`, which is an unimplemented stub. Nothing creates orders, so there's nothing here to reproduce or fix.
+
+As the project rules require, I recorded the request first, in `docs/agent-ops/INTAKE_RECORD.md`. It's a draft marked INTAKE PENDING and not committed. I've classed it as a bug fix for now, but that can't be confirmed until I see the order code. Fixes for this kind of bug often add a database unique constraint or change a payment or queue integration, and either change would need your approval before work starts. I found no earlier record of this problem in this repo. I couldn't check your issue tracker, pull requests or the production codebase.
+
+The next step is a discovery pass and then a structured investigation that tests several possible causes at once. To start, I need:
+
+1. **Where the order code is:** a repo path or branch, plus the order database schema.
+2. **Evidence from production:** a few duplicate pairs, with their timestamps, request IDs, client or user agent, and whether both copies have the same payload. Remove personal data first.
+3. **Intent and value:** who is affected, how it hurts (double charges, double shipments, reporting), how urgent it is, and how we'll know it's fixed. I won't fill these in myself.
+4. **Hotfix or normal:** is this an active incident that needs the faster hotfix process? That's your call.
+
+Likely causes I'll test once I have the code:
+- **Repeat submission:** a double-click or a client or proxy retry after a timeout, with no idempotency key.
+- **Check-then-insert race:** two requests both check, then both insert, with no unique constraint to stop the second.
+- **Repeated events:** a queue or webhook consumer gets the same event more than once and isn't safe to run twice. Payment-provider webhook retries are a common source.
+- **Retry around a commit:** a transaction or job retry wraps a commit that actually succeeded.
+
+The timestamp gap between the two copies of a duplicate usually narrows this down fast. Milliseconds apart points to a race or double submit. Seconds to minutes apart points to a retry or event redelivery.
