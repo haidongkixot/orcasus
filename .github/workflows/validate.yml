@@ -69,6 +69,9 @@ jobs:
       - name: Knowledge link checker tests
         run: $PY scripts/test_knowledge_links.py
 
+      - name: Skill focus tests
+        run: $PY scripts/test_skill_focus.py
+
       - name: Live eval pipeline tests (fake claude, no model calls)
         run: $PY scripts/live_evals/test_live_evals.py
 

@@ -1,6 +1,6 @@
 ---
 name: team-debate
-description: Run structured Agent Team discussion and critique to compare competing product, architecture, UX, or implementation options and record a justified decision.
+description: Run structured Agent Team discussion and critique to compare competing product, architecture, UX, or implementation options and record a justified decision. Do NOT use for an obvious choice, or to find the cause of a defect (root-cause-debate).
 ---
 
 # Team Debate Protocol

@@ -25,6 +25,7 @@ Orcasus is a complete, repository-integrated Agent Team System for complex web/m
 - Requirements cite their sources and each citation is checked; uncited or mismatched requirements are owner questions. Only the owner accepts an assumption, and the checker enforces it.
 - Gate order is provable from git: intake and readiness records are committed before code, reviews are saved in `reports/`, and the closeout exists before the audit. An owner-confirmed hotfix lane reorders records but skips none.
 - Without Agent Teams, debates run in subagent mode with verbatim ballots and capture NOT VERIFIED.
+- Focus over breadth: the core holds at most 20 skills and 9,000 description characters; each skill has a lifecycle stage, evals and a "Do NOT use" boundary, checked in CI. Domain skills belong in optional packs.
 - Every slice is testable before it is built; the owner sets priority.
 - Every task ends with a closeout; independent governance audits and retros propose process changes for owner approval.
 - Durable knowledge is linked, dated and secret-free, and only a human curator approves it.

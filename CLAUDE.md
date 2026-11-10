@@ -100,6 +100,12 @@ For each feature before implementation/testing:
 - Use `/governance-audit` (via the read-only `governance-auditor`, never the change author) for retrospective checks, incidents and autonomy spot checks. Missing evidence is UNVERIFIABLE, never PASS.
 - Use `/process-retro` at milestone ends and after failed audits. Retros propose; changes to CLAUDE.md, agents, skills, hooks, settings or templates need owner approval and go through `/change-intake` as agent-system-config.
 
+## Skill admission and focus
+More skills dilute the core: every description loads into every session and every neighbour adds routing ambiguity. Keep the core small and sharp.
+- The core is `.claude/skills/`: at most 20 skills and 9,000 description characters in total. Each skill is named in `docs/AI_SDLC_STAGE_MAP.md`, has valid evals and says in its description when not to use it ("Do NOT use … (neighbouring skill)"). `scripts/skill_focus.py` enforces this in the validator and CI; the limits change only with owner approval.
+- Adding a core skill goes through `/change-intake` as agent-system-config and states the stage it serves, why existing skills cannot cover it and which skill is merged or removed if a limit is reached.
+- Domain, framework and industry skills stay out of the core, in optional packs installed only where a project needs them.
+
 ## Knowledge and memory (S10)
 - Use `/knowledge-curation` to keep `knowledge/INDEX.md`: one dated fact per entry, tracked sources, no secrets or personal data, superseded entries pointing to successors.
 - Agents add entries as PROPOSED. Only a human curator approves; agents never write a curator approval.

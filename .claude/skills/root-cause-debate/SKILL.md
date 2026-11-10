@@ -1,6 +1,6 @@
 ---
 name: root-cause-debate
-description: Investigate hard-to-reproduce defects with competing hypotheses, independent experiments, peer falsification, and evidence-based convergence.
+description: Investigate hard-to-reproduce defects with competing hypotheses, independent experiments, peer falsification, and evidence-based convergence. Do NOT use for an obvious, already located bug, or to choose between design options (team-debate).
 ---
 
 # Root Cause Debate

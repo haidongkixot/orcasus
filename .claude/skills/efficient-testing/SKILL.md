@@ -1,6 +1,6 @@
 ---
 name: efficient-testing
-description: Mandatory risk-based testing for web/mobile changes. Prefer the lowest-cost reliable behavioral test; screenshot, trace and video artifacts default to zero unless a named question, bounded budget and approval exist.
+description: Mandatory risk-based testing for web/mobile changes. Prefer the lowest-cost reliable behavioral test; screenshot, trace and video artifacts default to zero unless a named question, bounded budget and approval exist. Do NOT use to write requirements or acceptance criteria (requirements-traceability) or as a release gate (delivery-readiness).
 ---
 
 # Efficient Testing — Zero-Capture Defaults v1.3.0

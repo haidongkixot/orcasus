@@ -8,6 +8,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import skill_evals  # noqa: E402
+import skill_focus  # noqa: E402
 
 SKILLS = {
     "change-intake", "project-discovery", "platform-discovery", "requirements-traceability",
@@ -22,7 +23,7 @@ AGENTS = {
     "devil-advocate", "team-secretary", "governance-auditor", "knowledge-steward",
 }
 REQUIRED = [
-    "README.md", "CLAUDE.md", "VERSION", "INITIALIZE_AGENTS.md",
+    "README.md", "CLAUDE.md", "VERSION", "INITIALIZE_AGENTS.md", "scripts/skill_focus.py",
     ".claude/settings.json", ".gitignore", "CHANGELOG.md",
     "docs/TEAM_OPERATING_MODEL.md", "docs/DEBATE_PROTOCOL.md",
     "docs/MEETING_RECORDING_PROTOCOL.md", "docs/PLATFORM_REFERENCE_ARCHITECTURE.md",
@@ -148,6 +149,10 @@ if skill_names == SKILLS:
     passed.append(f"PASS {len(SKILLS)} unique workflow skills match the expected set")
 else:
     errors.append(f"Skill set mismatch; missing {sorted(SKILLS - skill_names)}, unexpected {sorted(skill_names - SKILLS)}")
+
+focus_passed, focus_errors = skill_focus.check(ROOT)
+passed.extend("PASS skill focus: " + item for item in focus_passed)
+errors.extend("Skill focus: " + item for item in focus_errors)
 
 eval_passed, eval_errors = skill_evals.validate(ROOT)
 passed.extend("PASS " + item for item in eval_passed)

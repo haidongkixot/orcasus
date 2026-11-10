@@ -30,6 +30,8 @@ Không overlay cấu hình lên repository có sẵn một cách mù quáng. Hã
 - docs/ và templates/: operating model, debate/meeting protocols, reference architecture, UX quality, acceptance tests, readiness/test-plan templates.
 - meetings/, evidence/, decisions/, projects/, reports/: nơi lưu các hồ sơ bền vững.
 
+**Luật tập trung:** lõi Orcasus giữ tối đa 20 skill và tổng mô tả không quá 9.000 ký tự, vì mô tả của mọi skill được nạp vào mọi phiên và mỗi skill thêm vào lại làm việc chọn skill mơ hồ hơn. Mỗi skill phải gắn với một giai đoạn trong stage map, có eval, và nêu rõ khi nào KHÔNG dùng nó. `scripts/skill_focus.py` kiểm tra các điều này trong CI. Skill chuyên ngành để ở gói riêng, chỉ cài khi dự án cần. Muốn thêm skill vào lõi phải qua `/change-intake` và được owner duyệt.
+
 ## 3. Quy trình cho một feature
 
 ### Bước 0 — Intake (S0)

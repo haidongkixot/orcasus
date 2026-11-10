@@ -1,6 +1,6 @@
 ---
 name: vertical-slice-delivery
-description: Plan and deliver a small complete workflow across UI, API, domain rules, persistence, permissions, observability, and automated tests.
+description: Plan and deliver a small complete workflow across UI, API, domain rules, persistence, permissions, observability, and automated tests. Do NOT use to split scope into slices without building them (backlog-slicing).
 ---
 
 # Vertical Slice Delivery

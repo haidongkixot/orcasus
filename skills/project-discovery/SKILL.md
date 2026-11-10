@@ -1,6 +1,6 @@
 ---
 name: project-discovery
-description: Mandatory preflight gate for non-trivial web/mobile work. Inventory repository, assets/licences, tools and permissions, integrations, credential availability, runtime, environments, test resources and budget before architecture or implementation.
+description: Mandatory preflight gate for non-trivial web/mobile work. Inventory repository, assets/licences, tools and permissions, integrations, credential availability, runtime, environments, test resources and budget before architecture or implementation. Do NOT use for a trivial edit, to classify a new request (change-intake) or to write the test plan (efficient-testing).
 ---
 
 # Project Discovery — Mandatory Preflight Gate v1.3.0

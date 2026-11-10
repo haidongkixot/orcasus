@@ -1,6 +1,6 @@
 ---
 name: meeting-record
-description: Open, maintain, reconcile, and close a recorded Agent Team meeting with observable messages, explicit ballots, decisions, dissent, actions, and coverage status.
+description: Open, maintain, reconcile, and close a recorded Agent Team meeting with observable messages, explicit ballots, decisions, dissent, actions, and coverage status. Do NOT use to run the debate itself (team-debate), and never to record hidden reasoning.
 ---
 
 # Meeting Record Workflow

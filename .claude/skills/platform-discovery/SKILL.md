@@ -1,6 +1,6 @@
 ---
 name: platform-discovery
-description: Turn an ambitious web/mobile platform idea into a validated product brief, capability map, domain model, architecture options, and phased vertical-slice roadmap.
+description: Turn an ambitious web/mobile platform idea into a validated product brief, capability map, domain model, architecture options, and phased vertical-slice roadmap. Do NOT use for a small change to an existing product (change-intake, then project-discovery).
 ---
 
 # Platform Discovery Workflow

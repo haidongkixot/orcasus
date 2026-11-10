@@ -20,6 +20,7 @@ Proposed thresholds, to be confirmed by the owner: trigger accuracy ≥ 0.90, as
 |---|---|---|
 | Smoke run, 8 skills changed in v2.4.0 (16 attempts, Linux cloud container, Claude Code 2.1.314, default model) | RAN 2026-10-30: trigger 12/16; deterministic checks 38/40, both failures `files_created` on a trigger FAIL; safety checks 36/36; judge (uncalibrated) 18 PASS / 22 FAIL of 40 assertions; spend $3.97 run + $1.67 judge | [run](../evidence/live-evals/run-20261030T154250Z-d8fc2f/run.json), [scorecard](../reports/live-eval-scorecard.md), [findings](../reports/v2.4-closeout.md#live-eval-smoke-run-2026-10-30) |
 | First smoke attempt (stopped after 2 attempts) | STOPPED: harness copied Orcasus's own records into the workspace and flagged an env reference as a secret; both fixed in `f27550e` | [stopped run](../evidence/live-evals/run-20261030T154015Z-752394/STOPPED.md) |
+| Smoke run after the focus rule (2026-11-10): 9 skills whose descriptions gained a "Do NOT use" boundary | NOT RUN (cost above the approved cap; owner decides) | command in [closeout](../reports/v2.4-closeout.md#follow-up-skill-focus-rule-owner-decision-2026-11-10) |
 | Smoke run, other 8 skills | NOT RUN | `python3 scripts/live_evals/run_live_evals.py --smoke --budget-total <USD>` |
 | Full run (78 cases × 3) | NOT RUN | owner decides after the smoke run's measured cost |
 | Judge calibration (≥ 30, target 60 human labels) | WAITING FOR OWNER: 40 items sampled, human labels empty | [labels sheet](../evidence/live-evals/calibration/2026-10-30-labels.csv), then `calibrate.py score` |
