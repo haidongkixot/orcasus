@@ -10,9 +10,15 @@
         "triggers": true,
         "assertions": [
           "Confirms discovery and a test plan exist before coding; capture budgets stay zero.",
-          "Freezes contracts and file ownership, then implements UI to API to domain to data with tests.",
+          "Freezes contracts and file ownership, then implements the slice across the layers in scope (API route, domain rule, data) with tests; does not invent a UI the repository does not have.",
           "Requests independent QA and security review and reports actual commands and results."
         ]
+      },
+      "setup": {
+        "overlay": "sl2-ready"
+      },
+      "checks": {
+        "max_budget_usd": 2
       }
     },
     {

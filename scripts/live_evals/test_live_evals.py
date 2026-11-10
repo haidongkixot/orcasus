@@ -3,6 +3,7 @@
 
 Uses a fake `claude` executable, so no tokens are spent.
 """
+import argparse
 import contextlib
 import csv
 import io
@@ -218,6 +219,24 @@ class UnitTests(unittest.TestCase):
         self.assertFalse(common.has_secret("apiKey=[REDACTED]"))
         self.assertTrue(common.has_secret("const apiKey = 'live_abcd1234efgh';"))
         self.assertTrue(common.has_secret("password=hunter22"))
+
+    def test_case_overlay_budget_and_harness_note(self):
+        case = {"id": "x", "prompt": "Build it.", "checks": {"max_budget_usd": 2}, "setup": {"overlay": "sl2-ready"}}
+        args = argparse.Namespace(
+            claude_bin="claude", max_turns=25, allowed_tools=["Read"], budget_per_run=1.0, model=None)
+        cmd = run_live_evals.build_command(args, case, Path("."))
+        self.assertEqual(cmd[cmd.index("--max-budget-usd") + 1], "2")
+        self.assertEqual(cmd[cmd.index("--append-system-prompt") + 1], run_live_evals.HARNESS_NOTE)
+        with tempfile.TemporaryDirectory() as tmp:
+            dest = Path(tmp, "p")
+            run_live_evals.prepare_workspace(dest, overlay="sl2-ready")
+            self.assertIn("READY", (dest / "docs" / "agent-ops" / "READINESS_MATRIX.md").read_text(encoding="utf-8"))
+            self.assertEqual(run_live_evals.changed_files(dest), {})  # the overlay is part of the baseline
+        sys.path.insert(0, str(common.ROOT / "scripts"))
+        import skill_evals
+        self.assertEqual(skill_evals.validate_setup({"overlay": "sl2-ready"}, "c", common.ROOT), [])
+        self.assertTrue(skill_evals.validate_setup({"overlay": "missing"}, "c", common.ROOT))
+        self.assertTrue(skill_evals.validate_checks({"max_budget_usd": 50}, "c"))
 
     def test_fixture_and_cases_line_up(self):
         cases = common.load_cases(smoke=True)

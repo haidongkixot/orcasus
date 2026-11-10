@@ -14,6 +14,8 @@ EVIDENCE_DIR = ROOT / "evidence" / "live-evals"
 # Judge "model" recorded on assertions failed by the deterministic trigger check, without a model call.
 AUTO_FAIL_MODEL = "auto:trigger-fail"
 FIXTURE_DIR = ROOT / "evals" / "fixtures" / "sample-app"
+# Per-case files copied over the fixture before the baseline commit (case "setup": {"overlay": name}).
+OVERLAY_DIR = ROOT / "evals" / "fixtures" / "overlays"
 HOOK_OK = "Orcasus hook runtime: OK"
 HOOK_WARNING = "Orcasus hook runtime: WARNING"
 

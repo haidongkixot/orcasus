@@ -110,3 +110,4 @@ The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilo
 
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
+| 2026-11-10 | Owner agreed to fix the smoke-run eval findings and run the pending live evals: live-eval harness (overlays, per-case budget, harness note) and three eval cases | agent-system-config (same class) | Owner "Đồng ý", 2026-11-10; live eval spend capped at $6 |

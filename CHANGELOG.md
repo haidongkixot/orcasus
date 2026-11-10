@@ -12,6 +12,7 @@ Changes from the tbagri-web pilot retro (P1–P9). Dispositions are in docs/EVID
 - Owner-confirmed hotfix lane: same gates, records completed before the pull request leaves draft or merges (P9).
 - 6 new eval cases and 1 rewritten (16 skills, 78 cases); 2 new checker tests.
 - Skill admission and focus rule (D14): at most 20 core skills and 9,000 description characters; every skill needs a stage-map entry and a "Do NOT use" boundary. Enforced by scripts/skill_focus.py in the validator and CI. Boundary clauses added to 9 skill descriptions; root-cause-debate added to the stage map (S8).
+- Eval fixes from the smoke run findings: per-case fixture overlays (`setup.overlay`, evals/fixtures/overlays/) so downstream skills start after a confirmed intake; per-case `checks.max_budget_usd`; a harness note telling agents to run single shell commands; the team-debate positive case asks a question the fixture has not decided; the vertical-slice case no longer expects a UI the fixture does not have.
 - Live evals: the first smoke run on the 8 changed skills (evidence in docs/EVIDENCE.md). Harness fixes: Orcasus's own records are kept out of the eval workspace; env references and redaction markers are not secrets; the judge loads no user-level settings. The judge no longer calls the model for assertions of attempts whose trigger check failed: they are marked FAIL as `auto:trigger-fail` and are never sampled for calibration.
 
 ### Live evidence tooling (shipped in the same pull request)

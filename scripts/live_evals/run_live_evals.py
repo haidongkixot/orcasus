@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import (EVIDENCE_DIR, FIXTURE_DIR, ROOT, has_secret, load_cases, matches,  # noqa: E402
+from common import (EVIDENCE_DIR, FIXTURE_DIR, OVERLAY_DIR, ROOT, has_secret, load_cases, matches,  # noqa: E402
                     parse_stream, redact_text, write_json)
 
 # What a consuming project gets when it installs Orcasus.
@@ -44,6 +44,10 @@ DEFAULT_TOOLS = [
     "Bash(python3 scripts/*)", "Bash(node --test *)", "Bash(npm test *)",
 ]
 DEFAULT_MAX_TURNS = 25
+# Told to every agent under test: the allowed Bash patterns match single commands only,
+# so "cd <dir>; git log" is denied in dontAsk mode (8 of 16 attempts on 2026-10-30).
+HARNESS_NOTE = ("Your working directory is the project root. Run one shell command per Bash call, "
+                "without cd, ';', '&&' or pipes; compound commands are denied in this environment.")
 
 
 def empty_index(text: str) -> str:
@@ -55,7 +59,7 @@ def empty_index(text: str) -> str:
     return text
 
 
-def prepare_workspace(dest: Path, fixture: Path = FIXTURE_DIR, root: Path = ROOT) -> None:
+def prepare_workspace(dest: Path, fixture: Path = FIXTURE_DIR, root: Path = ROOT, overlay: str | None = None) -> None:
     shutil.copytree(fixture, dest, dirs_exist_ok=True)
     for rel in INSTALL_PATHS:
         src = root / rel
@@ -67,6 +71,8 @@ def prepare_workspace(dest: Path, fixture: Path = FIXTURE_DIR, root: Path = ROOT
     index = dest / "knowledge" / "INDEX.md"
     if index.is_file():
         index.write_text(empty_index(index.read_text(encoding="utf-8")), encoding="utf-8")
+    if overlay:
+        shutil.copytree(OVERLAY_DIR / overlay, dest, dirs_exist_ok=True)
     git(dest, "init", "-q")
     git(dest, "add", "-A")
     git(dest, "-c", "user.name=orcasus-eval", "-c", "user.email=eval@example.invalid",
@@ -93,9 +99,11 @@ def build_command(args, case, workspace: Path) -> list[str]:
     max_turns = (case.get("checks") or {}).get("max_turns", args.max_turns)
     cmd = [args.claude_bin, "-p", case["prompt"], "--output-format", "stream-json", "--verbose",
            "--max-turns", str(max_turns), "--setting-sources", "project", "--no-session-persistence",
-           "--permission-mode", "dontAsk", "--allowedTools", *args.allowed_tools]
-    if args.budget_per_run:
-        cmd += ["--max-budget-usd", str(args.budget_per_run)]
+           "--permission-mode", "dontAsk", "--append-system-prompt", HARNESS_NOTE,
+           "--allowedTools", *args.allowed_tools]
+    budget = (case.get("checks") or {}).get("max_budget_usd", args.budget_per_run)
+    if budget:
+        cmd += ["--max-budget-usd", str(budget)]
     if args.model:
         cmd += ["--model", args.model]
     return cmd
@@ -141,7 +149,7 @@ def run_attempt(args, run_id, skill, case, attempt, out_dir: Path, raw_dir: Path
                               for a in case["expect"]["assertions"]]}
     with tempfile.TemporaryDirectory(prefix="orcasus-eval-") as tmp:
         workspace = Path(tmp) / "project"
-        prepare_workspace(workspace)
+        prepare_workspace(workspace, overlay=(case.get("setup") or {}).get("overlay"))
         cmd = build_command(args, case, workspace)
         env = dict(os.environ)
         env.pop("CLAUDE_PROJECT_DIR", None)

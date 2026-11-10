@@ -5,16 +5,24 @@
     {
       "id": "positive-architecture-choice",
       "type": "should_trigger",
-      "prompt": "Should our new platform be a modular monolith or microservices? Get the team to decide.",
+      "prompt": "How should invoice export run: a synchronous CSV download, or a background job that emails a download link? Get the team to decide.",
       "expect": {
         "triggers": true,
         "assertions": [
-          "Runs project-discovery first and starts Team Secretary with an active meeting record.",
+          "Runs project-discovery first. Starts Team Secretary with an active meeting record when Agent Teams are available; otherwise uses subagent mode and marks capture NOT VERIFIED.",
           "Collects independent first proposals before peers see each other's views.",
           "Requires peer challenge, rebuttal and a Devil's Advocate alternative.",
           "Scores with an explicit weighted matrix and collects explicit FINAL_BALLOT messages; never infers votes from silence.",
           "Records the decision state, dissent and revisit triggers in an ADR."
         ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ],
+        "max_budget_usd": 3
       }
     },
     {

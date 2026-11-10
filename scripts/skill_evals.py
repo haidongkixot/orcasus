@@ -28,7 +28,7 @@ def skill_names(root: Path) -> list[str]:
     return sorted(p.parent.name for p in (root / ".claude" / "skills").glob("*/SKILL.md"))
 
 
-CHECK_KEYS = {"files_created", "files_unchanged", "forbidden_tools", "max_turns"}
+CHECK_KEYS = {"files_created", "files_unchanged", "forbidden_tools", "max_turns", "max_budget_usd"}
 
 
 def validate_checks(checks, where: str) -> list[str]:
@@ -41,10 +41,22 @@ def validate_checks(checks, where: str) -> list[str]:
         if value is not None and (not isinstance(value, list) or not value
                                   or not all(isinstance(v, str) and v.strip() for v in value)):
             errors.append(f"{where}: checks.{key} must be a non-empty list of strings")
+    budget = checks.get("max_budget_usd")
+    if budget is not None and (isinstance(budget, bool) or not isinstance(budget, (int, float)) or not 0 < budget <= 10):
+        errors.append(f"{where}: checks.max_budget_usd must be a number above 0 and at most 10")
     turns = checks.get("max_turns")
     if turns is not None and (not isinstance(turns, int) or not 1 <= turns <= 100):
         errors.append(f"{where}: checks.max_turns must be an integer from 1 to 100")
     return errors
+
+
+def validate_setup(setup, where: str, root: Path) -> list[str]:
+    """A case may copy an overlay from evals/fixtures/overlays/<name>/ over the fixture."""
+    if not isinstance(setup, dict) or set(setup) != {"overlay"} or not isinstance(setup["overlay"], str):
+        return [f"{where}: setup must be {{\"overlay\": \"<name>\"}}"]
+    if not (root / "evals" / "fixtures" / "overlays" / setup["overlay"]).is_dir():
+        return [f"{where}: overlay '{setup['overlay']}' not found in evals/fixtures/overlays/"]
+    return []
 
 
 def validate_file(path: Path, skill: str, known_skills: set[str]) -> list[str]:
@@ -90,6 +102,8 @@ def validate_file(path: Path, skill: str, known_skills: set[str]) -> list[str]:
                 errors.append(f"{where}: routes_to names unknown skill '{routes_to}'")
         if "checks" in case:
             errors.extend(validate_checks(case["checks"], where))
+        if "setup" in case:
+            errors.extend(validate_setup(case["setup"], where, path.parents[4]))
     for case_type in CASE_TYPES:
         if case_type not in types:
             errors.append(f"{skill}: needs at least one {case_type} case")
