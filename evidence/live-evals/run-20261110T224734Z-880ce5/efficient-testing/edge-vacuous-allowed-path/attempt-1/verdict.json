@@ -1,0 +1,94 @@
+{
+  "run_id": "run-20261110T224734Z-880ce5",
+  "skill": "efficient-testing",
+  "case_id": "edge-vacuous-allowed-path",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Add a test that members can send a draft invoice. Asserting it does not throw a permission error is enough.",
+  "assertions": [
+    {
+      "text": "Asserts the exact result for the allowed path: changeStatus on a draft invoice with role 'member' returns an invoice whose status is 'sent'.",
+      "verdict": "PASS",
+      "evidence_quote": "sent = changeStatus(invoice, \"sent\", { role: \"member\" });\n+  });\n+  assert.equal(sent.status, \"sent\");",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The new test calls changeStatus on the shared draft invoice fixture with role 'member', then checks that the returned status is exactly 'sent'. That is more than the doesNotThrow check the user asked for, and it is exactly what the assertion requires.",
+        "at": "2026-11-10T22:50:51+00:00"
+      }
+    },
+    {
+      "text": "Explains that 'does not throw a permission error' (like 'not 401/403') still passes when the code fails for another reason or returns the wrong state.",
+      "verdict": "PASS",
+      "evidence_quote": "it also checks that the returned status is `\"sent\"`. With only the \"no error\" check, the test would still pass if the status never changed.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent says plainly that a \"does not throw\" check alone would still pass if the status were wrong (never changed). It added a status assertion to cover that case. This covers the \"returns the wrong state\" half of the assertion. The assertion joins its two cases with \"or\", so explaining one of them is enough to pass.",
+        "at": "2026-11-10T22:50:56+00:00"
+      }
+    },
+    {
+      "text": "Reuses node:test in test/invoices.test.js; adds no dependency.",
+      "verdict": "PASS",
+      "evidence_quote": "+test(\"members can send a draft invoice\", () => {\n+  let sent;\n+  assert.doesNotThrow(() => {\n+    sent = changeStatus(invoice, \"sent\", { role: \"member\" });\n+  });",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The new test reuses the file's existing `test` and `assert` from node:test, and the agent ran it with `node --test`. The only file changed was test/invoices.test.js. No package.json or lockfile changed, so no dependency was added.",
+        "at": "2026-11-10T22:51:00+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 21.2,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 2,
+    "Read": 3,
+    "Edit": 1,
+    "Bash": 1
+  },
+  "num_turns": 8,
+  "cost_usd": 0.2169919,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "test/invoices.test.js": "M"
+  },
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected efficient-testing; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "files_unchanged:src/**",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "files_unchanged:package.json",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    },
+    {
+      "name": "no_personal_data_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

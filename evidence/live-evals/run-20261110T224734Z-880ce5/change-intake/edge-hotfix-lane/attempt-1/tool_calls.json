@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "x-org-id|invoice",
+      "-i": true,
+      "glob": "!{docs,reports,knowledge,meetings,evals,templates}/**",
+      "output_mode": "content",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "hotfix",
+      "path": ".claude/skills/change-intake/SKILL.md",
+      "output_mode": "content",
+      "-C": 3
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-xl9b9t66/project/src/server.js"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short --branch",
+      "description": "Show branch and working tree status"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "auth|session|token|jwt|bearer|user",
+      "-i": true,
+      "path": "src",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls src test package.json",
+      "description": "List source, test files and package manifest"
+    }
+  }
+]

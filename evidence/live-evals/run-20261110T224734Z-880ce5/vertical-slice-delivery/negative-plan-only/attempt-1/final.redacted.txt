@@ -1,0 +1,34 @@
+I've broken the PRD into 6 slices and 2 spikes in `projects/demo/BACKLOG.md`. None can be built yet: every slice is blocked, and no code was changed.
+
+**Two problems came up while slicing:**
+
+1. **R1 isn't met, even though the old backlog marked it DONE.** The server takes the organization from a request header the caller sets themselves (`src/server.js:9`), with no login check. Anyone can read another organization's invoices by changing that header. I reopened it as two slices: S-1 makes the server get the organization from a logged-in user instead of a header, and S-2 is the R1 invoice list. S-1 is a must-do security fix.
+2. **The old backlog doesn't match the repo.** The branch it lists for CSV export (`feat/csv-export`) doesn't exist; git has only the `baseline` commit. I treated export as not started.
+
+**The required earlier steps haven't happened.** There's no intake record, readiness check or requirements trace, and nothing in the PRD shows it was approved. So this is a draft for you, not a plan anyone can start building from.
+
+**Proposed order** (by dependency; you set the final priority):
+
+| # | Slice | Requirement | Blocked on |
+|---|---|---|---|
+| SP-1 | Spike: how users log in, and where their organization and role come from | — | auth approach unknown |
+| S-1 | Get the organization from the logged-in user, not a header | R1 (security) | SP-1 |
+| S-2 | Each organization sees only its own invoices, with totals | R1 | S-1, no test runner found |
+| S-3 | Void endpoint for admins only (403 for anyone else, 404 across organizations) | R2 | full role list unknown |
+| S-4 | Void button shown only to admins | R2 | no UI code in repo |
+| SP-2 | Spike: where invoices are stored (today they're only held in memory) | — | — |
+| S-5 | Export all past invoices for the organization | R3 | export format, which statuses count, SP-2 |
+| S-6 | Show totals in the organization's currency | R4 | invoices and organizations have no currency field |
+
+I used MoSCoW (Must / Should / Could / Won't) to rank them, because most inputs for a numeric score would be guesses. Payments collection is out of scope per the PRD.
+
+**Questions for you (most blocking first):**
+- **Q0:** Is the PRD approved? If so, I'll do the intake, readiness check and requirements trace next.
+- **Q1:** How do users log in, and where do their organization and role come from?
+- **Q2:** What's the full list of roles? The code only knows `admin`, and the PRD also names finance staff.
+- **Q3:** Should "all historical invoices" include draft and void ones?
+- **Q4:** Should the export be CSV, and who may export?
+- **Q5:** What UI stack should the billing page use? There's none in the repo.
+- **Q6:** Where does an organization's currency come from? Can one organization have invoices in more than one currency?
+
+The backlog file isn't committed yet.

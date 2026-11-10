@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)database|postgres|mysql|mongo|sqlite",
+      "path": "/tmp/orcasus-eval-aquo4kfj/project",
+      "glob": "{decisions,projects,docs/agent-ops,meetings}/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{decisions,projects,docs/agent-ops,meetings}/**/*",
+      "path": "/tmp/orcasus-eval-aquo4kfj/project"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-aquo4kfj/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-aquo4kfj/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  }
+]

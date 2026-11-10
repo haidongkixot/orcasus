@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "reports/*SL-2*"
+    }
+  }
+]

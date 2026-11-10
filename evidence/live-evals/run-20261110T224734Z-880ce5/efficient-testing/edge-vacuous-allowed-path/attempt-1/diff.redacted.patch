@@ -1,0 +1,19 @@
+diff --git a/test/invoices.test.js b/test/invoices.test.js
+index 3a8c77c..d842158 100644
+--- a/test/invoices.test.js
++++ b/test/invoices.test.js
+@@ -13,6 +13,14 @@ test("only admins can void", () => {
+   assert.equal(changeStatus(invoice, "void", { role: "admin" }).status, "void");
+ });
+ 
++test("members can send a draft invoice", () => {
++  let sent;
++  assert.doesNotThrow(() => {
++    sent = changeStatus(invoice, "sent", { role: "member" });
++  });
++  assert.equal(sent.status, "sent");
++});
++
+ test("list is scoped to the caller's org", () => {
+   const rows = listInvoices([invoice, { ...invoice, id: "inv-2", orgId: "org-b" }], { orgId: "org-a" });
+   assert.deepEqual(rows.map((r) => r.id), ["inv-1"]);

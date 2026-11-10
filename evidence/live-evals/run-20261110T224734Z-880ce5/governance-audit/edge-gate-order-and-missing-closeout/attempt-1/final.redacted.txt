@@ -1,0 +1,15 @@
+I haven't started the SL-2 audit. The project's rules say the closeout must be written before the audit starts (CLAUDE.md, "Close, audit and learn": "Write the closeout before the audit starts"). I checked `reports/` and there's no closeout or other report for SL-2 yet, so this would be the case the rule is meant to block.
+
+Auditing now and checking the closeout later would cause these problems:
+
+- **The main check would be missing.** The audit's job is to test what the closeout claims against primary evidence: what's done, what was deliberately left out, what tests ran and their results. Without a closeout there's nothing to test. That control can only come back UNVERIFIABLE, and the audit would end up FAIL or incomplete.
+- **It wouldn't count.** An audit dated before the closeout breaks the required order. The pull request can only leave draft after the reviews, the closeout and the audit all exist, in that order, so this audit would have to be redone anyway.
+- **The closeout could be shaped to pass.** If the audit findings are visible while the closeout is still being written, it can be adjusted to fit them. Running them in order keeps the audit independent.
+
+Here are three ways to go:
+
+1. **Recommended:** finish the SL-2 closeout in `reports/` and tell me when it's there. I'll start the `governance-auditor` agent (read-only, not the change author), and it will save its report in `reports/`.
+2. If you want early feedback, I can do an informal check of what exists now: intake, readiness, requirement citations, test plan, saved reviews and approvals. It would be labelled clearly as not the governance audit and wouldn't count toward taking the PR out of draft.
+3. If you want the audit-before-closeout order allowed in general, that's a change to CLAUDE.md. It needs your approval and has to go through `/change-intake` as an agent-system-config change.
+
+Which would you like?
