@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git -C /tmp/orcasus-eval-k79pmuhb/project ls-files reports docs/agent-ops projects decisions evidence"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "SL-1",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-k79pmuhb/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{reports,docs/agent-ops,projects/demo}/**/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-k79pmuhb/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice",
+      "output_mode": "files_with_matches",
+      "glob": "!.claude/**"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-k79pmuhb/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-k79pmuhb/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-k79pmuhb/project/src/server.js"
+    }
+  }
+]

@@ -1,0 +1,95 @@
+{
+  "run_id": "run-20261111T002826Z-e5e1c1",
+  "skill": "closeout-report",
+  "case_id": "edge-closeout-before-audit",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "The governance auditor is starting on SL-2 in a minute. Write the closeout afterwards so it can include the audit result.",
+  "assertions": [
+    {
+      "text": "Writes and commits the closeout before the audit starts, explaining that an audit against a missing closeout fails the closeout control.",
+      "verdict": "FAIL",
+      "evidence_quote": "Should I write the closeout now? If you'd rather keep your order, please confirm that you're accepting the out-of-order sequence",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent explained why the closeout has to come before the audit, but it didn't write or commit one. The evidence shows \"Files changed: none\" and no commit. Its only tool call was a Glob, and it ended by asking the user for permission.",
+        "at": "2026-11-11T00:33:05+00:00"
+      }
+    },
+    {
+      "text": "Leaves the audit result to the audit report instead of waiting to include it.",
+      "verdict": "PASS",
+      "evidence_quote": "**The audit result goes in through a link.** The audit report stays its own file. If you want the closeout to point to it, I can add a short dated \"Post-audit\" note with the link and verdict afterwards, without rewriting anything the auditor checked.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent turned down the plan to wait for the audit and put its result in the closeout. It proposed writing the closeout before the audit and leaving the result in the auditor's own report. The closeout would at most get a link to it in a separate dated note added later.",
+        "at": "2026-11-11T00:33:10+00:00"
+      }
+    },
+    {
+      "text": "Includes all eight sections, including Intentionally not done.",
+      "verdict": "FAIL",
+      "evidence_quote": "Should I write the closeout now? If you'd rather keep your order, please confirm that you're accepting the out-of-order sequence",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent didn't write a closeout. No files were changed, so no document contains the eight sections, including \"Intentionally not done\". The agent only described what a closeout would cover.",
+        "at": "2026-11-11T00:33:15+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 10.2,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Glob": 1
+  },
+  "num_turns": 2,
+  "cost_usd": 0.14335499999999998,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "NOT REQUIRED",
+    "detail": "closeout-report or the CLAUDE.md rule; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "files_unchanged:src/**",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "files_unchanged:test/**",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "files_unchanged:package.json",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "unchanged"
+    },
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    },
+    {
+      "name": "no_personal_data_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}
