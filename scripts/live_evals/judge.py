@@ -121,7 +121,21 @@ def claude_call(prompt: str, model: str | None, claude_bin: str, timeout: int = 
                               timeout=timeout, env=child_env(os.environ))
     if proc.returncode != 0:
         raise RuntimeError(f"judge call failed ({proc.returncode}): {proc.stderr[-500:]}")
-    return parse_judge_output(proc.stdout)
+    result = parse_judge_output(proc.stdout)
+    result["_cost_usd"] = judge_cost(proc.stdout)  # kept in the evidence; re-audit N7
+    return result
+
+
+def judge_cost(stdout: str):
+    """Reported cost of one judge call, or None when the CLI did not report it."""
+    try:
+        data = json.loads(stdout)
+    except ValueError:
+        return None
+    if isinstance(data, list):
+        data = next((e for e in reversed(data) if isinstance(e, dict) and e.get("type") == "result"), {})
+    cost = data.get("total_cost_usd") if isinstance(data, dict) else None
+    return cost if isinstance(cost, (int, float)) else None
 
 
 def parse_judge_output(stdout: str) -> dict:
@@ -151,7 +165,7 @@ def auto_fail(verdict: dict) -> dict | None:
 
 
 def judge_run(run_dirs, call, model, rejudge=False, limit=0, auto=True) -> dict:
-    counts = {"PASS": 0, "FAIL": 0, "UNCLEAR": 0, "ERROR": 0, "skipped": 0, "auto_fail": 0}
+    counts = {"PASS": 0, "FAIL": 0, "UNCLEAR": 0, "ERROR": 0, "skipped": 0, "auto_fail": 0, "cost_usd": 0.0}
     graded = 0
     for path, verdict in iter_attempts(run_dirs):
         if verdict.get("status") != "RAN":
@@ -175,14 +189,18 @@ def judge_run(run_dirs, call, model, rejudge=False, limit=0, auto=True) -> dict:
                 changed = True
                 continue
             prompt = RUBRIC.format(prompt=verdict["prompt"], assertion=assertion["text"], material=material)
+            cost = None
             try:
-                result = check_quote(call(prompt), material)
+                raw = call(prompt)
+                cost = raw.pop("_cost_usd", None) if isinstance(raw, dict) else None
+                result = check_quote(raw, material)
             except Exception as exc:  # recorded, never counted as PASS
                 result = {"verdict": "UNCLEAR", "evidence_quote": None, "reason": f"judge error: {exc}"[:500]}
                 counts["ERROR"] += 1
+            counts["cost_usd"] = round(counts["cost_usd"] + (cost or 0.0), 6)
             assertion.update({"verdict": result["verdict"], "evidence_quote": result["evidence_quote"],
                               "judge": {"model": model or "default", "rubric_hash": RUBRIC_HASH,
-                                        "reason": result.get("reason", ""),
+                                        "reason": result.get("reason", ""), "cost_usd": cost,
                                         "at": datetime.now(timezone.utc).isoformat(timespec="seconds")}})
             counts[result["verdict"]] += 1
             graded += 1

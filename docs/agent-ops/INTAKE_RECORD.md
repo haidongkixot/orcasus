@@ -94,7 +94,7 @@ The plan turns the tbagri-web pilot retro proposals into rules and checks: [pilo
 
 ## 4. Intent and value (owner-confirmed)
 
-- Problem: every added skill costs every session context tokens and routing ambiguity, and spreads the core rules across more texts. Measured: Orcasus has 16 skills and 5,771 description characters; Aegis has 194 skills, 173,285 characters and 990 routing edges.
+- Problem: every added skill costs every session context tokens and routing ambiguity, and spreads the core rules across more texts. Measured: Orcasus has 16 skills and 5,771 description characters (corrected to 5,757 by the same method in D14 and evidence/aegis-measurement-2026-11-10.md); Aegis has 194 skills, 173,285 characters and 990 routing edges.
 - Expected value: the core stays small and each skill has a clear boundary, so routing and the core rules stay sharp.
 - Success signal: the validator fails a bundle that exceeds the cap or budget, or that has a skill without a stage-map entry or a boundary clause.
 - Urgency: none stated. Non-goals: shrinking the current set.

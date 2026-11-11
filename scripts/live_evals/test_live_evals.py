@@ -35,7 +35,7 @@ FAKE_CLAUDE = textwrap.dedent('''\
     if "--json-schema" in args:
         evidence = sys.stdin.read()
         quote = "Skills invoked: change-intake" if mode != "bad_quote" else "this text is not in the evidence"
-        print(json.dumps({{"type": "result", "structured_output": {{"verdict": "PASS", "evidence_quote": quote, "reason": "ok"}}}}))
+        print(json.dumps({{"type": "result", "total_cost_usd": 0.002, "structured_output": {{"verdict": "PASS", "evidence_quote": quote, "reason": "ok"}}}}))
         sys.exit(0)
     def emit(event): print(json.dumps(event))
     emit({{"type": "system", "subtype": "init"}})
@@ -106,6 +106,8 @@ class RunnerTests(unittest.TestCase):
         call = lambda prompt: judge.claude_call(prompt, None, str(self.fake))  # noqa: E731
         counts = judge.judge_run([run_dir], call, None)
         self.assertEqual(counts["PASS"], counts["graded"])
+        self.assertAlmostEqual(counts["cost_usd"], 0.002 * counts["graded"])  # judge spend is recorded (re-audit N7)
+        self.assertTrue(all(a["judge"]["cost_usd"] == 0.002 for a in self.verdicts(run_dir)[0]["assertions"]))
         card = scorecard.build([run_dir])
         self.assertEqual(card["skills"]["change-intake"]["status"], "INSUFFICIENT EVIDENCE")
         calibration = self.dir / "cal.json"
