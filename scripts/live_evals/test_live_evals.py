@@ -138,6 +138,35 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(len(calls), total)
         self.assertEqual(counts["auto_fail"], 0)
 
+    def test_skill_or_rule_case_is_graded_by_assertions(self):
+        case = {"id": "x", "type": "should_trigger", "trigger": "skill-or-rule", "prompt": "p",
+                "expect": {"triggers": True, "assertions": ["a"]}}
+        summary = {"skills_invoked": [], "tools_used": {}}
+        verdict = run_live_evals.apply_checks("change-intake", case, summary, {}, "")
+        self.assertEqual(verdict["trigger"]["verdict"], "NOT REQUIRED")
+        self.assertIsNone(judge.auto_fail(verdict))  # never auto-FAILed
+        strict = run_live_evals.apply_checks("change-intake", dict(case, trigger="skill"), summary, {}, "")
+        self.assertEqual(strict["trigger"]["verdict"], "FAIL")
+        sys.path.insert(0, str(common.ROOT / "scripts"))
+        import skill_evals
+        bad = dict(case, id="y", type="should_not_trigger", expect={"triggers": False, "assertions": ["a"]})
+        padding = [dict(case, id=f"p{i}", trigger="skill") for i in range(skill_evals.MIN_CASES)]
+        errors = self.validate_cases(skill_evals, [case, bad, *padding])
+        self.assertEqual([e for e in errors if "trigger must be" in e], ["change-intake case y: trigger must be 'skill' or 'skill-or-rule', on should_trigger cases only"])
+
+    def validate_cases(self, skill_evals, cases):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp, "evals.json")
+            path.write_text(json.dumps({"skill": "change-intake", "description": "d", "cases": cases}), encoding="utf-8")
+            return skill_evals.validate_file(path, "change-intake", {"change-intake"})
+
+    def test_child_env_drops_identity_and_session(self):
+        base = {"PATH": "/bin", "HOME": "/root", "CLAUDE_CODE_USER_EMAIL": "x", "CLAUDE_CODE_ACCOUNT_UUID": "u",
+                "CLAUDE_CODE_ORGANIZATION_UUID": "o", "CLAUDE_CODE_SESSION_ID": "s", "CLAUDECODE": "1",
+                "CLAUDE_PROJECT_DIR": "/p", "ANTHROPIC_BASE_URL": "https://example.invalid"}
+        self.assertEqual(common.child_env(base), {"PATH": "/bin", "HOME": "/root",
+                                                  "ANTHROPIC_BASE_URL": "https://example.invalid"})
+
     def test_judge_quote_not_in_evidence_becomes_unclear(self):
         run_dir = self.run_main()
         with mock.patch.dict(os.environ, {"FAKE_MODE": "bad_quote"}):

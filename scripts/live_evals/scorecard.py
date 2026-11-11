@@ -72,15 +72,17 @@ def build(run_dirs, calibrations=None, label_files=None) -> dict:
         s["attempts"] += 1
         if v.get("status") != "RAN":
             s["errors"] += 1
-        trig = v["trigger"]["verdict"] == "PASS"
-        s["trigger_total"] += 1
-        s["trigger_pass"] += trig
-        if v["case_type"] == "should_trigger":
-            s["pos_total"] += 1
-            s["pos_pass"] += trig
-        else:
-            s["neg_total"] += 1
-            s["neg_pass"] += trig
+        rule_case = v["trigger"]["verdict"] == "NOT REQUIRED"  # skill-or-rule case without a skill call
+        trig = rule_case or v["trigger"]["verdict"] == "PASS"
+        if not rule_case:
+            s["trigger_total"] += 1
+            s["trigger_pass"] += trig
+            if v["case_type"] == "should_trigger":
+                s["pos_total"] += 1
+                s["pos_pass"] += trig
+            else:
+                s["neg_total"] += 1
+                s["neg_pass"] += trig
         if v["routing"]["verdict"] in ("PASS", "FAIL"):
             s["routing_total"] += 1
             s["routing_pass"] += v["routing"]["verdict"] == "PASS"

@@ -29,7 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import (EVIDENCE_DIR, FIXTURE_DIR, OVERLAY_DIR, ROOT, has_personal_data, has_secret, load_cases, matches,  # noqa: E402
+from common import (EVIDENCE_DIR, FIXTURE_DIR, OVERLAY_DIR, ROOT, child_env, has_personal_data, has_secret, load_cases, matches,  # noqa: E402
                     parse_stream, redact_text, write_json)
 
 # What a consuming project gets when it installs Orcasus.
@@ -112,7 +112,12 @@ def build_command(args, case, workspace: Path) -> list[str]:
 def apply_checks(skill: str, case: dict, summary: dict, files: dict, raw: str) -> dict:
     """Deterministic verdicts for one attempt."""
     invoked = summary["skills_invoked"]
-    if case["type"] == "should_trigger":
+    if case["type"] == "should_trigger" and case.get("trigger") == "skill-or-rule":
+        # The behavior may come from a CLAUDE.md rule without a skill call; assertions decide (retro R11).
+        trigger = {"verdict": "PASS" if skill in invoked else "NOT REQUIRED",
+                   "detail": f"{skill} or the CLAUDE.md rule; invoked {invoked or 'none'}"}
+        routing = {"verdict": "NOT APPLICABLE"}
+    elif case["type"] == "should_trigger":
         trigger = {"verdict": "PASS" if skill in invoked else "FAIL",
                    "detail": f"expected {skill}; invoked {invoked or 'none'}"}
         routing = {"verdict": "NOT APPLICABLE"}
@@ -155,8 +160,7 @@ def run_attempt(args, run_id, skill, case, attempt, out_dir: Path, raw_dir: Path
         workspace = Path(tmp) / "project"
         prepare_workspace(workspace, overlay=(case.get("setup") or {}).get("overlay"))
         cmd = build_command(args, case, workspace)
-        env = dict(os.environ)
-        env.pop("CLAUDE_PROJECT_DIR", None)
+        env = child_env(os.environ)
         started = time.monotonic()
         try:
             proc = subprocess.run(cmd, cwd=workspace, capture_output=True, text=True,

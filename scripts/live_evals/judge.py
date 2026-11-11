@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -28,7 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import AUTO_FAIL_MODEL, iter_attempts, write_json  # noqa: E402
+from common import AUTO_FAIL_MODEL, child_env, iter_attempts, write_json  # noqa: E402
 
 RUBRIC = """You are grading one assertion about how an AI coding agent handled a task.
 Decide only from the evidence between the BEGIN EVIDENCE and END EVIDENCE markers.
@@ -117,7 +118,7 @@ def claude_call(prompt: str, model: str | None, claude_bin: str, timeout: int = 
         cmd += ["--model", model]
     with tempfile.TemporaryDirectory(prefix="orcasus-judge-") as empty:
         proc = subprocess.run(cmd, cwd=empty, input=prompt, capture_output=True, text=True,
-                              timeout=timeout)
+                              timeout=timeout, env=child_env(os.environ))
     if proc.returncode != 0:
         raise RuntimeError(f"judge call failed ({proc.returncode}): {proc.stderr[-500:]}")
     return parse_judge_output(proc.stdout)

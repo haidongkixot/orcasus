@@ -94,6 +94,8 @@ def validate_file(path: Path, skill: str, known_skills: set[str]) -> list[str]:
         assertions = expect.get("assertions")
         if not isinstance(assertions, list) or not assertions or not all(isinstance(a, str) and a.strip() for a in assertions):
             errors.append(f"{where}: expect.assertions must be a non-empty list of strings")
+        if "trigger" in case and (case_type != "should_trigger" or case["trigger"] not in ("skill", "skill-or-rule")):
+            errors.append(f"{where}: trigger must be 'skill' or 'skill-or-rule', on should_trigger cases only")
         routes_to = case.get("routes_to")
         if routes_to is not None:
             if case_type != "should_not_trigger":

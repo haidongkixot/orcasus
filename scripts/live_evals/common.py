@@ -125,6 +125,19 @@ def has_secret(text: str) -> bool:
     return any(pattern.search(text) for pattern, _ in SECRET_PATTERNS)
 
 
+# Nested runs must not see the caller's account identity or session: the 2026-10-30 run copied the
+# owner's e-mail into a record (audit F3), and inherited session ids mix the child into the parent.
+SESSION_VARS = {"CLAUDE_PROJECT_DIR", "CLAUDE_CODE_SESSION_ID", "CLAUDE_CODE_REMOTE_SESSION_ID", "CLAUDECODE",
+                "CLAUDE_CODE_CHILD_SESSION", "CLAUDE_PID"}
+IDENTITY_MARKERS = ("USER_EMAIL", "ACCOUNT_UUID", "ORGANIZATION_UUID")
+
+
+def child_env(base) -> dict:
+    """Environment for a nested `claude -p`: no session ids, no account identity."""
+    return {k: v for k, v in base.items()
+            if k not in SESSION_VARS and not any(marker in k for marker in IDENTITY_MARKERS)}
+
+
 def has_personal_data(text: str) -> bool:
     return bool(EMAIL_RE.search(text))
 
