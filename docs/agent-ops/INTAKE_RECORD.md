@@ -160,3 +160,60 @@ The source is the independent audit [v2.4-governance-audit.md](../../reports/v2.
 
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
+
+---
+
+# Intake Record — S0 (retro adoption)
+
+- Intake ID: ORC-2026-11-11-retro
+- Date: 2026-11-11
+- Requested by / owner: repository owner (haidongkixot)
+- Status: CONFIRMED (selection delegated to the agent)
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> "You decide" (owner, 2026-11-10). This answers the open choice of which retro proposals R1–R12 ([v2.4-retro.md](../../reports/v2.4-retro.md)) to adopt. The agent's selection and its reasons are below. The owner can reverse any of them; see [APPROVALS.md](APPROVALS.md).
+
+## 2. Deliverables and classes
+
+| ID | Decision | Deliverable | Files | Class | Validation floor |
+|---|---|---|---|---|---|
+| R1 | ADOPT | Commits after a closeout need a new intake or a reclassification row committed first | `CLAUDE.md`, change-intake | agent-system-config | validator |
+| R2 | DEFER | Gate-order/scope CI check. It needs a machine-readable scope contract, a new format. Revisit if the next audit fails gate order | — | — | — |
+| R3 | ADOPT | "Hooks" includes the scripts they run; templates are agent-system-config; changing a hook script needs an approval row | change-intake | agent-system-config | validator |
+| R4 | ADOPT | Records redact personal data, not only secrets; nested eval runs carry no account identity variables | `CLAUDE.md`, `scripts/live_evals/run_live_evals.py` + test | agent-system-config | unit tests |
+| R5 | ADOPT | Short readiness table for agent-system-config in the intake; its validation-floor table is the test plan for that class | change-intake, efficient-testing, intake template | agent-system-config | validator |
+| R6 | ADOPT (text only) | One closeout per intake; header head SHA refreshed at the final head before the audit | closeout-report | agent-system-config | validator |
+| R7 | ADOPT | D-entries carry options, a decision state and a revisit trigger; D14 completed, D15 added for the judge auto-FAIL rule | `docs/RESEARCH_AND_DECISIONS.md` | docs-only | link check |
+| R8 | ADOPT | Approvals log with the owner's verbatim words | `docs/agent-ops/APPROVALS.md` | docs-only | link check |
+| R9 | ADOPT | Audits run in a separate session or are countersigned by the owner; re-audit v2.4 in a new cloud session | `CLAUDE.md`; report file | agent-system-config | report saved |
+| R10 | ADOPT | Fix eval cases with design defects; add eval-authoring rules to the overlay README | 6 `evals.json`, overlays | agent-system-config | evals valid; live re-run |
+| R11 | ADOPT | `"trigger": "skill-or-rule"` cases are scored by assertions, never auto-FAILed | `scripts/live_evals/*`, `scripts/skill_evals.py` + tests | agent-system-config | unit tests |
+| R12 | ADOPT | Hotfix lane writes and commits the minimal intake first and names the security review | change-intake | agent-system-config | evals valid; live re-run |
+
+Reasons for the selection:
+- **Focus (D14):** short rules in one place, machine checks where cheap, no new skill, and nothing that needs a new structured format (R2).
+
+## 3. Readiness (short form, R5)
+
+| Area | Status | Evidence |
+|---|---|---|
+| Eval runtime | AVAILABLE | `claude` CLI in the container; nested runs worked on 2026-11-10 |
+| Eval budget | AVAILABLE, capped | **$4** for re-runs in this intake |
+| Separate session for the re-audit | AVAILABLE | `create_session` tool in this session |
+| CI | AVAILABLE | GitHub Actions on 3 OSes |
+
+## 4. Scope contract and test plan
+
+- **Files:** those in section 2, plus `CHANGELOG.md`, `docs/EVIDENCE.md`, `reports/` (closeout and re-audit), `evidence/live-evals/**`, `knowledge/INDEX.md` and `.github/workflows/validate.yml` if a test file is added.
+- **Test plan (R5):** the validation floors in section 2, plus all package checks and CI green.
+- **Out of scope:**
+  - human calibration labels (owner only);
+  - leaving draft on PR #3;
+  - R2.
+
+## 5. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
