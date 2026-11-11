@@ -92,7 +92,8 @@
           "package.json",
           "projects/demo/PRD.md"
         ]
-      }
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-elicitation-from-scratch",

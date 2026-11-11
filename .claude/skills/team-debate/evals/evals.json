@@ -31,7 +31,7 @@
     {
       "id": "edge-no-agent-teams",
       "type": "should_trigger",
-      "prompt": "Run a team debate on the database choice.",
+      "prompt": "Run a team debate on how invoices are stored: keep the in-memory array, move to SQLite, or move to PostgreSQL.",
       "expect": {
         "triggers": true,
         "assertions": [
@@ -47,8 +47,13 @@
           "src/**",
           "test/**",
           "package.json"
-        ]
-      }
+        ],
+        "max_budget_usd": 2
+      },
+      "setup": {
+        "overlay": "storage-intake-confirmed"
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-obvious-choice",

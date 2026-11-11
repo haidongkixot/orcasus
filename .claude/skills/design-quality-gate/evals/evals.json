@@ -5,7 +5,7 @@
     {
       "id": "positive-review-ui",
       "type": "should_trigger",
-      "prompt": "Review the new settings page for UX and accessibility issues.",
+      "prompt": "Review the new settings page (public/settings.html) for UX and accessibility issues.",
       "expect": {
         "triggers": true,
         "assertions": [
@@ -13,6 +13,9 @@
           "Prefers DOM and accessibility assertions; no screenshots by default.",
           "Records issues with severity, evidence, expected behavior and recommended fix."
         ]
+      },
+      "setup": {
+        "overlay": "settings-page"
       }
     },
     {

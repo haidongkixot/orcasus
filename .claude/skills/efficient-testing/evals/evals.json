@@ -75,7 +75,8 @@
           "src/**",
           "package.json"
         ]
-      }
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-requirements",

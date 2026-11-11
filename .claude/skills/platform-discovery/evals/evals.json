@@ -13,6 +13,9 @@
           "Defines users, jobs-to-be-done, workflows, constraints and success metrics, separating primitives from modules.",
           "Picks one end-to-end vertical slice that tests the riskiest assumption and records MVP non-goals."
         ]
+      },
+      "setup": {
+        "overlay": "platform-intake-confirmed"
       }
     },
     {

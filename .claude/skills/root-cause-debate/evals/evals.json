@@ -5,7 +5,7 @@
     {
       "id": "positive-flaky-defect",
       "type": "should_trigger",
-      "prompt": "Orders occasionally duplicate in production and nobody can reproduce it.",
+      "prompt": "Users occasionally see another organization's invoice in the invoice list in production, and nobody can reproduce it.",
       "expect": {
         "triggers": true,
         "assertions": [
@@ -14,6 +14,9 @@
           "Runs only safe experiments with no production-impacting changes.",
           "Adds regression tests for the confirmed cause."
         ]
+      },
+      "setup": {
+        "overlay": "rca-intake-confirmed"
       }
     },
     {

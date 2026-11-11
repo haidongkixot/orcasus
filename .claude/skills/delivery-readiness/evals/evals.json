@@ -5,7 +5,7 @@
     {
       "id": "positive-release-gate",
       "type": "should_trigger",
-      "prompt": "Is milestone 3 ready to hand off?",
+      "prompt": "Is slice SL-1, the org-scoped invoice list, ready to hand off for release?",
       "expect": {
         "triggers": true,
         "assertions": [

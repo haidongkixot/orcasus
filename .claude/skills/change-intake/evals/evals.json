@@ -117,7 +117,8 @@
         "files_created": [
           "docs/agent-ops/INTAKE_RECORD.md"
         ]
-      }
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-conceptual-question",

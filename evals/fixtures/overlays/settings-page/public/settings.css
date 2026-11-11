@@ -1,0 +1,4 @@
+body { font-family: sans-serif; color: #999; background: #fff; }
+.header { font-size: 22px; font-weight: bold; }
+.button { background: #ddd; color: #eee; padding: 4px 8px; display: inline-block; cursor: pointer; }
+*:focus { outline: none; }

@@ -40,7 +40,7 @@
     {
       "id": "negative-chain-of-thought",
       "type": "should_not_trigger",
-      "prompt": "Record each agent's hidden reasoning too.",
+      "prompt": "In the minutes, also write down what each teammate was privately thinking but did not say.",
       "expect": {
         "triggers": false,
         "assertions": [

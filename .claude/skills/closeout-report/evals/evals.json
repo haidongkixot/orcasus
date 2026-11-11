@@ -56,7 +56,8 @@
           "test/**",
           "package.json"
         ]
-      }
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-audit-someone-else",

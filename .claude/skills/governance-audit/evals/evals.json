@@ -70,7 +70,8 @@
           "projects/**",
           "decisions/**"
         ]
-      }
+      },
+      "trigger": "skill-or-rule"
     },
     {
       "id": "negative-own-closeout",
