@@ -217,3 +217,4 @@ Reasons for the selection:
 
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
+| 2026-11-11 | Re-audit (`reports/v2.4-governance-audit-2.md`) findings fixable by the author: N7 judge records its cost (code, `scripts/live_evals/judge.py` + test), N5 closeout corrections, N6 intake-2 figure note, N9 PR body. Committed before the code (R1) | agent-system-config (same class) | Within the delegated selection ("You decide"); owner confirmation of the R-list still pending (N2) |
