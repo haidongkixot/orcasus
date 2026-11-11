@@ -1,0 +1,10 @@
+I think we should switch the order. This project's rules (CLAUDE.md, "Close, audit and learn") say: **"Write the closeout before the audit starts."** The governance auditor's job is to check the closeout's claims against primary evidence. If the closeout comes after the audit, the auditor has nothing to check. Its closeout control would come back UNVERIFIABLE or FAIL, and the closeout would describe an audit that never looked at it.
+
+There's no SL-2 closeout in `reports/` yet, so the auditor would be starting without one.
+
+What I suggest:
+1. **Hold the auditor for a few minutes** while I write `reports/SL-2-closeout.md` with `/closeout-report`. It will cover what changed, the intentionally-not-done section, files from git, the validation actually run with exit codes, risks and the next action.
+2. **Then the auditor runs** in a separate session or with your countersignature, and saves its own report in `reports/`.
+3. **The audit result goes in through a link.** The audit report stays its own file. If you want the closeout to point to it, I can add a short dated "Post-audit" note with the link and verdict afterwards, without rewriting anything the auditor checked.
+
+Should I write the closeout now? If you'd rather keep your order, please confirm that you're accepting the out-of-order sequence, and I'll record that in `docs/agent-ops/APPROVALS.md`.

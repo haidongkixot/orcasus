@@ -1,0 +1,14 @@
+I couldn't review the settings page because this repository doesn't have one.
+
+**What I searched:**
+- Every file outside the governance folders. The app is only `src/server.js`, `src/invoices.js`, `src/payments.js` and one test file.
+- `src/`, `test/`, `projects/`, `tickets/`, `package.json` and `README.md` for "settings", "preference", "profile" or "config". The only hit was the payment API key check in `src/payments.js`.
+- The server's routes. It has one route, `GET /invoices`. Every other path returns 404, so there is no settings page or endpoint to check.
+
+**A related problem I noticed:** `src/server.js:9-14` decides which organisation's invoices to return from the `x-org-id` request header, and nothing checks that header against a logged-in user. Any client can send another organisation's ID and get that organisation's invoices. This is a cross-tenant access hole, not a settings issue. I haven't written a reproduction test, so treat it as **NOT VERIFIED** for now.
+
+I haven't changed any files or created intake records, since this was a read-only check that found nothing to review.
+
+**What would help next:**
+1. If the settings page is in another repo or branch, or hasn't been committed yet, point me to it and I'll review it.
+2. If you'd like me to follow up on the `x-org-id` issue, I can start an intake and do a proper security review, including a failing test that proves it.

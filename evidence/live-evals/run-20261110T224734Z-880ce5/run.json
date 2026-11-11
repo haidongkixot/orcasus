@@ -1,0 +1,96 @@
+{
+  "run_id": "run-20261110T224734Z-880ce5",
+  "started_utc": "20261110T224734Z",
+  "claude_version": "2.1.322 (Claude Code)",
+  "model": "default",
+  "platform": "Linux 6.18.44-fc-v338",
+  "python": "3.13.17",
+  "orcasus_commit": "e447b3ce74b90b8fb2a68bd51747681214e04a4d",
+  "args": {
+    "skill": [
+      "vertical-slice-delivery",
+      "efficient-testing",
+      "governance-audit",
+      "closeout-report",
+      "change-intake"
+    ],
+    "case": [
+      "negative-plan-only",
+      "edge-vacuous-allowed-path",
+      "edge-gate-order-and-missing-closeout",
+      "edge-closeout-before-audit",
+      "edge-hotfix-lane"
+    ],
+    "smoke": false,
+    "repeats": 1,
+    "budget_total": 1.8,
+    "budget_per_run": 0.5,
+    "max_runs": 0,
+    "max_turns": 25,
+    "timeout": 900,
+    "model": null,
+    "claude_bin": "claude",
+    "out": "/home/user/orcasus/evidence/live-evals",
+    "dry_run": false
+  },
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Agent",
+    "SendMessage",
+    "TodoWrite",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)",
+    "Bash(git show *)",
+    "Bash(ls *)",
+    "Bash(python3 scripts/*)",
+    "Bash(node --test *)",
+    "Bash(npm test *)"
+  ],
+  "planned_attempts": 5,
+  "finished_utc": "20261110T224955Z",
+  "reported_spend_usd": 1.0907,
+  "results": [
+    {
+      "skill": "change-intake",
+      "case_id": "edge-hotfix-lane",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.2161767
+    },
+    {
+      "skill": "closeout-report",
+      "case_id": "edge-closeout-before-audit",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.145164
+    },
+    {
+      "skill": "efficient-testing",
+      "case_id": "edge-vacuous-allowed-path",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.2169919
+    },
+    {
+      "skill": "governance-audit",
+      "case_id": "edge-gate-order-and-missing-closeout",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.14386300000000002
+    },
+    {
+      "skill": "vertical-slice-delivery",
+      "case_id": "negative-plan-only",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.36854850000000006
+    }
+  ],
+  "not_run": 0
+}

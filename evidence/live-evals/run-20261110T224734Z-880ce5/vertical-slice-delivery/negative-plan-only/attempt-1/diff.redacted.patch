@@ -1,0 +1,96 @@
+diff --git a/projects/demo/BACKLOG.md b/projects/demo/BACKLOG.md
+index 15952d1..c04bf3c 100644
+--- a/projects/demo/BACKLOG.md
++++ b/projects/demo/BACKLOG.md
+@@ -1,7 +1,86 @@
+-# Backlog: Billing area
++# Backlog — S5: Billing area
+ 
+-| Order | Slice ID | Intent | Status |
++> Produced with `/backlog-slicing` on 2026-11-10. Plan only; no implementation started. Priority order is set by the owner.
++
++- Goal (one sentence): Finance staff and org admins work with their organization's invoices in the product (view, void, export, in org currency) instead of rebuilding lists in spreadsheets (`projects/demo/PRD.md:4,7`).
++- Done when (observable end state): R1–R4 in `projects/demo/PRD.md:10-13` each have a passing acceptance test through the HTTP API; no cross-org data is reachable by any request.
++- Sources: PRD `projects/demo/PRD.md` · trace matrix **MISSING** · intake record **MISSING** (`docs/agent-ops/INTAKE_RECORD.md` absent) · readiness matrix **MISSING** (`docs/agent-ops/READINESS_MATRIX.md` absent) · ADR `decisions/ADR-0001-modular-monolith.md`.
++
++## Gate status (read first)
++
++1. **PRD approval not evidenced.** The PRD has no approver/date. Slicing an unapproved scope is a draft for the owner, not an implementation plan.
++2. **S0 intake, S1 discovery and S3 trace matrix do not exist.** Per CLAUDE.md no slice may be implemented until `/change-intake`, `/project-discovery` and `/requirements-traceability` have run. Every slice below therefore carries the gate prerequisite G0.
++3. **Previous backlog claims reconciled against git (2026-11-10):**
++   - Old "SL-1 Org-scoped invoice list — DONE": **NOT PROVEN.** `listInvoices` filters by org (`src/invoices.js:15-17`), but the org comes from a caller-supplied `x-org-id` header with no authentication (`src/server.js:9`). Any caller can read another org's invoices by changing the header, so R1 ("never another organization's") is not met. No tests for it are tracked in git. Reopened as S-1/S-2 below.
++   - Old "SL-2 CSV export — IN PROGRESS (branch feat/csv-export)": **branch not found** (`git log --all` shows only `3edcfa5 baseline`). Treated as not started. CSV format is not in the PRD (R3 names no format) → owner question Q4.
++   - Old "SL-3 Admin-only void action in the UI": a domain rule exists (`src/invoices.js:11`) but there is no endpoint and no UI in the repo. Kept as S-3/S-4.
++
++## Layer map
++
++| Layer | Likely files/modules | VERIFIED / ASSUMED |
++|---|---|---|
++| API (HTTP) | `src/server.js` — only `GET /invoices` exists | VERIFIED |
++| Domain | `src/invoices.js` — `STATUSES`, `invoiceTotal`, `changeStatus`, `listInvoices` | VERIFIED |
++| Auth / identity (actor, role, org) | none in repo; org from raw header, no role source | VERIFIED absent |
++| Data / persistence | in-memory `const invoices = []` (`src/server.js:4`); no DB, no migrations | VERIFIED |
++| Org settings (currency) | none; invoices have no currency field, amounts are integer cents (`src/invoices.js:1`) | VERIFIED absent |
++| UI | none in repo | VERIFIED absent |
++| Payments | `src/payments.js` — out of scope (PRD non-goal, `PRD.md:16`); do not touch | VERIFIED |
++| Tests / runner | no app tests or `package.json` tracked; runner UNKNOWN | ASSUMED (needs discovery) |
++
++Domain values from code (for policy questions): statuses `draft, sent, paid, void` (`src/invoices.js:2`); roles referenced: only `admin` (`src/invoices.js:11`) — the full role list is UNKNOWN.
++
++## Slices
++
++All slices depend on **G0** (intake + discovery + trace matrix + PRD approval). Classes are provisional pending `/change-intake`.
++
++| Order | Slice ID | Intent | Acceptance criterion | Evidence that proves it | Test layer | Resources (readiness status) | Testability verdict | Class | Depends on | Approval flag |
++|---|---|---|---|---|---|---|---|---|---|---|
++| 0 | SP-1 | Spike: identity/org/role source | Written answer: where authenticated org + role come from, with recommendation | Spike note in `projects/demo/` | n/a (spike) | Identity provider UNKNOWN | Spike | discovery | G0 | Owner decision on auth approach |
++| 1 | S-1 | Requests resolve org from an authenticated identity, not a client header | `GET /invoices` with no/invalid credential → 401; with a valid credential for org A → only org A rows; tampering any header to org B still returns only org A (0 org-B rows) | API integration tests in CI log, exit 0 | API integration | Auth mechanism UNKNOWN (SP-1); test runner UNKNOWN | BLOCKED (SP-1, Q1) | security / permission | SP-1 | Security review required |
++| 2 | S-2 | R1: org-scoped invoice list with totals | Seeded fixture of 2 orgs × ≥3 invoices: each org's list returns exactly its own invoices with `totalCents` = Σ qty × unitPriceCents | Unit test (`listInvoices`, `invoiceTotal`) + API test | Unit + API | Synthetic fixtures (no prod data); runner UNKNOWN | BLOCKED (test runner UNKNOWN; S-1) | feature, touches tenancy | S-1 | Security review (tenant isolation) |
++| 3 | S-3 | R2: void endpoint enforcing admin-only | `POST /invoices/:id/void`: admin of same org → 200, status `void`; non-admin → 403, status unchanged; admin of other org → 404; already-void → 409 | Unit tests on `changeStatus` + API tests per role × org | Unit + API | Role list UNKNOWN (Q2); S-1 | BLOCKED (Q2, SP-1) | permission change | S-1, S-2 | Security review |
++| 4 | S-4 | R2: void action in UI, shown only to admins | Admin sees enabled Void with confirm; non-admin sees no Void control; server 403 surfaced as error state | Component tests | Component | No UI framework in repo (Q5) | BLOCKED (Q5) | UI feature | S-3 | Design quality gate |
++| 5 | SP-2 | Spike: persistence for historical invoices | Recommendation for storage + migration path consistent with ADR-0001 | Spike note | n/a | DB/environment UNKNOWN | Spike | discovery / architecture | G0 | Architecture decision (`/team-debate` if options are material) |
++| 6 | S-5 | R3: export of all historical invoices for the org | For a fixture with N invoices across all statuses and ≥2 years, export contains exactly N rows for the caller's org and 0 for others; fields per Q4 | API test comparing export row set to fixture | API integration | Format UNKNOWN (Q4); scope of "all" (Q3); persistence (SP-2) | BLOCKED (Q3, Q4, SP-2) | feature, data exposure | S-1, S-2, SP-2 | Security review (bulk data egress) |
++| 7 | S-6 | R4: totals displayed in the org's currency | For an org with currency X, list and export show totals formatted in X with correct minor units; org without currency → defined behaviour per Q6 | Unit tests on formatting + API test | Unit + API | Org currency source MISSING (Q6) | BLOCKED (Q6) | feature, possible data-model change | S-2 | Data-model change needs intake reclassification |
++
++Not sliced (PRD non-goal): payments collection (`PRD.md:16`).
++
++## Spikes
++
++| Spike ID | Question | Time box | Unblocks | Result |
++|---|---|---|---|---|
++| SP-1 | How is the caller authenticated and where do org and role come from? | 1 day (ESTIMATE) | S-1, S-3 | — |
++| SP-2 | Where are invoices persisted so "historical" is meaningful (today: in-memory array)? | 1 day (ESTIMATE) | S-5 | — |
++
++## Owner questions (blocking first)
++
++| Question | Unblocks | Options and recommendation | Decision / date |
++|---|---|---|---|
++| Q0. Is this PRD approved, and will you confirm intent/value at intake? | Everything | Run `/change-intake` → `/project-discovery` → `/requirements-traceability` next. Recommended. | |
++| Q1. Identity source for org/role? | S-1, S-3 | (a) existing IdP/session if one exists; (b) signed token; (c) keep header but behind a trusted gateway. Recommend deciding after SP-1. | |
++| Q2. Full list of roles, and which may view invoices (R1 says "users"; PRD names finance staff + admins)? Code only knows `admin`. | S-3, S-2 | Need the role list from the identity system. | |
++| Q3. Does "all historical invoices" include `draft` and `void`? Any date limit? Statuses: draft, sent, paid, void. | S-5 | Recommend: all statuses, status column included. | |
++| Q4. Export format (old backlog said CSV; PRD silent) and who may export? | S-5 | Recommend CSV, finance + admin roles. | |
++| Q5. Which UI stack/design system for the billing page? None in repo. | S-4 | Discovery item. | |
++| Q6. Where does an org's currency come from, and can invoices of one org have mixed currencies? | S-6 | (a) org setting; (b) per-invoice currency. Recommend per-invoice currency stored, org currency as default. | |
++
++## Prioritization proposal
++
++- Frame: **MoSCoW** — the scope is small (4 requirements) and most inputs for RICE/WSJF would be guesses; ordering is driven mainly by dependencies and security.
++- Must-do outside the score: G0 gates; S-1 (tenant isolation is a current security defect against R1); SP-1.
++
++| Slice ID | Inputs (mark guesses as ESTIMATE) | Score or category | Confidence |
+ |---|---|---|---|
+-| 1 | SL-1 | Org-scoped invoice list | DONE |
+-| 2 | SL-2 | CSV export of invoices from the billing page | IN PROGRESS (branch feat/csv-export) |
+-| 3 | SL-3 | Admin-only void action in the UI | PLANNED |
++| S-1 | Fixes cross-org read exposure | Must (security, outside score) | High |
++| S-2 | R1, core problem `PRD.md:4` | Must | High |
++| S-3 | R2 | Must | Medium |
++| S-5 | R3, directly replaces spreadsheet work (ESTIMATE) | Must | Medium |
++| S-6 | R4 | Should (ESTIMATE; depends on whether orgs are multi-currency) | Low |
++| S-4 | R2 UI | Should | Medium |
++
++## Owner priority decision
++
++- Final order: _pending owner_
++- Decided by / date: _pending owner_

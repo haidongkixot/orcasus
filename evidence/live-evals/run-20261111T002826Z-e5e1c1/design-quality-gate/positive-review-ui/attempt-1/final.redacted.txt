@@ -1,0 +1,28 @@
+The settings page can't save anything right now. On top of that, keyboard and screen-reader users can't use it, and the text fails WCAG contrast. I reviewed `public/settings.html` and `settings.css` by reading the code only. I didn't run the page in a browser, test it with assistive technology, or call `/settings`, so nothing here is verified at runtime. I didn't change any code. The full review, with fixes and suggested replacement markup, is in `reports/settings-page-ux-a11y-review.md`.
+
+**Blockers**
+1. **No data is sent** (`settings.html:11,12,16`): none of the fields has a `name`, so `FormData` is empty, but the page still says "Saved".
+2. **Failures still say "Saved"** (`settings.html:22-23`): the code never checks `res.ok`, so error responses show "Saved" too. There's no `.catch`, so a network failure shows nothing.
+3. **Save can't be used from the keyboard** (`settings.html:17`): it's a `<div onclick>`, so Tab can't reach it and Enter/Space can't trigger it. It should be a `<button type="submit">` with a `submit` handler.
+4. **Enter in the name field reloads the page** (`settings.html:10-11`): the browser submits the form itself, skips `save()` and throws away what was typed.
+
+**High**
+- **No labels:** the name field relies on its placeholder, the select has no accessible name, and clicking the checkbox's text doesn't tick it.
+- **Focus is invisible:** `*:focus { outline: none; }` (`settings.css:4`) removes the focus indicator everywhere.
+- **Contrast fails:** body text `#999` on `#fff` is about 2.8:1, below the 4.5:1 minimum. Button text `#eee` on `#ddd` is about 1.2:1, which is barely visible.
+
+**Medium**
+- The `#status` message isn't a live region, so screen readers don't announce it.
+- The heading is a styled `<div>`, so there is no `<h1>` and no `<main>` landmark.
+- Current settings are never loaded, so once saving works, a save could overwrite real values with blanks.
+- There's no "saving" state, so the button can be clicked twice and gives no feedback on slow connections.
+- The name field has no validation.
+
+**Low**
+- No viewport meta tag, so phones show a zoomed-out desktop layout.
+- The page title is just "Settings".
+- The "Email me" option doesn't say which address it uses.
+
+**Outside this review:** I couldn't see a CSRF token in the POST, and the page doesn't show who is allowed to change organization settings. Both need a security review. The field names I suggest in the report (`orgName`, `currency`, `voidAlerts`) need to match what the server expects, which I haven't checked.
+
+I didn't run the intake or design-quality-gate workflows because this was a read-only review. If you want the fixes made, that should go through `/change-intake` first.

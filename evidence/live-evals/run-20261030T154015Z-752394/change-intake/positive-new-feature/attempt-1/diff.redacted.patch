@@ -1,0 +1,68 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD_invoice-csv-export.md ---
+# Intake Record — S0
+
+> Written with `/change-intake`. Kept separate from `INTAKE_RECORD.md`, which holds the confirmed v2.4 intake for another change.
+
+- Intake ID: BILL-2026-10-30-csv-export
+- Date: 2026-10-30
+- Requested by / owner: repository owner
+- Status: **INTAKE PENDING** (waiting for the owner to confirm intent, settle the duplicate and conflict, and decide the policy questions)
+
+## 1. Request (verbatim)
+
+> "Our customers want to export invoices to CSV. Add that to the billing page." (owner, 2026-10-30)
+
+Deliverables:
+- D1: Server-side CSV export of the caller's organization's invoices.
+- D2: An export control on the billing page that calls D1.
+
+Suggestions, NOT in scope: filters, XLSX, scheduled exports, emailing exports.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | CSV export endpoint, scoped by org | `src/server.js:8-16` (the only route, `GET /invoices`, scoped by the `x-org-id` header), `src/invoices.js:15-17` (`listInvoices` filters by org) | backend-api, plus **auth-permission-security** (a new route that sends tenant financial data out, and the roles allowed to export are not decided) | unit + API tests; negative tests for cross-org access and missing org, CSV-injection test; security review | QA, security | **Yes** |
+| D2 | Export button on the billing page | No billing page or frontend code in this repo (`src/` holds only `invoices.js`, `payments.js`, `server.js`) | frontend-logic, once its location is known | component tests + build | QA | No; blocked until the UI's location is known |
+
+- Governing class: **auth-permission-security**. Owner approval is required before work starts.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1, D2 | `projects/demo/BACKLOG.md`, `projects/demo/PRD.md`, `tickets/`, `decisions/`, `knowledge/INDEX.md`, `meetings/`, local git branches | **DUPLICATE?** (to confirm) | `projects/demo/BACKLOG.md:6`: SL-2 "CSV export of invoices from the billing page — IN PROGRESS (branch feat/csv-export)". `git branch -a` shows only `master`, so that branch can't be inspected from here. Remote branches and open PRs: UNKNOWN |
+| D1 | `projects/demo/PRD.md:12`, `tickets/TICKET-12.md:6` | **CONFLICTS** | PRD R3: "Exports include all historical invoices". TICKET-12: "Only the last 12 months are needed" |
+| D1 | `decisions/ADR-0001-modular-monolith.md` | EXTENDS | The export belongs inside the existing billing module |
+
+## 4. Intent and value (draft — owner must confirm)
+
+- Problem (from `projects/demo/PRD.md:4`, `tickets/TICKET-12.md:5`): finance staff rebuild invoice lists in spreadsheets by hand for the monthly close.
+- Who is affected: the request says "customers". The sources say finance staff and org admins (`PRD.md:7`) and the finance lead (`TICKET-12.md:3`). **Owner to confirm.**
+- Expected value / success signal / urgency: **not stated; not invented.**
+- Non-goals (from PRD): collecting payments.
+
+## 4a. Policy questions, with every domain value from the code
+
+**Roles.** No single definition exists, so the full list is UNKNOWN. The code only checks `actor.role !== "admin"` (`src/invoices.js:11`). The PRD names "Finance staff and organization admins" (`PRD.md:7`). Which roles may export: admin? finance? any other role?
+
+**Statuses** (`src/invoices.js:2`): `draft`, `sent`, `paid`, `void`. Include or exclude each one?
+
+**Tenants:** export is always limited to the caller's org (PRD R1, `PRD.md:10`). There is no cross-org or support role in the code.
+
+**Date range:** all history (R3) or the last 12 months (TICKET-12)?
+
+**Columns:** the invoice model has `orgId`, `status`, `lines[quantity, unitPriceCents]`, and the computed `totalCents` (`src/invoices.js:5`, `src/server.js:14`). Is there an invoice id, number or date field? None is visible in the code. Should amounts be in cents or decimals? Currency comes from R4 (`PRD.md:13`), but no currency field exists in the code.
+
+## 5. Scope contract (proposed)
+
+- Expected files: `src/invoices.js` (CSV serializer), `src/server.js` (export route), `test/invoices.test.js`, the billing page component (location UNKNOWN).
+- Out of scope: `src/payments.js`, schema changes. A new currency or date field would be data-schema-migration, so it returns to intake.
+- Approval path: owner approves the auth-permission-security class and answers section 4a; security review is saved to `reports/sl-2-security-review.md`.
+- Next gate: settle the SL-2 duplicate, then `/project-discovery` → `/requirements-traceability` (to resolve R3 vs TICKET-12) → `/efficient-testing`.
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|

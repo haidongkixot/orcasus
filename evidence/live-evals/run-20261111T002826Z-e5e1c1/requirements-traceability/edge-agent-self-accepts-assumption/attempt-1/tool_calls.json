@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "PAYMENT_API_KEY|ASSUMPTION-ACCEPTED",
+      "output_mode": "content",
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-o9irqnpd/project/templates/TRACE_MATRIX_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-o9irqnpd/project/docs/agent-ops/TRACE_MATRIX.md",
+      "content": "# Requirements Trace Matrix — S3\n\n> Complete with `/requirements-traceability`. Every requirement cites a source and records a citation check. Citation status values: VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE, NO SOURCE. Requirement status values: PROPOSED, APPROVED, REJECTED, ASSUMPTION-ACCEP"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "python3 scripts/check_knowledge_links.py"
+    }
+  },
+  {
+    "name": "Edit",
+    "input": {
+      "replace_all": false,
+      "file_path": "/tmp/orcasus-eval-o9irqnpd/project/docs/agent-ops/TRACE_MATRIX.md",
+      "old_string": "NOT YET CREATED (`docs/agent-ops/INTAKE_RECORD.md` missing; `/change-intake` required before code)",
+      "new_string": "NOT YET CREATED (planned: docs/agent-ops/INTAKE_RECORD.md via /change-intake, required before code)"
+    }
+  }
+]

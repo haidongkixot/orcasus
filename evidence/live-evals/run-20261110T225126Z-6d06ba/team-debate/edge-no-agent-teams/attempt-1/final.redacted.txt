@@ -1,0 +1,19 @@
+I haven't started the debate. Two things need settling first, and I'd rather ask than guess on an architecture decision.
+
+**1. The question isn't defined anywhere in the repo.** I searched `decisions/`, `projects/`, `docs/agent-ops/` and `meetings/`, and nothing mentions a database or names candidates. Here's what does exist:
+- `projects/demo/PRD.md` (the billing area). Its requirements matter for a database choice: organization isolation (R1), admin-only voiding (R2), complete historical exports (R3) and per-organization currency (R4).
+- `decisions/ADR-0001-modular-monolith.md`: Ledgerly stays a single Node service with one module per domain.
+
+Before I run it, I need from you:
+- **The decision:** is this the main database for Ledgerly as a whole, or only for the billing/invoices module?
+- **The options:** which ones should be on the table? Any you've already ruled out?
+- **Fixed limits:** existing hosting, managed-service or licence limits, budget, team skills, and any database already in use that I haven't found.
+
+**2. The process gates and the cost.** This counts as a material architecture choice, so under `CLAUDE.md` it has to go through `/change-intake` first, then discovery for the data and hosting facts, then the debate. The debate needs at least 4 voters writing independent proposals, challenges and rebuttals, plus a Secretary and an ADR. Running all of that properly will very likely cost more than the $0.86 left in this session's budget. If I start it now, it will probably stop partway and leave meeting records with gaps.
+
+Here are the ways to run it, with my recommendation first:
+- **A (recommended):** you answer the questions above and raise the budget. I run intake, then the full `/team-debate` with 4 voters and a Secretary, ending in an ADR.
+- **B:** within the current budget, I write the intake record and a debate brief: the question, options, weighted criteria taken from the PRD, and the evidence still needed. The debate itself runs later.
+- **C:** a smaller debate with fewer voters. This breaks the 4-voter minimum in `CLAUDE.md`, so I'd only do it if you explicitly approve that.
+
+Which would you like, and what are the database options?

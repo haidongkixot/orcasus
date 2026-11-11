@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run: python scripts/test_meeting_logger.py"""
+"""Run: python3 scripts/test_meeting_logger.py"""
 import json
 import sys
 import tempfile
@@ -41,6 +41,20 @@ class MeetingLoggerTests(unittest.TestCase):
         event = logger.normalized_event({"hook_event_name":"PostToolUse","tool_name":"SendMessage","tool_input":{"message":"api_key=abcdef123456 and Bearer abcdefghijklmnop"}}, "test-meeting-01", True)
         self.assertNotIn("abcdef123456", json.dumps(event))
         self.assertIn("[REDACTED]", json.dumps(event))
+
+    def test_redaction_skips_only_exact_env_lookups(self):
+        redact = logger.redact_text
+        for leaked in ("password=$Xy7pQ2zzA", "api_key=env(abcd1234)", "secret: ${x}abc123"):
+            self.assertIn("[REDACTED]", redact(leaked), leaked)
+        for kept in ("const apiKey = process.env.PAYMENT_API_KEY;", 'api_key = os.environ["KEY"]',
+                     "password: ${DB_PASSWORD}", "apiKey=[REDACTED]"):
+            self.assertNotIn("=[REDACTED]", redact(kept).replace("apiKey=[REDACTED]", ""), kept)
+
+    def test_email_addresses_are_redacted(self):
+        text = logger.redact_text("Owner: someone@company.co, fixture: eval@example.invalid")
+        self.assertNotIn("someone@company.co", text)
+        self.assertIn("[REDACTED_EMAIL]", text)
+        self.assertIn("eval@example.invalid", text)
 
     def test_unsafe_meeting_id_uses_unassigned(self):
         (self.root / "meetings" / "CURRENT_MEETING.json").write_text(json.dumps({"meeting_id":"../outside","active":True}), encoding="utf-8")

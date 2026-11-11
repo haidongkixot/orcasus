@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "meeting-record",
+      "args": "Start recording the architecture debate."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls -la meetings docs/agent-ops decisions",
+      "description": "List meetings, agent-ops and decisions folders"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qmrcruxu/project/meetings/CURRENT_MEETING.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qmrcruxu/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-qmrcruxu/project/meetings/README.md"
+    }
+  }
+]

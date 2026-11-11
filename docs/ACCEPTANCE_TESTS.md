@@ -4,10 +4,12 @@ Run in a non-production workspace. Static tests do not substitute for runtime ac
 
 ## A. Package/configuration
 - [ ] JSON in .claude/settings.json parses.
-- [ ] Exactly 15 named role definitions are discoverable under .claude/agents.
-- [ ] All 9 skills have valid frontmatter and a non-empty body.
-- [ ] Python logger unit tests pass.
-- [ ] Bundle validator passes.
+- [ ] Exactly 17 named role definitions are discoverable under .claude/agents, each name matching its file name.
+- [ ] All 16 skills have valid frontmatter, a name matching their directory and a non-empty body.
+- [ ] Every skill has evals/evals.json with trigger and non-trigger cases; `python3 scripts/skill_evals.py validate` passes.
+- [ ] Python logger, hook launcher and knowledge link checker unit tests pass.
+- [ ] Bundle validator and `python3 scripts/check_knowledge_links.py` pass.
+- [ ] The GitHub Actions `validate` workflow is green on the pull request.
 - [ ] Permission rules preserve secret-file guards and ask before sensitive operations.
 
 ## B. Agent Team runtime
@@ -57,6 +59,28 @@ Run in a non-production workspace. Static tests do not substitute for runtime ac
 - [ ] Critical data-integrity, tenant-isolation or authorization defects block readiness.
 - [ ] Tests and visual inspections are not claimed if not executed.
 - [ ] Deployment/publishing remains separately approval-gated.
+
+## H. Hook runtime portability
+- [ ] Every hook in .claude/settings.json calls Python through scripts/hooks/run_python.sh; none calls bare `python`.
+- [ ] A new session shows the SessionStart line "Orcasus hook runtime: OK" on this machine, or the WARNING with the fix.
+- [ ] With no working Python 3.8+ (test in a throwaway shell with a reduced PATH), the logger hook exits non-zero, prints a warning and appends to meetings/HOOK_ERRORS.log instead of failing silently.
+- [ ] Team Secretary caps capture at PARTIAL when HOOK_ERRORS.log has entries in the meeting window.
+
+## I. Intake, requirements and backlog (S0, S3, S5)
+- [ ] A new feature request produces docs/agent-ops/INTAKE_RECORD.md with classes, a duplicate/conflict verdict citing searched sources, and an owner-confirmed intent and value statement.
+- [ ] Scope growth into a new class mid-task stops work and triggers reclassification and a new approval.
+- [ ] TRACE_MATRIX.md gives every requirement a source and a citation status; MISMATCH, UNVERIFIABLE and NO SOURCE rows are not APPROVED.
+- [ ] BACKLOG.md gives every slice an observable criterion, evidence, test layer and testability verdict; the owner sets the order.
+
+## J. Close, audit and learn (S9)
+- [ ] Every finished slice has a closeout with all eight sections, including "Intentionally not done" (explicit "None." when empty).
+- [ ] The governance-auditor, not the change author, audits a sample change; missing evidence is UNVERIFIABLE.
+- [ ] A retro proposes process changes as PROPOSED and applies none without owner approval.
+
+## K. Knowledge (S10)
+- [ ] New entries in knowledge/INDEX.md are PROPOSED, cite tracked sources and use absolute dates.
+- [ ] Only a human curator's name and date turn an entry APPROVED; agents never write it.
+- [ ] Superseded entries name an existing successor; the link checker passes.
 
 ## Expected report format
 Record each check as PASS, FAIL, BLOCKED, NOT RUN or NOT APPLICABLE. Include the evidence path and explain runtime checks not attempted.

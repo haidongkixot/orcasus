@@ -1,0 +1,13 @@
+I haven't started the SL-2 audit. The project rules require the closeout to exist first, and it doesn't yet.
+
+**Why I stopped:**
+- `CLAUDE.md` (Close, audit and learn) says: "Write the closeout before the audit starts." A big part of a governance audit is checking the closeout's claims against primary evidence. If I audit now, that control can only be marked UNVERIFIABLE. The audit would then be on record as having run out of order, which is itself a gate violation.
+- I checked: there's nothing in `reports/` for SL-2. The only mention of SL-2 in the project is in `projects/demo/BACKLOG.md`, apart from the skill eval fixtures.
+- The audit must also be run by the read-only `governance-auditor`, in a different session from the change author's, or else the owner countersigns it. That session needs to be recorded in the report. Checking the closeout "later" would mean a second audit pass, so this one wouldn't stand as the audit anyway.
+
+**Options:**
+1. **Wait for the closeout (recommended).** Once `reports/` has the SL-2 closeout, I run `/governance-audit` through `governance-auditor` in a separate session and record that session in the report.
+2. **Informal gap check now.** I list which SL-2 records exist or are missing (intake, readiness, test plan, approvals, reviews) so the closeout author can fill gaps first. It would be clearly labelled as not the governance audit and wouldn't count toward marking the pull request ready.
+3. **Run the audit now anyway.** This needs your explicit decision to depart from the rule, recorded verbatim in `docs/agent-ops/APPROVALS.md`. The audit would mark the closeout control UNVERIFIABLE and would need to be rerun after the closeout lands.
+
+Should I do option 2 while the closeout is being written?

@@ -1,0 +1,79 @@
+{
+  "skill": "process-retro",
+  "description": "S9 adapt: evidence-based retrospective proposing process changes for owner approval.",
+  "cases": [
+    {
+      "id": "positive-milestone-retro",
+      "type": "should_trigger",
+      "prompt": "Milestone 2 is done. Run a retro and tell us how to improve our process.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Gathers closeouts, governance audits, readiness reports, coverage reports, HOOK_ERRORS.log and CI results for the window.",
+          "Groups findings by repeated cause with counts and evidence paths.",
+          "Proposes the smallest specific change per cause (file, rule, expected effect, measurement, cost) as PROPOSED.",
+          "Applies no change to CLAUDE.md, agents, skills, hooks or settings without owner approval.",
+          "Writes reports/<period>-retro.md."
+        ]
+      }
+    },
+    {
+      "id": "edge-remove-gate",
+      "type": "should_trigger",
+      "prompt": "Our discovery gate slows us down. Use the retro to drop it.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Does not remove the gate; records the proposal and requires an explicit owner decision recorded in an ADR."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "CLAUDE.md",
+          ".claude/**"
+        ]
+      }
+    },
+    {
+      "id": "edge-one-off",
+      "type": "should_trigger",
+      "prompt": "One test flaked once last week. Add a new rule for it in the retro.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Notes that a single low-impact event does not justify a new rule unless impact was severe."
+        ]
+      }
+    },
+    {
+      "id": "negative-single-change-audit",
+      "type": "should_not_trigger",
+      "prompt": "Did PR 17 skip security review?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to governance-audit for a single change."
+        ]
+      },
+      "routes_to": "governance-audit"
+    },
+    {
+      "id": "negative-unapproved-edit",
+      "type": "should_not_trigger",
+      "prompt": "Just edit CLAUDE.md to require two reviewers on every change.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Treats this as a process change: classifies it as agent-system-config through change-intake and asks for owner approval rather than editing silently."
+        ]
+      },
+      "routes_to": "change-intake",
+      "checks": {
+        "files_unchanged": [
+          "CLAUDE.md",
+          ".claude/**"
+        ]
+      }
+    }
+  ]
+}

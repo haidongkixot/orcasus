@@ -1,0 +1,55 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "delivery-readiness",
+  "case_id": "negative-past-change",
+  "case_type": "should_not_trigger",
+  "routes_to": "governance-audit",
+  "attempt": 1,
+  "prompt": "Did last week's PR follow our process?",
+  "assertions": [
+    {
+      "text": "Routes to governance-audit for a retrospective check.",
+      "verdict": "PASS",
+      "evidence_quote": "Skill: {\"skill\": \"governance-audit\", \"args\": \"last week's PR\"}",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent's first action was to call the governance-audit skill, which sends this retrospective process-compliance question to the right workflow. It then followed that skill's steps. When it found no PR or closeout records, it stopped and asked the user for them instead of writing an audit with no evidence behind it.",
+        "at": "2026-11-10T22:28:05+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 17.0,
+  "status": "RAN",
+  "skills_invoked": [
+    "governance-audit"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Bash": 2,
+    "Grep": 1,
+    "Glob": 1
+  },
+  "num_turns": 7,
+  "cost_usd": 0.18608550000000001,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke delivery-readiness; invoked ['governance-audit']"
+  },
+  "routing": {
+    "verdict": "PASS",
+    "detail": "expected governance-audit"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "reports/*SL-2*"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "SL-2",
+      "output_mode": "files_with_matches"
+    }
+  }
+]

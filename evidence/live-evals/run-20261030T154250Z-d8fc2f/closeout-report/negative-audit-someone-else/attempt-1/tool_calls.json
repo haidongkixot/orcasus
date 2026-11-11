@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "governance-audit",
+      "args": "PR 42"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-ifz2rbvu/project; gh pr view 42 --json title,headRefName,baseRefName,state,author,mergedBy,commits,files 2>&1 | head -60; git log --oneline -15; ls reports/",
+      "description": "Inspect PR 42, recent history and reports"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "reports/**"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(PR|pull)[ #-]*42\\b",
+      "-i": true,
+      "output_mode": "files_with_matches"
+    }
+  }
+]

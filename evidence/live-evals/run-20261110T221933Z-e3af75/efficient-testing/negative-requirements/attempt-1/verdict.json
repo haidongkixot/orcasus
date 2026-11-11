@@ -1,0 +1,59 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "efficient-testing",
+  "case_id": "negative-requirements",
+  "case_type": "should_not_trigger",
+  "routes_to": "requirements-traceability",
+  "attempt": 1,
+  "prompt": "Write acceptance criteria for the export feature with sources.",
+  "assertions": [
+    {
+      "text": "Routes to requirements-traceability.",
+      "verdict": "PASS",
+      "evidence_quote": "Skill: {\"skill\": \"requirements-traceability\", \"args\": \"Write acceptance criteria for the export feature with sources.\"}",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent's first action was to invoke the requirements-traceability skill. It then produced a trace matrix using that skill's format.",
+        "at": "2026-11-10T22:28:12+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 63.3,
+  "status": "RAN",
+  "skills_invoked": [
+    "requirements-traceability"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Grep": 2,
+    "Glob": 1,
+    "Read": 6,
+    "Bash": 1,
+    "Write": 1
+  },
+  "num_turns": 14,
+  "cost_usd": 0.38169339999999996,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "projects/demo/TRACE_MATRIX.md": "A"
+  },
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke efficient-testing; invoked ['requirements-traceability']"
+  },
+  "routing": {
+    "verdict": "PASS",
+    "detail": "expected requirements-traceability"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

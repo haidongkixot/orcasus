@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-rt5qbsaf/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-rt5qbsaf/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-rt5qbsaf/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)\\b(send|sent|member|role)",
+      "path": "/tmp/orcasus-eval-rt5qbsaf/project/projects/demo",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Edit",
+    "input": {
+      "replace_all": false,
+      "file_path": "/tmp/orcasus-eval-rt5qbsaf/project/test/invoices.test.js",
+      "old_string": "test(\"list is scoped",
+      "new_string": "test(\"members can send a draft invoice\", () => {\n  let sent;\n  assert.doesNotThrow(() => {\n    sent = changeStatus(invoice, \"sent\", { role: \"member\" });\n  });\n  assert.equal(sent.status, \"sent\");\n});\n\ntest(\"list is scoped"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test test/invoices.test.js",
+      "description": "Run invoice tests"
+    }
+  }
+]

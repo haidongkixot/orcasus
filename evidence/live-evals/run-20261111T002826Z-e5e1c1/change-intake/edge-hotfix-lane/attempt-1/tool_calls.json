@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "x-org-id|invoice",
+      "-i": true,
+      "glob": "!{docs,reports,knowledge,meetings,decisions,evals,.claude}/**"
+    }
+  },
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "hotfix lane: production incident — invoice listing trusts client x-org-id header, cross-tenant data exposure"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1m2njc1_/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1m2njc1_/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1m2njc1_/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "auth|token|session|membership|user",
+      "-i": true,
+      "path": "/tmp/orcasus-eval-1m2njc1_/project/src",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1m2njc1_/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — invoice cross-org exposure (HOTFIX)\n\nLane: hotfix\nStatus: INTAKE PENDING — blocked on owner decision (identity source)\nDate: 2026-11-11\n\n## 1. Request (verbatim)\n> \"Production incident: anyone can list another org's invoices by changing the x-org-id header. Fix it now, we can do th"
+    }
+  }
+]

@@ -1,0 +1,20 @@
+We start with three short gates. None of them is coding yet. I checked the repo first: there are no intake or readiness records (`docs/agent-ops/` doesn't exist) and nothing for this platform under `projects/`. The only architecture decision is `decisions/ADR-0001-modular-monolith.md`, and it's about **Ledgerly**, a single invoicing and payments service. So I'm treating this platform as new work, unless it's meant to extend Ledgerly. That's one of the questions below.
+
+## The starting sequence
+
+1. **Intake (`/change-intake`).** We classify the request, check it doesn't duplicate or conflict with existing records, and set the scope. You confirm what it's for and why it matters. I won't make up goals, numbers or deadlines.
+2. **Platform discovery (`/platform-discovery`).** This turns the idea into a product brief, a map of what the platform needs to do (task management, ERP areas like finance, procurement, inventory and HR, plus mobile), a domain model and two or three architecture options. It also produces a roadmap built from small, end-to-end pieces that each work on their own.
+3. **Readiness check (`/project-discovery`).** For each prerequisite, we mark whether it's actually available or missing. That covers existing systems to integrate with, identity/single sign-on, credentials, environments, licensed design assets, mobile platforms and budget. Anything essential that's missing stops the work that depends on it until you decide what to do.
+
+Big decisions after that go through a recorded team debate with a written decision record. Examples: whether to build or integrate the ERP pieces, whether mobile is native or cross-platform, and whether each customer company gets its own database or shares one. My starting default is a modular monolith (one application split into clear modules), but this platform needs its own decision.
+
+## What I need from you to open intake
+
+1. **Who is it for, and what problem does it solve?** Is it an internal tool for your company or a product sold to many customer companies? Who are the main users (field workers, managers, finance, admins)?
+2. **What does the first useful version look like?** Which single workflow must work end-to-end first? For example: a task created on web, completed on mobile, and the time or cost posted to the ERP.
+3. **Build or connect for ERP?** Do you want ERP features built in, or connected to an existing ERP such as SAP, NetSuite, Odoo or Dynamics? If connecting, do we have API access and credentials?
+4. **Is this related to Ledgerly?** Should it extend Ledgerly's invoicing and payments, or be a separate product?
+5. **Constraints:** timeline, team size, budget, required tech stack or cloud, regulations (GDPR, SOX, industry-specific), and which mobile platforms (iOS, Android, or both). Does mobile need to work offline?
+6. **What will we measure success by?** Only if you already have a measure in mind.
+
+Once you answer, I'll write the intake record and run platform discovery. That discovery can be a small team of three to five agents (product, architecture, data, mobile, UX) doing read-only research in parallel. I'll bring back the brief, the open decisions and the readiness gaps for your approval before any code is written.

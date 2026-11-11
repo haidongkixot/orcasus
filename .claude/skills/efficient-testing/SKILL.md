@@ -1,6 +1,6 @@
 ---
 name: efficient-testing
-description: Mandatory risk-based testing for web/mobile changes. Prefer the lowest-cost reliable behavioral test; screenshot, trace and video artifacts default to zero unless a named question, bounded budget and approval exist.
+description: Mandatory risk-based testing for web/mobile changes. Prefer the lowest-cost reliable behavioral test; screenshot, trace and video artifacts default to zero unless a named question, bounded budget and approval exist. Do NOT use to write requirements or acceptance criteria (requirements-traceability) or as a release gate (delivery-readiness).
 ---
 
 # Efficient Testing — Zero-Capture Defaults v1.3.0
@@ -14,6 +14,8 @@ description: Mandatory risk-based testing for web/mobile changes. Prefer the low
 - Do not add a browser framework, device farm, visual-regression package or major dependency until existing resources are inspected and a documented gap justifies it.
 - Any non-zero capture budget requires a named diagnostic/visual question, bounded artifact count, destination, retention/cleanup and owner approval or a pre-approved project CI policy.
 
+For agent-system-config changes (CLAUDE.md, skills, agents, templates, hooks, settings), the intake's validation-floor table is the test plan. It must name the package checks and any live evals the regression rule requires.
+
 ## Inspect before designing tests
 Read requirements/acceptance criteria, changed files, current test runner/config/version, package scripts, fixtures, CI, prior failures and existing artifact paths. Verify browser/device access, API, database, test data, preview/staging, network and budget. Reuse existing tools.
 
@@ -25,6 +27,8 @@ Map each acceptance criterion to the cheapest reliable layer:
 4. Component — interactive states, keyboard, semantics/accessibility.
 5. Small critical browser/mobile E2E set.
 6. Visual regression only when explicit visual requirements or a high-risk layout change justify it.
+
+Assert the exact expected result on allowed paths too. For authorization, a test that only checks the response "is not 401/403" passes when the handler crashes with 500; assert the exact status (200, 201, 204 or a named, explained error) and, where cheap, the body. If an allowed path cannot reach success in the test environment (for example a missing storage token), assert that exact error and record why in the test plan.
 
 Prefer semantic role/name/label assertions, API responses, DOM state, accessibility, console/network errors and geometry where appropriate. Avoid brittle selectors and screenshots when behavioral assertions prove the requirement more cheaply. Don't duplicate identical assertions across layers unless they cover distinct failure modes.
 

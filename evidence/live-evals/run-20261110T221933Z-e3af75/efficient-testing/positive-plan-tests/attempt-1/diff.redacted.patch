@@ -1,0 +1,73 @@
+
+--- new file: docs/agent-ops/TEST_PLAN.md ---
+# Test Plan — Invoice export endpoint and button (TICKET-12 / SL-2)
+
+Status: **DRAFT — blocked on owner decisions (OQ-1…OQ-5) and on missing intake/readiness records.**
+Date: 2026-11-10 · Skill: efficient-testing v1.3.0 · No tests have been written or run.
+
+## 1. Inputs inspected
+| Source | Finding |
+|---|---|
+| `tickets/TICKET-12.md:5-6` | Finance wants a spreadsheet download for the monthly close; **only the last 12 months**. |
+| `projects/demo/PRD.md:12` (R3) | "Exports include **all historical** invoices" — **conflicts with TICKET-12**. |
+| `projects/demo/PRD.md:10` (R1) | Org isolation: never another org's invoices. |
+| `projects/demo/PRD.md:7` | Users: finance staff and organization admins. |
+| `projects/demo/BACKLOG.md:6` | SL-2 "CSV export from the billing page" is IN PROGRESS on `feat/csv-export`, so this may duplicate existing work. Not inspected because shell access was denied. |
+| `src/server.js` | Plain `node:http`; org comes from the `x-org-id` header (401 when missing). No export route exists and no authentication or role is checked. |
+| `src/invoices.js` | Statuses: `draft`, `sent`, `paid`, `void`. Roles referenced: `admin` and anything else (tests use `member`). Amounts are integer cents. **No date field on invoices.** |
+| `test/invoices.test.js`, `package.json` | Runner: built-in `node --test test/` (Node ≥ 20). No dependencies, no frontend code, no browser tooling, no CI for this app. |
+
+## 2. Owner questions (blocking)
+- **OQ-1 Window:** last 12 months (TICKET-12) or all history (PRD R3)? Which date counts: issue, sent or paid date? Invoices currently have no date field, so a data-model change may be needed.
+- **OQ-2 Who may export:** the code has `admin` and non-admin roles (`member`) only. The PRD's "finance staff" role does not exist in code. Which roles get 200, and which get 403?
+- **OQ-3 Statuses:** include `draft` and `void`, or only `sent` and `paid`?
+- **OQ-4 Format:** CSV (backlog) or XLSX ("spreadsheet")? Columns, currency (R4) and amount format: cents or decimal?
+- **OQ-5 Button:** there is no frontend in this repo. Where does the "billing page" live, and what is its component/test stack? Until this is answered, every UI test is **BLOCKED**.
+- **Process:** confirm whether this continues `feat/csv-export` or is new work. `/change-intake` and `/project-discovery` records don't exist yet and must come before implementation.
+
+## 3. Criteria → cheapest layer (pending OQs)
+Runner: the existing `node --test`. No new dependencies.
+
+| # | Acceptance criterion (provisional) | Layer | Test (file) |
+|---|---|---|---|
+| T1 | Serialiser emits the agreed header and one row per invoice in a stable order | Unit | `test/invoiceExport.test.js` |
+| T2 | Fields containing `,`, `"`, newlines or a leading `= + - @` are escaped (CSV formula-injection guard) | Unit | same |
+| T3 | Totals use `invoiceTotal` and the agreed money format, with no float drift (e.g. 3 × 1999 → `59.97` or `5997`) | Unit | same |
+| T4 | Date-window filter includes the boundary days and excludes older invoices (per OQ-1), using an injected clock | Unit | same |
+| T5 | Status filter matches OQ-3 for all 4 statuses | Unit | same |
+| T6 | `GET /invoices/export` with a valid org and allowed role → **exactly 200**, the agreed `content-type`, `content-disposition: attachment; filename=…`, and a body equal to the expected text | API (in-process `server.listen(0)` + `fetch`) | `test/invoiceExport.api.test.js` |
+| T7 | Missing `x-org-id` → exactly **401**, empty body | API | same |
+| T8 | Disallowed role (per OQ-2) → exactly **403**, with no invoice data in the body | API | same |
+| T9 | Org A's request never contains org B's ids (R1), checked by a seeded fixture with both orgs | API | same |
+| T10 | Org with no invoices → 200 with the header row only | API | same |
+| T11 | Wrong method (`POST`) → 404/405 as decided; the existing `GET /invoices` behaviour is unchanged | API | same |
+| T12 | Button has an accessible name ("Export invoices"), is shown only to allowed roles, and is disabled with a busy state while the export downloads | Component | **BLOCKED (OQ-5)** |
+| T13 | Button error state: a failed request shows an announced error message and re-enables the button | Component | **BLOCKED (OQ-5)** |
+| T14 | One critical E2E (billing page → click → file received with the expected rows) | E2E | **NOT PLANNED** unless OQ-5 reveals an existing browser runner and the owner approves it |
+
+Fixtures are synthetic invoices built in the test file, with no production data. Seeding needs a test hook to inject invoices, because `server.js` keeps a module-private `invoices` array. Prefer exporting a `createServer({ invoices, now })` factory over mutating module state; this needs the owner's agreement in design.
+
+## 4. Capture budget
+Screenshots 0 · traces 0 · videos 0. No visual question has been named. Any change needs a named question, a count limit, a path, a retention plan and owner approval.
+
+## 5. Execution order
+1. `node --test test/invoiceExport.test.js` (T1–T5)
+2. `node --test test/invoiceExport.api.test.js` (T6–T11)
+3. `npm test` (full suite of 3 existing + new tests) at the PR gate
+4. Component tests (T12–T13) only once OQ-5 is resolved
+
+On failure: keep the first output, classify the cause and retry only the failing test. Never relax exact status/body assertions.
+
+## 6. Current results
+| Item | Status |
+|---|---|
+| T1–T11 | NOT RUN (not written; blocked on OQ-1…OQ-4) |
+| T12–T13 | BLOCKED (no frontend found) |
+| T14 | NOT PLANNED |
+| Existing suite (`npm test`) | NOT RUN (shell denied in this session) |
+| Artifacts produced | 0 |
+
+## 7. Coverage gaps / unverified
+- `feat/csv-export` branch contents: NOT VERIFIED.
+- No authentication: `x-org-id` is a trusted header, so the tests prove scoping logic only, not identity. Flag this for security review.
+- Large-export performance and streaming: out of scope until volumes are known.

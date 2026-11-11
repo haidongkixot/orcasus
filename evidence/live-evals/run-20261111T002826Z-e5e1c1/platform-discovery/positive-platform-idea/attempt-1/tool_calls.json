@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{projects,docs/agent-ops,decisions}/**/*.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "head -40 docs/agent-ops/INTAKE_RECORD.md decisions/ADR-0001-modular-monolith.md projects/demo/PRD.md",
+      "description": "Preview existing intake, ADR and demo PRD"
+    }
+  }
+]

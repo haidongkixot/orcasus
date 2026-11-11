@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files",
+      "description": "List tracked files in the repo"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice|export|csv",
+      "glob": "!**/.claude/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/.claude/skills/team-debate/SKILL.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/meetings/CURRENT_MEETING.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/.env.example"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export|invoice|email|smtp|queue|job",
+      "path": "/tmp/orcasus-eval-_uearf20/project",
+      "glob": "{decisions/**,projects/**,knowledge/INDEX.md,docs/RESEARCH_AND_DECISIONS.md}",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git branch -a --list",
+      "description": "List local and remote branches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-_uearf20/project/projects/demo/BACKLOG.md"
+    }
+  }
+]

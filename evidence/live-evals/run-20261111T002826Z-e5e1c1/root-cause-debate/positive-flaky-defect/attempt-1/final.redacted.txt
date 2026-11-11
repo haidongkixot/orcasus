@@ -1,0 +1,18 @@
+I haven't changed anything yet. An intake already exists for this exact request, and while reading the code I found something that may change how urgent it is. You need to decide that before I go further.
+
+**Where this stands**
+- **Intake:** `docs/agent-ops/INTAKE_RECORD.md` (LED-2026-10-22-crossorg) quotes your request word for word. It's classed as an auth/permission/security change, confirmed by the owner on 2026-10-22, and set to the normal (non-urgent) lane because the issue was judged "not exploitable on demand". I'm reusing it rather than opening a duplicate.
+- **Next step:** the intake says to run a root-cause investigation that tests competing explanations against each other. I searched `reports/`, `meetings/`, `decisions/`, `knowledge/` and `projects/` and found no record that this was ever done. The required readiness and discovery documents don't exist yet either, and git has only the `baseline` commit.
+
+**Two likely causes from reading the code (not yet tested)**
+1. **The client says which organization it belongs to.** `src/server.js:9` takes the organization from the `x-org-id` request header. Nothing checks that the logged-in user actually belongs to that organization, and the filter at `src/invoices.js:15-17` trusts whatever the header says. If production works the way this code reads, anyone who changes that header can list another organization's invoices whenever they want. That would contradict the "not exploitable on demand" reason the intake gives for the normal lane.
+2. **A shared cache could be handing one organization's list to another.** The `/invoices` response (`src/server.js:15`) has no `Cache-Control` or `Vary: x-org-id` header. A CDN, reverse proxy or browser cache that stores responses by URL alone would sometimes serve one organization's list to another. That would explain why it happens only occasionally and why nobody can reproduce it. I can't see the production proxy or CDN settings, and production access is outside the agreed scope, so this is **UNKNOWN**.
+
+A client-side cause, such as stale data after a user switches organization, can't be checked here because the frontend isn't in this repo.
+
+**Decisions I need from you**
+1. **Is `x-org-id` set by something trusted in production** (an auth gateway that strips anything the client sends), **or can the client set it?** If the client can, this is an exploitable security hole. I'd recommend reopening the intake and switching to the urgent lane: a fix with tests that try to read another organization's data, a draft pull request, and a security review before merge.
+2. **Can someone with access confirm whether a CDN or proxy caches `GET /invoices`?** That settles cause 2 without me touching production.
+3. **The investigation:** a full one with several agents costs more than this session has left (about $0.40). I can either run a single-agent version now (write a test that shows each cause happening, record the evidence, then fill in the readiness documents), or you can start a session with a larger budget for the full team version.
+
+My recommendation is to answer question 1 first, because it decides how urgent the rest is.

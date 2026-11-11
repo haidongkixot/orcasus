@@ -1,0 +1,21 @@
+I haven't added Stripe yet. Discovery found blockers, and the project rules stop the build until you resolve them.
+
+**What I did**
+- **Intake:** a confirmed intake for this exact request already exists (`docs/agent-ops/INTAKE_RECORD.md`, LED-2026-10-20-stripe, confirmed 2026-10-20). I reused it instead of opening a second one. It treats the "checkout" as a new route where customers pay an open invoice by card.
+- **Discovery:** I wrote `docs/agent-ops/READINESS_MATRIX.md` and `docs/agent-ops/DISCOVERY_SUMMARY.md`. They aren't committed yet; I'll commit them if you want.
+
+**Why it's blocked**
+- **No Stripe test account or key.** `src/payments.js:1-2` says no sandbox account is set up. The project requires the integration to be checked against a real test account, so it can't be built against a mock.
+- **No webhook secret or webhook route.** Without one, marking an invoice paid would rely on the customer's browser returning to the site, which can be faked or lost.
+- **No rule for who may pay.** The only access check is that an `x-org-id` header is present (`src/server.js:9-12`). As it stands, anyone could start a payment for another organization's invoice.
+- **Paid status wouldn't survive a restart.** Invoices are stored in memory (`src/server.js:4`).
+
+**Decisions I need from you**
+1. **Stripe access:** can you create a Stripe test-mode account and provide a restricted test key and a webhook signing secret? Which environments set `PAYMENT_API_KEY`? I couldn't check, because the permission rules block reading `.env.example`.
+2. **Payable statuses:** the statuses are draft, sent, paid and void (`src/invoices.js:2`). Which ones can be paid? My proposal is sent only.
+3. **Who can pay:** (A) a signed pay link that expires, sent per invoice, or (B) customer login. I recommend A. B adds an auth/security change that needs your separate approval.
+4. **Currency:** invoices have no currency field, but the PRD (R4) requires the organization's currency. Should I add one (a data-schema change), or use a single fixed currency for this phase?
+5. **Storage:** add real storage (a data-schema change that needs your approval), or accept in-memory storage as a recorded risk for the test-mode demo?
+6. **Dependency:** may I add the official `stripe` npm package? It would be the project's first runtime dependency. I recommend it because it handles webhook signature checks.
+
+Once these are settled, the next steps are a debate and decision record on Stripe-hosted Checkout vs Payment Element, then requirements, a test plan, and the build.

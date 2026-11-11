@@ -1,0 +1,49 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "project-discovery",
+  "case_id": "negative-typo",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Fix the spelling of 'recieve' in the footer.",
+  "assertions": [
+    {
+      "text": "Does a light check proportionate to the change; no full discovery matrix for a trivial docs fix.",
+      "verdict": "PASS",
+      "evidence_quote": "Once you point me to it, the fix is a single edit and doesn't need the full intake process.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent ran only two greps, one for 'recieve' and one for 'footer'. It invoked no skills and ran no full discovery process. That check fits the size of a trivial typo fix, and the agent says outright that the full intake process isn't needed.",
+        "at": "2026-10-30T15:55:32+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 14.2,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 2
+  },
+  "num_turns": 3,
+  "cost_usd": 0.1391101,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke project-discovery; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

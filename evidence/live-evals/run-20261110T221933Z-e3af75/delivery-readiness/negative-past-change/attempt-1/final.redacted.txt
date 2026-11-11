@@ -1,0 +1,12 @@
+I can't audit it yet because I can't find the PR in this repo. Here's what I checked:
+
+- **Git history:** there's only one commit on any branch, `bbfd718 orcasus-eval baseline`, dated today (2026-11-10). Nothing from last week, and no merge or PR branches.
+- **GitHub:** I couldn't list pull requests because the `gh` command was blocked in this session.
+- **Records:** `reports/` and `docs/agent-ops/` are empty. That means there's no closeout, intake record, readiness matrix, test plan or review report. Nothing in `reports/`, `projects/`, `decisions/`, `docs/agent-ops/` or `meetings/` mentions a PR or a date from last week. The only process files are `projects/demo/PRD.md`, `projects/demo/BACKLOG.md` and `decisions/ADR-0001-modular-monolith.md`.
+
+The audit process says to stop and ask for the closeout if it doesn't exist, so I haven't written an audit or given any pass/fail results. To go ahead I need:
+
+1. **Which PR you mean:** its number or link, or the branch or commits it covered. If it lives in another repo or remote, point me to it, or allow `gh` so I can find it.
+2. **Its records:** the closeout in `reports/` and the intake and readiness records. If they were never written, the audit will report that as a finding. But I'd rather confirm I'm looking at the right repo before calling it a failure.
+
+Once I have the PR, a separate read-only `governance-auditor` agent will run the audit, as the process requires, and the result will be written to `reports/<change>-governance-audit.md`.

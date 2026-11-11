@@ -1,8 +1,11 @@
-# Definition of Done — Orcasus v2.2.0
+# Definition of Done — Orcasus v2.4.0
 
 A feature/slice is done only when applicable gates have evidence.
 
 ## Readiness and product
+- Intake record exists: class, duplicate/conflict verdict, owner-confirmed intent and value, scope contract.
+- Requirements trace to checked sources; no MISMATCH, UNVERIFIABLE or NO SOURCE row approved without owner acceptance.
+- The slice came from a backlog entry with a TESTABLE verdict, or intake confirmed it fits one reviewable change.
 - Requirements, user journey, non-goals and acceptance criteria documented.
 - Current repository, in-progress work, components, assets/licences, integrations/access, environments and test resources inspected.
 - Readiness record uses evidence; UNKNOWN is not AVAILABLE.
@@ -29,5 +32,8 @@ A feature/slice is done only when applicable gates have evidence.
 - Findings resolved or explicitly accepted by owner with rationale.
 - Meeting Secretary status is accurate after a material debate.
 - Docs/ADR/PRD updated where material.
+- Changed files stay inside the intake scope contract, or reclassification is recorded.
+- Closeout report written with all eight sections, including intentionally not done.
+- Durable decisions and lessons proposed as knowledge entries; the curator decides.
 - Final handoff summarizes deliverables, tests, findings, risks and next actions.
 - Deployment/publishing is separately authorized; this checklist grants no deployment permission.

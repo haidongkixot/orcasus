@@ -1,0 +1,94 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "efficient-testing",
+      "args": "Plan tests for the new invoice export endpoint and button."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice|export",
+      "glob": "!**/{node_modules,.git}/**",
+      "output_mode": "files_with_matches",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/**"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{package.json,pyproject.toml,playwright.config.*,vitest.config.*,jest.config.*,src/**,app/**}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/package.json"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export|role|button|frontend|csv",
+      "path": "/tmp/orcasus-eval-51cqo9y8/project/projects/demo",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git -C /tmp/orcasus-eval-51cqo9y8/project log --oneline -5",
+      "description": "Show recent commits"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-51cqo9y8/project/docs/agent-ops/TEST_PLAN.md",
+      "content": "# Test Plan — Invoice export endpoint and button (TICKET-12 / SL-2)\n\nStatus: **DRAFT — blocked on owner decisions (OQ-1…OQ-5) and on missing intake/readiness records.**\nDate: 2026-11-10 · Skill: efficient-testing v1.3.0 · No tests have been written or run.\n\n## 1. Inputs inspected\n| Source | Finding "
+    }
+  }
+]

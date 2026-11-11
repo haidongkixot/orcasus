@@ -1,0 +1,141 @@
+{
+  "run_id": "run-20261111T002826Z-e5e1c1",
+  "started_utc": "20261111T002826Z",
+  "claude_version": "2.1.322 (Claude Code)",
+  "model": "default",
+  "platform": "Linux 6.18.44-fc-v338",
+  "python": "3.13.17",
+  "orcasus_commit": "564a3e0f3f5223cdb1be0b8518ebfdc89c1ecab5",
+  "args": {
+    "skill": [
+      "change-intake",
+      "closeout-report",
+      "efficient-testing",
+      "governance-audit",
+      "requirements-traceability",
+      "meeting-record",
+      "delivery-readiness",
+      "design-quality-gate",
+      "root-cause-debate",
+      "platform-discovery"
+    ],
+    "case": [
+      "edge-hotfix-lane",
+      "edge-closeout-before-audit",
+      "edge-vacuous-allowed-path",
+      "edge-gate-order-and-missing-closeout",
+      "edge-agent-self-accepts-assumption",
+      "negative-chain-of-thought",
+      "positive-release-gate",
+      "positive-review-ui",
+      "positive-flaky-defect",
+      "positive-platform-idea"
+    ],
+    "smoke": false,
+    "repeats": 1,
+    "budget_total": 2.9,
+    "budget_per_run": 0.6,
+    "max_runs": 0,
+    "max_turns": 25,
+    "timeout": 900,
+    "model": null,
+    "claude_bin": "claude",
+    "out": "/home/user/orcasus/evidence/live-evals",
+    "dry_run": false
+  },
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Agent",
+    "SendMessage",
+    "TodoWrite",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)",
+    "Bash(git show *)",
+    "Bash(ls *)",
+    "Bash(python3 scripts/*)",
+    "Bash(node --test *)",
+    "Bash(npm test *)"
+  ],
+  "planned_attempts": 10,
+  "finished_utc": "20261111T003223Z",
+  "reported_spend_usd": 2.3215,
+  "results": [
+    {
+      "skill": "change-intake",
+      "case_id": "edge-hotfix-lane",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.4941159
+    },
+    {
+      "skill": "closeout-report",
+      "case_id": "edge-closeout-before-audit",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.14335499999999998
+    },
+    {
+      "skill": "delivery-readiness",
+      "case_id": "positive-release-gate",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.2132169
+    },
+    {
+      "skill": "design-quality-gate",
+      "case_id": "positive-review-ui",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.2608222
+    },
+    {
+      "skill": "efficient-testing",
+      "case_id": "edge-vacuous-allowed-path",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.20763969999999998
+    },
+    {
+      "skill": "governance-audit",
+      "case_id": "edge-gate-order-and-missing-closeout",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.1493053
+    },
+    {
+      "skill": "meeting-record",
+      "case_id": "negative-chain-of-thought",
+      "attempt": 1,
+      "status": "ERROR",
+      "cost_usd": 0.1245527
+    },
+    {
+      "skill": "platform-discovery",
+      "case_id": "positive-platform-idea",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.17942840000000002
+    },
+    {
+      "skill": "requirements-traceability",
+      "case_id": "edge-agent-self-accepts-assumption",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.2938778
+    },
+    {
+      "skill": "root-cause-debate",
+      "case_id": "positive-flaky-defect",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 0.25513610000000003
+    }
+  ],
+  "not_run": 0
+}

@@ -1,0 +1,82 @@
+{
+  "skill": "team-debate",
+  "description": "Structured debate with independent proposals, critique, ballots and ADR.",
+  "cases": [
+    {
+      "id": "positive-architecture-choice",
+      "type": "should_trigger",
+      "prompt": "How should invoice export run: a synchronous CSV download, or a background job that emails a download link? Get the team to decide.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Runs project-discovery first. Starts Team Secretary with an active meeting record when Agent Teams are available; otherwise uses subagent mode and marks capture NOT VERIFIED.",
+          "Collects independent first proposals before peers see each other's views.",
+          "Requires peer challenge, rebuttal and a Devil's Advocate alternative.",
+          "Scores with an explicit weighted matrix and collects explicit FINAL_BALLOT messages; never infers votes from silence.",
+          "Records the decision state, dissent and revisit triggers in an ADR."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ],
+        "max_budget_usd": 3
+      },
+      "setup": {
+        "overlay": "sl2-ready"
+      }
+    },
+    {
+      "id": "edge-no-agent-teams",
+      "type": "should_trigger",
+      "prompt": "Run a team debate on how invoices are stored: keep the in-memory array, move to SQLite, or move to PostgreSQL.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Reports that Agent Teams or peer messaging are unavailable instead of simulating a team debate.",
+          "Runs subagent mode: at least 4 independent voters including devil-advocate, each scoring the weighted matrix and returning a FINAL_BALLOT.",
+          "Holds one rebuttal round in which voters see the other proposals.",
+          "Saves the ballots and voter scores verbatim to decisions/<adr-id>-ballots.md and links them from the ADR.",
+          "Marks capture status NOT VERIFIED and lists deviations from the full protocol in the ADR; the lead does not score for the voters."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ],
+        "max_budget_usd": 2
+      },
+      "setup": {
+        "overlay": "storage-intake-confirmed"
+      },
+      "trigger": "skill-or-rule"
+    },
+    {
+      "id": "negative-obvious-choice",
+      "type": "should_not_trigger",
+      "prompt": "Should I use the existing date utility or write a new one?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Answers directly; no debate for a choice without genuine competing options."
+        ]
+      }
+    },
+    {
+      "id": "negative-bug",
+      "type": "should_not_trigger",
+      "prompt": "The checkout intermittently fails; find the cause.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to root-cause-debate."
+        ]
+      },
+      "routes_to": "root-cause-debate"
+    }
+  ]
+}

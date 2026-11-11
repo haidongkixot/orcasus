@@ -1,0 +1,50 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "governance-audit",
+  "case_id": "negative-own-closeout",
+  "case_type": "should_not_trigger",
+  "routes_to": "closeout-report",
+  "attempt": 1,
+  "prompt": "I just finished the task. Write up what I did.",
+  "assertions": [
+    {
+      "text": "Routes to closeout-report; an audit is independent and retrospective.",
+      "verdict": "PASS",
+      "evidence_quote": "Once I have that, I'll write it with `/closeout-report` into `reports/`. That covers what changed, what you deliberately left out, files touched, checks run with their real results, risks and what was not verified.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent named closeout-report as the right skill for writing up the user's own finished work, and it did not treat the request as an independent audit. It did not invoke the skill yet because the repository held no evidence of the work, which is a reasonable gate. The routing choice itself was correct.",
+        "at": "2026-10-30T15:54:58+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 15.5,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Bash": 2
+  },
+  "num_turns": 3,
+  "cost_usd": 0.1529903,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke governance-audit; invoked none"
+  },
+  "routing": {
+    "verdict": "FAIL",
+    "detail": "expected closeout-report"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

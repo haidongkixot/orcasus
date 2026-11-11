@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "efficient-testing",
+      "args": "Plan tests for the new invoice export endpoint and button."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-5k8vo4fq/project; git log --oneline | head -5; ls docs/agent-ops 2>/dev/null; grep -rli \"invoice\" --exclude-dir=.git . | head -20; ls; cat package.json 2>/dev/null | head -30",
+      "description": "Look for invoice code, records and test tooling"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-5k8vo4fq/project; cat tickets/TICKET-12.md src/invoices.js src/server.js test/invoices.test.js; grep -n -i -A3 \"export\" projects/demo/PRD.md projects/demo/BACKLOG.md | head -40; ls src test docs",
+      "description": "Read ticket, invoice source, server and tests"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-5k8vo4fq/project; git branch -a; cat projects/demo/PRD.md; grep -rn \"role\" src | head; grep -rln \"playwright\\|jsdom\\|\\.jsx\\|\\.html\" --exclude-dir=.git --exclude-dir=.claude . | head; timeout 60 npm test 2>&1 | tail -8; echo EXIT=$?",
+      "description": "Check branches, PRD, roles, UI tooling, and run tests"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-5k8vo4fq/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "role|playwright|jsdom",
+      "path": "/tmp/orcasus-eval-5k8vo4fq/project/src",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-5k8vo4fq/project/docs/agent-ops/TEST_PLAN.md",
+      "content": "# TEST PLAN — Invoice export endpoint and button (SL-2 / TICKET-12)\n\nStatus: DRAFT — not approved. Blocked on the owner questions in section 2.\nAuthor: Main Agent, 2026-10-30. Skill: `/efficient-testing` v1.3.0.\n\n## 0. Gate status (read first)\n| Gate | State | Evidence |\n|---|---|---|\n| S0 intake (`"
+    }
+  }
+]
