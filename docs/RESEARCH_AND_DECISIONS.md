@@ -50,7 +50,36 @@ Rationale: hooks called `python`. macOS and many Linux systems ship only `python
 Rationale: the first real pilot (tbagri-web, 2026-10-29) failed its governance audit because rules existed only in prose. v2.4.0 adds machine checks where a check is possible (owner-only ASSUMPTION-ACCEPTED, dangling record paths) and written procedures elsewhere (subagent-mode debate, records before code, closeout before audit, hotfix lane). Two retro proposals asked for wider permissions: Bash for the security reviewer and reading `.env.example`. Both were replaced. Claude Code cannot restrict Bash to read-only commands, and deny rules win over allow rules, so an exception for `.env.example` needs a narrower deny glob that could expose other env files. Reviewers get an evidence pack instead, and discovery takes env var names from code. Evidence: [pilot record](../evidence/pilots/tbagri-web-2026-10-29.md), [EVIDENCE.md](EVIDENCE.md).
 
 ### D14 — Focus over breadth (v2.4.0)
-Rationale: the owner holds that adding skills weakens the focus of the philosophy (2026-11-10). The measured cost agrees. Every description loads into every session: 16 Orcasus skills use 5,771 description characters (about 1,400 tokens), while Aegis's 194 skills use 173,285 (about 43,000 tokens) and need a 990-edge routing graph and a "Do NOT use" clause in every skill to stay apart. Orcasus therefore caps its core at 20 skills and 9,000 description characters, requires a stage-map entry and a boundary clause per skill, and keeps domain skills in optional packs. A cap does not make a skill good; evals and the live scorecard still decide that. Evidence: [intake record](agent-ops/INTAKE_RECORD.md), `scripts/skill_focus.py`.
+- Decision state: DECIDED (owner, 2026-11-10; [approvals](agent-ops/APPROVALS.md)).
+- Options considered:
+  - (a) a formal admission rule with validator checks (chosen);
+  - (b) a written principle only;
+  - (c) no change.
+- Rationale:
+  - The owner holds that adding skills weakens the focus of the philosophy.
+  - The measured cost agrees. Every skill description loads into every session.
+  - Orcasus: 16 skills, 5,757 description characters before this change (about 1,400 tokens).
+  - Aegis: 194 skills and 173,103 characters (about 43,000 tokens), a 990-edge routing graph, and a "Do NOT use" clause in 177 of the 194 descriptions ([measurement](../evidence/aegis-measurement-2026-11-10.md)).
+- Decision:
+  - Orcasus caps its core at 20 skills and 9,000 description characters.
+  - Each skill needs a stage-map entry and a boundary clause.
+  - Domain skills go in optional packs.
+- Limits: a cap does not make a skill good; evals and the live scorecard still decide that.
+- Revisit when a needed skill cannot fit without removing one, or when live evals show routing errors that the caps do not explain.
+- Evidence: [intake record](agent-ops/INTAKE_RECORD.md), `scripts/skill_focus.py`.
+
+### D15 — Judge auto-FAIL for trigger-failed attempts (v2.4.0)
+- Decision state: DECIDED, then adjusted (owner, 2026-11-01: "dùng option 3"; adjusted 2026-11-11 by retro R11).
+- Options considered:
+  - (1) a cheaper judge model, which needs recalibration;
+  - (2) one judge call per attempt, with a new rubric;
+  - (3) no model call when the deterministic trigger check failed (chosen).
+- Rationale: it saved about 40% of judge calls in the 2026-10-30 run.
+- Known cost:
+  - It can only lower scores.
+  - It hid correct rule-following when the rules live in CLAUDE.md (run `run-20261110T224734Z-880ce5`).
+  - Therefore cases marked `"trigger": "skill-or-rule"` are never auto-FAILed (R11).
+- Revisit when calibration shows the judge is trusted on a cheaper model (option 1), or when auto-FAIL marks more than 10% of a run's assertions on cases whose behavior a human labels PASS.
 
 ### D12 — Attribution
 The S0 classification gate, task slicing, closeout structure, governance audit controls and memory write/trust rules were adapted in Orcasus's own words from ideas in Project Aegis (https://github.com/ModernNomad-98/Project-Aegis, Apache License 2.0; reference copy haidongkixot/aegis-ref). No Aegis text or code was copied.

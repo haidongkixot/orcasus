@@ -25,7 +25,7 @@ Inspect the files and layers each deliverable would touch before classifying; ne
 | integration | contract tests + failure-path tests; real account/scope verified | integration, security | yes when credentials, scopes or paid usage change |
 | mobile-platform | device/emulator tests on supported targets | mobile, QA | no |
 | infra-deploy-release | plan/diff reviewed, rollback, delivery-readiness | security, performance | **yes** |
-| agent-system-config | evals + validator pass (CLAUDE.md, agents, skills, hooks, settings) | governance-auditor | **yes** when permissions, hooks or tool grants change |
+| agent-system-config | evals + validator pass (CLAUDE.md, agents, skills, templates, hooks, settings); a short readiness table and the validation-floor table, which serve as the test plan | governance-auditor, in a separate session | **yes** when permissions, hooks or tool grants change. "Hooks" includes every script a hook runs; each such change gets an approval row in `docs/agent-ops/APPROVALS.md` |
 | test-only | test run proving intent | QA | no |
 | refactor | behavior-preservation proof (same tests pass before/after) | QA | yes when broad/multi-module |
 | bug-fix | failing case reproduced, then passing | QA | no |
@@ -54,13 +54,14 @@ Record expected files/modules, classes, validation floors, reviewers, approval p
 
 ## 5a. Hotfix lane (urgent production or security fixes)
 Use it only when the owner confirms the change fixes an active production incident or an exploitable security hole, and the class is auth-permission-security, bug-fix or infra-deploy-release. The lane changes the order in which records are completed, not which gates apply:
-1. Minimal intake (sections 1, 2, 5 and the owner's confirmation that it is a hotfix) committed first.
+1. Before reading code in depth, say in the reply that this is the hotfix lane and that a security review will follow. Then write and commit the minimal intake: sections 1, 2 and 5, plus the owner's confirmation that it is a hotfix.
 2. Fix with negative tests, on a branch with a **draft** pull request.
 3. Security review saved to `reports/<slice>-security-review.md`.
 4. Readiness matrix, trace matrix, ADR (if a material choice was made) and closeout completed **before the pull request leaves draft or is merged**.
 Record "Lane: hotfix" and the owner's confirmation in the intake record. `/governance-audit` checks that every record exists before the merge commit. Without the owner's confirmation, use the normal order.
 
 ## 6. Scope lock
+Work that continues after a closeout opens a new intake. The only alternative is a reclassification row, committed **before** the code it covers.
 During work, any file, layer or behavior outside the contract stops the affected work and returns here for reclassification. A previous approval does not transfer to a new class.
 
 ## Output

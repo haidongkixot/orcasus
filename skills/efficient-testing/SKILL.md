@@ -14,6 +14,8 @@ description: Mandatory risk-based testing for web/mobile changes. Prefer the low
 - Do not add a browser framework, device farm, visual-regression package or major dependency until existing resources are inspected and a documented gap justifies it.
 - Any non-zero capture budget requires a named diagnostic/visual question, bounded artifact count, destination, retention/cleanup and owner approval or a pre-approved project CI policy.
 
+For agent-system-config changes (CLAUDE.md, skills, agents, templates, hooks, settings), the intake's validation-floor table is the test plan. It must name the package checks and any live evals the regression rule requires.
+
 ## Inspect before designing tests
 Read requirements/acceptance criteria, changed files, current test runner/config/version, package scripts, fixtures, CI, prior failures and existing artifact paths. Verify browser/device access, API, database, test data, preview/staging, network and budget. Reuse existing tools.
 

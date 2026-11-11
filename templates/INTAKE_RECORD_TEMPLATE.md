@@ -45,6 +45,17 @@
 - Approval path:
 - Next gate: /project-discovery · /requirements-traceability · /team-debate · /backlog-slicing
 
+## 5b. Readiness and test plan (agent-system-config, short form)
+
+| Area | Status (AVAILABLE / MISSING / UNKNOWN / NOT NEEDED) | Evidence |
+|---|---|---|
+| Runtime and tools | | |
+| CI | | |
+| Live eval budget (if the regression rule applies) | | |
+| Reviewer in a separate session | | |
+
+For this class, the validation floors in section 2 are the test plan.
+
 ## 6. Reclassification log
 
 | Date | Trigger (file/layer/behavior outside contract) | New class | Approval obtained |

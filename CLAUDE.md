@@ -30,6 +30,7 @@ For every new request except conceptual questions and trivial edits:
 5. Declare the scope contract. Work outside it stops and returns to intake; an approval never transfers to a new class.
 6. Before asking a policy question, list every value of the domain it covers (roles, statuses, tenants) from the code.
 7. Commit the intake and readiness records before the first code commit, so the gate order is provable from git. Exception: the hotfix lane in `/change-intake`, which the owner confirms; it commits a minimal intake first and completes the other records before the pull request leaves draft or merges.
+8. Work that continues after a closeout opens a new intake, or adds a reclassification row committed before the code it covers.
 
 ## Mandatory discovery gate
 For every non-trivial feature, redesign, integration, migration, permission change or production-relevant bug fix:
@@ -87,7 +88,7 @@ For each feature before implementation/testing:
 - Use established assets and licensed resources; do not clone another product's proprietary UI or assets.
 
 ## Safety and approval
-- Never reveal secrets, credentials or personal data in logs/reports.
+- Never reveal secrets, credentials or personal data in logs/reports. Redaction covers personal data such as e-mail addresses, not only secrets. Nested agent runs (evals) get no account identity.
 - Do not bypass access controls, expose secrets or use production data in fixtures.
 - Require approval before deploy/publish, destructive data operations, production migrations, external communications, financial commitments, paid infrastructure or material permission-scope expansion.
 - Do not use `--dangerously-skip-permissions` on a normal workstation.
@@ -97,7 +98,8 @@ For each feature before implementation/testing:
 - Finish every task or slice with `/closeout-report` in `reports/`. The intentionally-not-done section is mandatory; unproven deliverables are never DONE.
 - Save every independent review as a file in `reports/` (for example `reports/<slice>-security-review.md`). Give reviewers without a shell an evidence pack: the diff and the test, typecheck and build output with exit codes.
 - Open the pull request as a draft. Mark it ready only after the reviews, the closeout and the governance audit exist. Write the closeout before the audit starts.
-- Use `/governance-audit` (via the read-only `governance-auditor`, never the change author) for retrospective checks, incidents and autonomy spot checks. Missing evidence is UNVERIFIABLE, never PASS.
+- Use `/governance-audit` (via the read-only `governance-auditor`, never the change author) for retrospective checks, incidents and autonomy spot checks. Run it in a session other than the author's, or have the owner countersign it, and record the session in the report. Missing evidence is UNVERIFIABLE, never PASS.
+- Record owner approvals verbatim in `docs/agent-ops/APPROVALS.md` (date, words, scope, where). Record system decisions as D-entries in `docs/RESEARCH_AND_DECISIONS.md`, each with the options considered, a decision state and a revisit trigger.
 - Use `/process-retro` at milestone ends and after failed audits. Retros propose; changes to CLAUDE.md, agents, skills, hooks, settings or templates need owner approval and go through `/change-intake` as agent-system-config.
 
 ## Skill admission and focus
