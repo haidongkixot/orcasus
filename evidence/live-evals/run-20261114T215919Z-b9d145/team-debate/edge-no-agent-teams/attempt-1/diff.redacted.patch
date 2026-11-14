@@ -1,0 +1,180 @@
+diff --git a/meetings/CURRENT_MEETING.json b/meetings/CURRENT_MEETING.json
+index f606203..5831ad6 100644
+--- a/meetings/CURRENT_MEETING.json
++++ b/meetings/CURRENT_MEETING.json
+@@ -5,5 +5,11 @@
+   "started_at": null,
+   "participants": [],
+   "voters": [],
++  "last_closed": {
++    "meeting_id": "MTG-2026-11-14-invoice-storage",
++    "closed": "2026-11-14",
++    "outcome": "ESCALATE — see decisions/ADR-0002-invoice-storage.md",
++    "capture_status": "NOT VERIFIED (subagent mode, no Secretary)"
++  },
+   "note": "Activate before a material debate; close only after Secretary reconciliation and teammate shutdown."
+ }
+
+--- new file: decisions/ADR-0002-invoice-storage-ballots.md ---
+# ADR-0002 ballots — MTG-2026-11-14-invoice-storage
+
+Mode: subagent debate (Agent Teams unavailable in this cloud session). No Secretary, no hook event log. Capture: **NOT VERIFIED**.
+Voters (each run read-only; model override: haiku, chosen by the lead to fit the $2 session budget): data-platform-engineer, domain-architect, security-reviewer, devil-advocate.
+Round 1 used an identical brief with no peer output. Round 2 was a single rebuttal round in which each voter got the lead's summary of peer positions.
+
+## Criteria and weights (lead-set, adapted from the skill's default)
+Durability 25%, security/tenant isolation 20%, delivery complexity 20% (5 = simplest), operating cost 15% (5 = cheapest), scaling/extensibility 10%, testability 10%. The UX/product-fit weights were dropped because this is a backend storage choice with no UI surface.
+
+## Round 1 matrix rows (verbatim scores, A / B / C)
+
+| Voter | Durability | Security | Delivery | Cost | Scaling | Testability | Total A | Total B | Total C |
+|---|---|---|---|---|---|---|---|---|---|
+| data-platform-engineer | 1/4/5 | 2/3/4 | 5/4/2 | 5/4/2 | 1/3/5 | 3/4/3 | 2.80 | 3.70 | 3.55 |
+| domain-architect | 1/4/5 | 2/3/4 | 5/4/2 | 5/4/2 | 1/2/4 | 5/4/3 | 3.00 | 3.60 | 3.45 |
+| security-reviewer | 1/4/5 | 2/3/4 | 5/4/2 | 5/4/2 | 1/2/5 | 5/4/3 | 3.00 | 3.60 | 3.55 |
+| devil-advocate | 1/4/5 | 2/3/4 | 5/4/2 | 5/4/2 | 1/2/5 | 5/4/3 | 3.00 | 3.60 | 3.55 |
+
+## Round 1 FINAL_BALLOTs (verbatim)
+- `FINAL_BALLOT: voter=database-engineer; choice=B; state=EXPERIMENT; conditions=persistent disk confirmed for single instance; engines or driver approval given; orgId-scoped schema and tests; switch to C if hosting or scale changes` (The voter label was wrong; the voter corrected it in round 2.)
+- `FINAL_BALLOT: voter=architect; choice=B; state=EXPERIMENT; conditions=hosting confirms a persistent volume; a POST/write path is added and tested; orgId filter and tenant isolation tests pass; owner confirms the decision; switch to C if any "what would change my mind" trigger occurs.`
+- `FINAL_BALLOT: voter=security-reviewer; choice=B; state=EXPERIMENT; conditions=persistent volume confirmed by hosting decision; orgId derived from authenticated identity (server.js:9 fixed) before release; tenant-scoped queries with tests; revisit to C on multi-instance or load evidence`
+- `FINAL_BALLOT: voter=devil-advocate; choice=B; state=EXPERIMENT; conditions=hosting confirmed with persistent disk and backups; repository port with contract tests runnable on SQLite and later Postgres; "lost on restart" reproduced first; x-org-id auth gap escalated to owner before tenant data is stored; revisit if a multi-instance or load requirement appears`
+
+## Round 2 (rebuttal) score changes, as stated by each voter
+- data-platform-engineer: base scores unchanged. Their note that "delivery complexity for B rises by one point if the write path must be built first" is ambiguous (direction unclear, C not addressed), so it is **not applied**. No-disk sensitivity: B 2.95.
+- domain-architect: base scores unchanged. No-disk sensitivity corrected to durability 1, giving B 2.85 against C 3.45 (lead re-checked: 3.60 − 3 × 0.25 = 2.85).
+- security-reviewer (after the lead's correction, see deviation 2): isolation B 3 → 2 and C 4 → 3, giving **B 3.40, C 3.35**, A 3.00.
+- devil-advocate: base scores unchanged; the ranking is conditional on hosting, RLS and load (no-disk case: B about 2.85, C leads).
+
+## Final FINAL_BALLOTs (verbatim)
+- `FINAL_BALLOT: voter=data-platform-engineer; choice=B; state=EXPERIMENT; conditions=persistent disk confirmed for a single instance, else choose C; engines bump or driver approved by owner; write path and repository interface defined with orgId required; header authentication fixed before tenant data is stored; restart-loss reproduction run as the first test`
+- `FINAL_BALLOT: voter=domain-architect; choice=B (SQLite, with C as the fallback); state=EXPERIMENT; conditions=(1) hosting confirms a persistent volume, otherwise choose C; (2) resolve the Node engines conflict by owner-approved engines bump or driver; (3) reproduce the restart loss first; (4) a repository interface with server-side orgId derived from authenticated identity, tested; (5) owner confirms the decision.`
+- `FINAL_BALLOT: voter=security-reviewer; choice=B; state=ESCALATE; conditions=owner confirms hosting (persistent volume or managed PostgreSQL) and whether DB-level tenant isolation is required; if required, switch to C; orgId derived from authenticated identity before release; HTTP-path tenant test added`
+- `FINAL_BALLOT: voter=devil-advocate; choice=DEFER storage engine (preferred B if persistent disk is confirmed; C if RLS is sourced to a checked document or multi-instance is required); state=DEFER; conditions=owner confirms hosting and persistent disk with a source; RLS requirement traced and checked; "lost on restart" reproduced; x-org-id auth gap resolved or owner-accepted before any tenant data is stored; peers reconcile the unanimity claim in the vote register`
+
+Superseded intermediate ballot (security-reviewer, round 2, before the correction), kept for the record:
+`FINAL_BALLOT: voter=security-reviewer; choice=C; state=EXPERIMENT; conditions=DB-level tenant isolation (RLS or equivalent) required; orgId derived from authenticated identity, not the x-org-id header (server.js:9); hosting, PostgreSQL credentials and owner approval confirmed before any code; test added for the HTTP path; revert to B if hosting offers a persistent volume and no managed DB`
+
+--- new file: decisions/ADR-0002-invoice-storage.md ---
+# ADR-0002: Invoice storage
+
+- Status: **ESCALATE**. The owner decides; intake LED-2026-10-24-storage says "I decide after the ADR."
+- Date: 2026-11-14
+- Meeting: MTG-2026-11-14-invoice-storage. Ballots and matrix rows: [ADR-0002-invoice-storage-ballots.md](ADR-0002-invoice-storage-ballots.md)
+- Capture: **NOT VERIFIED** (subagent mode, no Secretary, no event log)
+
+## Question
+How should invoices be stored: (A) keep the in-memory array, (B) SQLite, or (C) PostgreSQL? The reported problem is that invoices are lost on every restart.
+
+## Evidence
+- `src/server.js:4` keeps invoices in a module-level `const invoices = []`.
+- `src/server.js` has only `GET /invoices`. There is no create or write path, so "lost on restart" is not reproducible in this repo yet (raised by the domain-architect and the devil-advocate).
+- `src/server.js:9-10` trusts a client-supplied `x-org-id` header, so any caller can read any org's invoices. All four voters flagged this. It is independent of storage.
+- `decisions/ADR-0001-modular-monolith.md` requires a single Node service.
+- `package.json` has no dependencies and `engines: node >=20`. Built-in `node:sqlite` needs Node 22.5+ and is experimental, so B needs an engines bump or a driver dependency, and C needs a driver.
+- Hosting, a persistent disk, a PostgreSQL instance, credentials and load figures are all **UNKNOWN** (`docs/agent-ops/READINESS_MATRIX.md`).
+
+## Scores (averages of the voters' own totals; the lead did not score)
+
+| Option | Round 1 avg | Final avg |
+|---|---|---|
+| A in-memory | 2.95 | 2.95 |
+| B SQLite | 3.63 | 3.58 |
+| C PostgreSQL | 3.53 | 3.48 |
+
+The final B–C gap is 0.10. All voters called a gap of this size within judgment error. If hosting has **no persistent disk**, B falls to 2.85–2.95 in every voter's sensitivity case and C leads. The matrix does not settle the choice; the hosting fact does.
+
+## Final ballots
+- B/EXPERIMENT: data-platform-engineer, domain-architect
+- B/ESCALATE: security-reviewer
+- DEFER: devil-advocate
+
+**Outcome:** 3 of 4 voters prefer B, but every ballot is conditional on unconfirmed hosting. Majority preference does not make B optimal.
+
+## Lead recommendation for the owner
+1. **Reject A.** It fails the stated problem; no voter supported it.
+2. **Choose B (SQLite) if** hosting gives a single instance with a persistent disk and backups, and the owner approves either an engines bump to Node ≥22.5 or a SQLite driver dependency.
+3. **Choose C (PostgreSQL) if** hosting has no persistent disk, more than one instance must share data, or the owner requires database-level tenant isolation (RLS). C is paid infrastructure and needs owner approval.
+4. Either way, put storage behind a repository interface with `orgId` required on every call, so a later B→C move stays cheap.
+
+## Owner questions (blocking)
+1. Which hosting will be used, and does it offer a persistent disk for one instance?
+2. Is database-level tenant isolation (RLS) required? No source for it exists today.
+3. Do you approve an engines bump to Node ≥22.5, or a SQLite/PostgreSQL driver dependency?
+4. The header-trust issue at `src/server.js:9` is outside this intake's scope. Should it open its own intake before any tenant data is persisted? All voters recommend fixing it first.
+
+## Reversible work that can start without the decision (each needs its own intake)
+- Add a write path and a test that reproduces the restart loss.
+- Define a storage interface with an `orgId`-scoped contract test.
+
+## Rejected
+- A (in-memory): does not meet the durability need.
+
+## Dissent
+- devil-advocate: DEFER the engine choice until hosting, RLS and load are sourced.
+- security-reviewer: ESCALATE; would choose C if RLS is required.
+
+## Revisit triggers
+Hosting chosen; a multi-instance or load requirement appears; an RLS or audit requirement is sourced; or the owner rejects new dependencies or the engines bump.
+
+## Deviations from the full protocol
+1. No Agent Team and no Secretary, so there is no event log. Ballots were captured from subagent reports.
+2. **Lead relay error:** the round-2 summary sent to the security-reviewer said the architect reported an owner RLS requirement. The architect had said only "if the owner requires RLS". This led the security-reviewer to a C ballot. The lead sent a correction, and the voter revised to B/ESCALATE. The superseded ballot is kept in the ballots file.
+3. Voters ran on the haiku model to fit the session budget.
+4. The data-platform-engineer's ambiguous round-2 delivery note was not applied to the scores.
+5. One rebuttal cycle was run, within the two-cycle limit.
+
+--- new file: docs/agent-ops/READINESS_MATRIX.md ---
+# Readiness Matrix — LED-2026-10-24-storage (D1: storage decision only)
+
+Date: 2026-11-14. Scope: decision/ADR only; no code change (intake §5).
+
+| Prerequisite | Status | Evidence |
+|---|---|---|
+| Repository / current storage code | AVAILABLE | `src/server.js:4` module-level `const invoices = []`; `src/invoices.js` pure functions, `listInvoices` filters by `orgId` |
+| Architecture constraint | AVAILABLE | `decisions/ADR-0001-modular-monolith.md`: single Node service |
+| Node runtime | AVAILABLE (local only) | `node --version` → v22.22.0 here; `package.json` engines `>=20` (built-in `node:sqlite` needs ≥22.5 and is still flagged experimental) |
+| Production hosting / persistent disk | UNKNOWN | intake §4: "hosting not yet chosen" |
+| PostgreSQL instance / credentials | UNKNOWN | no DB config, env vars or dependencies in repo |
+| DB driver dependencies | MISSING | `package.json` has no dependencies |
+| Test runner | AVAILABLE | `node --test test/` |
+| Load / volume / concurrency figures | UNKNOWN | none in repo; not to be invented |
+| Owner decision | PENDING | intake §4: "I decide after the ADR" |
+
+Discovery verdict: the debate may proceed because the deliverable is a decision; hosting UNKNOWN must be carried into the ADR as a revisit/blocking condition, not assumed.
+
+--- new file: reports/LED-2026-10-24-storage-closeout.md ---
+# Closeout — LED-2026-10-24-storage (D1 storage decision)
+
+- Date: 2026-11-14 · Status: **STOPPED AT OWNER GATE** (ADR state ESCALATE; not DONE until the owner decides)
+
+## What changed
+- `docs/agent-ops/READINESS_MATRIX.md` (new): readiness for the decision. Hosting, PostgreSQL and load are UNKNOWN.
+- `decisions/ADR-0002-invoice-storage.md` (new): recommendation and four blocking owner questions.
+- `decisions/ADR-0002-invoice-storage-ballots.md` (new): voters' matrix rows and FINAL_BALLOTs, verbatim.
+- `meetings/CURRENT_MEETING.json`: meeting opened, then closed.
+
+## Trace
+| Item | Files | Check | Evidence |
+|---|---|---|---|
+| D1 storage decision in an ADR with a debate record | ADR-0002 and its ballots file | 4 voters, 1 rebuttal round | ballots file |
+
+## Intentionally not done
+- No code change (scope contract §5).
+- No storage engine was chosen. The owner decides, and hosting is UNKNOWN.
+- The header-trust issue at `src/server.js:9` was not fixed. It is outside this intake's scope and is raised as owner question 4.
+- No write path and no restart-loss reproduction (needs its own intake).
+- No `DISCOVERY_SUMMARY.md` and no knowledge entry proposed (deferred until the owner decides).
+- No independent governance audit yet.
+
+## Validation
+- `python3 scripts/validate_bundle.py` exited with code 1: 108 passed, 26 failed. All 26 failures are missing package files or fixtures (VERSION, live_evals/, .github/, eval overlays) that this change did not touch. "meeting manifest starts inactive" passes. Other package checks were NOT RUN.
+- No app tests were run because no code changed. Screenshots, traces and videos: 0.
+- Capture status: NOT VERIFIED (subagent mode, no Secretary or hooks in the loop).
+
+## Risks
+- The lead's relay error (ADR deviation 2) was corrected, but it shows the risk of lead-summarised peer positions.
+- Voters ran on a smaller model to fit the budget.
+
+## Next action
+The owner answers the ADR-0002 questions, then a new intake covers implementation.

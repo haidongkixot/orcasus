@@ -1,0 +1,60 @@
+{
+  "run_id": "run-20261114T215919Z-b9d145",
+  "started_utc": "20261114T215919Z",
+  "claude_version": "2.1.325 (Claude Code)",
+  "model": "default",
+  "platform": "Linux 6.18.44-fc-v470",
+  "python": "3.13.17",
+  "orcasus_commit": "be1f289601bf786382c50aaa827748b76ae9a3ac",
+  "args": {
+    "skill": [
+      "team-debate"
+    ],
+    "case": [
+      "edge-no-agent-teams"
+    ],
+    "smoke": false,
+    "repeats": 1,
+    "budget_total": 2.0,
+    "budget_per_run": 2.0,
+    "max_runs": 0,
+    "max_turns": 25,
+    "timeout": 900,
+    "model": null,
+    "claude_bin": "claude",
+    "out": "/home/user/orcasus/evidence/live-evals",
+    "dry_run": false
+  },
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Agent",
+    "SendMessage",
+    "TodoWrite",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)",
+    "Bash(git show *)",
+    "Bash(ls *)",
+    "Bash(python3 scripts/*)",
+    "Bash(node --test *)",
+    "Bash(npm test *)"
+  ],
+  "planned_attempts": 1,
+  "finished_utc": "20261114T220220Z",
+  "reported_spend_usd": 1.3042,
+  "results": [
+    {
+      "skill": "team-debate",
+      "case_id": "edge-no-agent-teams",
+      "attempt": 1,
+      "status": "RAN",
+      "cost_usd": 1.30424847
+    }
+  ],
+  "not_run": 0
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice|export",
+      "glob": "!**/.claude/**",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "team-debate"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-zcma1s9n/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-zcma1s9n/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export|email|job|queue",
+      "path": "/tmp/orcasus-eval-zcma1s9n/project",
+      "glob": "{docs/agent-ops/*.md,docs/RESEARCH_AND_DECISIONS.md,projects/demo/*.md,src/*.js,decisions/*.md,package.json}",
+      "output_mode": "content",
+      "head_limit": 60
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-zcma1s9n/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-zcma1s9n/project/src/server.js"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{package.json,meetings/*,decisions/*}"
+    }
+  }
+]

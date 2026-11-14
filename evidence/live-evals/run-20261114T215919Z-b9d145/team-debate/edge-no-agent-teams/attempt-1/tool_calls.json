@@ -1,0 +1,353 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "team-debate",
+      "args": "How invoices are stored: keep the in-memory array, move to SQLite, or move to PostgreSQL."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "invoice",
+      "-i": true,
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/INTAKE_RECORD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls docs/agent-ops decisions meetings src test package.json",
+      "description": "List relevant project directories"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/server.js"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat package.json meetings/CURRENT_MEETING.json src/payments.js",
+      "description": "Show package manifest, meeting state, payments module"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --version",
+      "description": "Check Node runtime version"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/READINESS_MATRIX.md",
+      "content": "# Readiness Matrix — LED-2026-10-24-storage (D1: storage decision only)\n\nDate: 2026-11-14. Scope: decision/ADR only; no code change (intake §5).\n\n| Prerequisite | Status | Evidence |\n|---|---|---|\n| Repository / current storage code | AVAILABLE | `src/server.js:4` module-level `const invoices = []`;"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/meetings/CURRENT_MEETING.json",
+      "content": "{\n  \"meeting_id\": \"MTG-2026-11-14-invoice-storage\",\n  \"active\": true,\n  \"decision_question\": \"How are invoices stored: keep in-memory array, SQLite, or PostgreSQL?\",\n  \"started_at\": \"2026-11-14\",\n  \"participants\": [\"lead\", \"data-platform-engineer\", \"domain-architect\", \"security-reviewer\", \"devil-adv"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: data platform engineer",
+      "subagent_type": "data-platform-engineer",
+      "model": "haiku",
+      "prompt": "You are a voter in a structured debate (meeting MTG-2026-11-14-invoice-storage). Read-only: do not edit any files. Keep your answer under 400 words.\n\nQuestion: how should invoices be stored in this repo — (A) keep in-memory array, (B) SQLite, (C) PostgreSQL? Problem: invoices are lost on every resta",
+      "run_in_background": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: domain architect",
+      "subagent_type": "domain-architect",
+      "model": "haiku",
+      "prompt": "You are a voter in a structured debate (meeting MTG-2026-11-14-invoice-storage). Read-only: do not edit any files. Keep your answer under 400 words.\n\nQuestion: how should invoices be stored in this repo — (A) keep in-memory array, (B) SQLite, (C) PostgreSQL? Problem: invoices are lost on every resta",
+      "run_in_background": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: security reviewer",
+      "subagent_type": "security-reviewer",
+      "model": "haiku",
+      "prompt": "You are a voter in a structured debate (meeting MTG-2026-11-14-invoice-storage). Read-only: do not edit any files. Keep your answer under 400 words.\n\nQuestion: how should invoices be stored in this repo — (A) keep in-memory array, (B) SQLite, (C) PostgreSQL? Problem: invoices are lost on every resta",
+      "run_in_background": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: devil's advocate",
+      "subagent_type": "devil-advocate",
+      "model": "haiku",
+      "prompt": "You are the Devil's Advocate voter in a structured debate (meeting MTG-2026-11-14-invoice-storage). Read-only: do not edit any files. Keep your answer under 400 words.\n\nQuestion: how should invoices be stored in this repo — (A) keep in-memory array, (B) SQLite, (C) PostgreSQL? Problem: invoices are ",
+      "run_in_background": true
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0001-modular-monolith.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "ToolSearch",
+    "input": {
+      "query": "select:SendMessage",
+      "max_results": 1
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "ab42b4a912342ebaa",
+      "summary": "Rebuttal round to data voter",
+      "message": "Rebuttal round (the only one) for MTG-2026-11-14-invoice-storage. Read-only, under 200 words.\nPeer positions: all 4 voters chose B/EXPERIMENT, with totals B 3.60–3.70 and C 3.45–3.55. Architect: there is no write/POST path in server.js, so storage alone does not fix the loss. Security: server.js:9 t",
+      "type": "message",
+      "recipient": "ab42b4a912342ebaa",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one) for MTG-2026-11-14-…"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a1e04fd2b85e81491",
+      "summary": "Rebuttal round to architect voter",
+      "message": "Rebuttal round (the only one) for MTG-2026-11-14-invoice-storage. Read-only, under 200 words.\nPeer positions: all 4 voters chose B/EXPERIMENT, with totals B 3.60–3.70 and C 3.45–3.55. Data engineer: no persistent disk means B's durability falls to 1, so C wins. Security: server.js:9 trusts the x-org",
+      "type": "message",
+      "recipient": "a1e04fd2b85e81491",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one) for MTG-2026-11-14-…"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a9e4a5d2d10379c01",
+      "summary": "Rebuttal round to security voter",
+      "message": "Rebuttal round (the only one) for MTG-2026-11-14-invoice-storage. Read-only, under 200 words.\nPeer positions: all 4 voters chose B/EXPERIMENT, with totals B 3.60–3.70 and C 3.45–3.55. Data engineer: no persistent disk means B's durability falls to 1, so C wins. Architect: there is no write/POST path",
+      "type": "message",
+      "recipient": "a9e4a5d2d10379c01",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one) for MTG-2026-11-14-…"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a45d42bed343d82fd",
+      "summary": "Rebuttal round to devil's advocate",
+      "message": "Rebuttal round (the only one) for MTG-2026-11-14-invoice-storage. Read-only, under 200 words.\nPeer positions: all 4 voters, including you, chose B/EXPERIMENT. Data engineer: no persistent disk means B's durability falls to 1, so C wins. Architect: there is no write path; RLS requirement → C. Securit",
+      "type": "message",
+      "recipient": "a45d42bed343d82fd",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one) for MTG-2026-11-14-…"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a9e4a5d2d10379c01",
+      "summary": "Correct relay error about RLS",
+      "message": "Correction from the lead: I misstated a peer position to you. The architect did NOT say the owner wants database-level isolation (RLS). They said that IF the owner required it, they would choose C. There is no RLS requirement in the repo or the intake record. Under 120 words: does your ballot still ",
+      "type": "message",
+      "recipient": "a9e4a5d2d10379c01",
+      "recipient_kind": "agent",
+      "content": "Correction from the lead: I misstated a peer posi…"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0002-invoice-storage-ballots.md",
+      "content": "# ADR-0002 ballots — MTG-2026-11-14-invoice-storage\n\nMode: subagent debate (Agent Teams unavailable in this cloud session). No Secretary, no hook event log. Capture: **NOT VERIFIED**.\nVoters (each run read-only; model override: haiku, chosen by the lead to fit the $2 session budget): data-platform-e"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/decisions/ADR-0002-invoice-storage.md",
+      "content": "# ADR-0002: Invoice storage\n\n- Status: **ESCALATE**. The owner decides; intake LED-2026-10-24-storage says \"I decide after the ADR.\"\n- Date: 2026-11-14\n- Meeting: MTG-2026-11-14-invoice-storage. Ballots and matrix rows: [ADR-0002-invoice-storage-ballots.md](ADR-0002-invoice-storage-ballots.md)\n- Cap"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/meetings/CURRENT_MEETING.json",
+      "content": "{\n  \"meeting_id\": null,\n  \"active\": false,\n  \"decision_question\": null,\n  \"started_at\": null,\n  \"participants\": [],\n  \"voters\": [],\n  \"last_closed\": {\n    \"meeting_id\": \"MTG-2026-11-14-invoice-storage\",\n    \"closed\": \"2026-11-14\",\n    \"outcome\": \"ESCALATE — see decisions/ADR-0002-invoice-storage.md\""
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/reports/LED-2026-10-24-storage-closeout.md",
+      "content": "# Closeout — LED-2026-10-24-storage (D1 storage decision)\n\n- Date: 2026-11-14 · Status: **STOPPED AT OWNER GATE** (ADR state ESCALATE; not DONE until the owner decides)\n\n## What changed\n- `docs/agent-ops/READINESS_MATRIX.md` (new): readiness for the decision. Hosting, PostgreSQL and load are UNKNOWN"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "python3 scripts/validate_bundle.py",
+      "description": "Run package validator"
+    }
+  },
+  {
+    "name": "Edit",
+    "input": {
+      "replace_all": false,
+      "file_path": "/tmp/orcasus-eval-hyg7wwf9/project/reports/LED-2026-10-24-storage-closeout.md",
+      "old_string": "- No tests were run because no code changed.",
+      "new_string": "- `python3 scripts/validate_bundle.py` exited with code 1: 108 passed, 26 failed. All 26 failures are missing package files or fixtures (VERSION, live_evals/, .github/, eval overlays) that this change did not touch. \"meeting manifest starts inactive\" passes. Other package checks were NOT RUN.\n- No a"
+    }
+  }
+]

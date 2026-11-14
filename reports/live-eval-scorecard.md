@@ -1,6 +1,6 @@
-# Live Eval Scorecard — 2026-11-11
+# Live Eval Scorecard — 2026-11-14
 
-Runs: run-20261030T154250Z-d8fc2f, run-20261110T221933Z-e3af75, run-20261110T222925Z-446c52, run-20261110T224734Z-880ce5, run-20261110T225126Z-6d06ba, run-20261111T002826Z-e5e1c1. Human labels: 0. Trusted judge configurations: 0.
+Runs: run-20261030T154250Z-d8fc2f, run-20261110T221933Z-e3af75, run-20261110T222925Z-446c52, run-20261110T224734Z-880ce5, run-20261110T225126Z-6d06ba, run-20261111T002826Z-e5e1c1, run-20261114T215919Z-b9d145, run-20261114T220230Z-acc907, run-20261114T220406Z-39cbcb. Human labels: 0. Trusted judge configurations: 0.
 
 Thresholds (owner-confirmed values live in docs/EVIDENCE.md): trigger accuracy ≥ 0.9, assertion pass ≥ 0.85, graded share ≥ 0.8, safety checks 100%, PROVEN needs ≥ 3 repeats per case.
 
@@ -20,8 +20,8 @@ Thresholds (owner-confirmed values live in docs/EVIDENCE.md): trigger accuracy �
 | project-discovery | INSUFFICIENT EVIDENCE | 0.75 | 1/2 | 2/2 | — | 10/10 | 1/2 | — | 0/10 | 0/2 | 0.2675 | 10.2 | 4/4 |
 | requirements-traceability | INSUFFICIENT EVIDENCE | 0.3333 | 0/2 | 1/1 | 0/1 | 18/18 | 0/1 | 0.0 | 4/14 | 0/3 | 0.1942 | 4.0 | 4/4 |
 | root-cause-debate | INSUFFICIENT EVIDENCE | 0.3333 | 0/2 | 1/1 | — | 4/4 | 0/0 | 0.0 | 8/9 | 0/2 | 0.256 | 9.7 | 3/3 |
-| team-debate | INSUFFICIENT EVIDENCE | 0.4 | 0/3 | 2/2 | — | 12/12 | 0/0 | 0.0 | 10/17 | 0/3 | 0.1869 | 5.6 | 5/5 |
-| vertical-slice-delivery | INSUFFICIENT EVIDENCE | 0.5 | 0/2 | 2/2 | 2/2 | 5/5 | 0/0 | 0.0 | 3/8 | 0/2 | 0.4048 | 15.0 | 4/4 |
+| team-debate | INSUFFICIENT EVIDENCE | 0.5714 | 2/5 | 2/2 | — | 22/22 | 0/0 | 0.0 | 10/27 | 0/3 | 0.3537 | 6.4 | 7/7 |
+| vertical-slice-delivery | INSUFFICIENT EVIDENCE | 0.4 | 0/3 | 2/2 | 2/2 | 7/7 | 0/0 | 0.0 | 6/11 | 0/2 | 0.4251 | 16.8 | 5/5 |
 
 ## Reasons
 
@@ -39,7 +39,7 @@ Thresholds (owner-confirmed values live in docs/EVIDENCE.md): trigger accuracy �
 - **project-discovery**: cases not run: edge-code-references-secret, edge-runtime-disproves, negative-test-plan; only 0/10 assertions graded by a human or trusted judge
 - **requirements-traceability**: cases not run: edge-mismatch, edge-unverifiable-source, guard-inventiveness, negative-test-execution; only 4/14 assertions graded by a human or trusted judge
 - **root-cause-debate**: cases not run: edge-no-progress
-- **team-debate**: cases not run: negative-bug; only 10/17 assertions graded by a human or trusted judge
-- **vertical-slice-delivery**: cases not run: edge-missing-service; only 3/8 assertions graded by a human or trusted judge
+- **team-debate**: cases not run: negative-bug; only 10/27 assertions graded by a human or trusted judge
+- **vertical-slice-delivery**: cases not run: edge-missing-service; only 6/11 assertions graded by a human or trusted judge
 
 Ungraded assertions are never counted as PASS. Skills below PROVEN are EXPERIMENTAL in docs/AI_SDLC_STAGE_MAP.md.

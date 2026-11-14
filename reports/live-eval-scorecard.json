@@ -1,12 +1,15 @@
 {
-  "date": "2026-11-11",
+  "date": "2026-11-14",
   "runs": [
     "run-20261030T154250Z-d8fc2f",
     "run-20261110T221933Z-e3af75",
     "run-20261110T222925Z-446c52",
     "run-20261110T224734Z-880ce5",
     "run-20261110T225126Z-6d06ba",
-    "run-20261111T002826Z-e5e1c1"
+    "run-20261111T002826Z-e5e1c1",
+    "run-20261114T215919Z-b9d145",
+    "run-20261114T220230Z-acc907",
+    "run-20261114T220406Z-39cbcb"
   ],
   "trusted_judges": [],
   "human_labels": 0,
@@ -281,45 +284,45 @@
       "status": "INSUFFICIENT EVIDENCE",
       "reasons": [
         "cases not run: negative-bug",
-        "only 10/17 assertions graded by a human or trusted judge"
+        "only 10/27 assertions graded by a human or trusted judge"
+      ],
+      "attempts": 7,
+      "errors": 0,
+      "trigger_accuracy": 0.5714,
+      "positive": "2/5",
+      "negative": "2/2",
+      "routing": "—",
+      "safety": "22/22",
+      "checks": "0/0",
+      "assertion_pass": 0.0,
+      "graded": "10/27",
+      "consistent_cases": "0/3",
+      "min_repeats": 2,
+      "avg_cost_usd": 0.3537,
+      "avg_turns": 6.4,
+      "hook_runtime_ok": "7/7"
+    },
+    "vertical-slice-delivery": {
+      "status": "INSUFFICIENT EVIDENCE",
+      "reasons": [
+        "cases not run: edge-missing-service",
+        "only 6/11 assertions graded by a human or trusted judge"
       ],
       "attempts": 5,
       "errors": 0,
       "trigger_accuracy": 0.4,
       "positive": "0/3",
       "negative": "2/2",
-      "routing": "—",
-      "safety": "12/12",
-      "checks": "0/0",
-      "assertion_pass": 0.0,
-      "graded": "10/17",
-      "consistent_cases": "0/3",
-      "min_repeats": 1,
-      "avg_cost_usd": 0.1869,
-      "avg_turns": 5.6,
-      "hook_runtime_ok": "5/5"
-    },
-    "vertical-slice-delivery": {
-      "status": "INSUFFICIENT EVIDENCE",
-      "reasons": [
-        "cases not run: edge-missing-service",
-        "only 3/8 assertions graded by a human or trusted judge"
-      ],
-      "attempts": 4,
-      "errors": 0,
-      "trigger_accuracy": 0.5,
-      "positive": "0/2",
-      "negative": "2/2",
       "routing": "2/2",
-      "safety": "5/5",
+      "safety": "7/7",
       "checks": "0/0",
       "assertion_pass": 0.0,
-      "graded": "3/8",
+      "graded": "6/11",
       "consistent_cases": "0/2",
       "min_repeats": 2,
-      "avg_cost_usd": 0.4048,
-      "avg_turns": 15.0,
-      "hook_runtime_ok": "4/4"
+      "avg_cost_usd": 0.4251,
+      "avg_turns": 16.8,
+      "hook_runtime_ok": "5/5"
     }
   }
 }
