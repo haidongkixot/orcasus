@@ -218,3 +218,49 @@ Reasons for the selection:
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
 | 2026-11-11 | Re-audit (`reports/v2.4-governance-audit-2.md`) findings fixable by the author: N7 judge records its cost (code, `scripts/live_evals/judge.py` + test), N5 closeout corrections, N6 intake-2 figure note, N9 PR body. Committed before the code (R1) | agent-system-config (same class) | Within the delegated selection ("You decide"); owner confirmation of the R-list still pending (N2) |
+
+---
+
+# Intake Record — S0 (F13 re-runs)
+
+- Intake ID: ORC-2026-11-14-f13
+- Date: 2026-11-14
+- Requested by / owner: repository owner (haidongkixot)
+- Status: CONFIRMED
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> "Okie. Proceed" (owner, 2026-11-11). Asked what it covers, the owner selected only "Chạy 3 eval case còn lại".
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files | Class | Validation floor | Owner approval before work? |
+|---|---|---|---|---|---|
+| E1 | Live re-run of `team-debate/edge-no-agent-teams`, `vertical-slice-delivery/positive-build-slice` and `team-debate/positive-architecture-choice` (audit F13/N4) | `evidence/live-evals/**`, `docs/EVIDENCE.md`, `reports/` | test-only | runs recorded with spend; judge; package checks | Yes (given above), cap **$6** |
+
+Not in scope:
+- recording acceptance of the historical breaches;
+- confirming the R-list;
+- marking PR #3 ready;
+- calibration labels.
+
+The owner did not select these.
+
+## 3. Readiness (short form)
+
+| Area | Status | Evidence |
+|---|---|---|
+| Eval runtime | AVAILABLE | `claude` CLI; `child_env` preflight passed 2026-11-11 |
+| Budget | AVAILABLE, capped | $6 in total. Cases run one at a time; the third runs only if the spend so far plus its $3 cap stays within $6 |
+| CI | AVAILABLE | GitHub Actions on 3 OSes |
+
+## 4. Scope contract and test plan
+
+- **Files:** `docs/agent-ops/{INTAKE_RECORD,APPROVALS}.md`, `evidence/live-evals/**`, `reports/live-eval-scorecard.*`, `reports/v2.4-f13-closeout.md`, `docs/EVIDENCE.md`.
+- **Test plan:** the validation floor above, plus the package checks.
+
+## 5. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|

@@ -13,3 +13,4 @@ Each row quotes the owner's words verbatim, with the date, the scope it covers a
 | 2026-11-10 | "Duyệt giữ bản sửa (Khuyến nghị)" | hook-invoked redactor change (audit F2) | session chat | agent (transcribed) |
 | 2026-11-10 | "Chuyển PR #3 về draft", "Chạy /process-retro cho F1–F12", "Chạy lại eval còn thiếu (F13)" | PR to draft, retro, re-runs ($3.50 cap) | session chat | agent (transcribed) |
 | 2026-11-10 | "You decide" | the agent selects which of R1–R12 to adopt (intake ORC-2026-11-11-retro), with $4 for re-runs | session chat | agent (transcribed) |
+| 2026-11-11 | "Okie. Proceed", then selected only "Chạy 3 eval case còn lại" | live re-run of the 3 remaining eval cases (F13/N4), cap $6 (intake ORC-2026-11-14-f13) | session chat | agent (transcribed) |
