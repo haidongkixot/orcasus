@@ -25,7 +25,7 @@
         "max_budget_usd": 3
       },
       "setup": {
-        "overlay": "sl2-ready"
+        "overlay": "export-design-open"
       }
     },
     {

@@ -5,7 +5,8 @@ A case in `.claude/skills/<skill>/evals/evals.json` can set `"setup": {"overlay"
 | Overlay | Puts the workspace in this state |
 |---|---|
 | `stripe-intake-confirmed` | Intake for Stripe card payments CONFIRMED by the owner; the PRD moves payments into this phase. Discovery is the next gate. |
-| `sl2-ready` | SL-2 (CSV export API) has a confirmed intake, a READY readiness matrix, a test plan and resolved requirements. Building the slice is the next step. Also used by the team-debate positive case so its export question does not hit the SL-2 conflicts. |
+| `sl2-ready` | SL-2 (CSV export API) has a confirmed intake, a READY readiness matrix, a test plan and resolved requirements. Building the slice is the next step. |
+| `export-design-open` | SL-2's conflicts are resolved (12 months, old branch abandoned) but the delivery mode is undecided; a confirmed intake names /team-debate as the next gate. Used by `team-debate/positive-architecture-choice`. |
 | `settings-page` | Adds a small settings page (`public/settings.html`, `public/settings.css`) with real accessibility defects, so the design-quality-gate case has a UI to review. |
 | `rca-intake-confirmed` | Confirmed intake for an intermittent cross-organization invoice in `GET /invoices`; the next gate is root-cause-debate. |
 | `platform-intake-confirmed` | Confirmed intake for a new work-management platform; the next gate is platform-discovery. |
