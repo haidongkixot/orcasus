@@ -1,0 +1,39 @@
+The team recommends **A+: a synchronous CSV download that streams the file, with mandatory safeguards**. All four voters chose it in the final round. The emailed-link option ranked last with every voter. The final choice is yours, since the intake records that you decide after the ADR, so the ADR's status is **ESCALATE** (owner decides).
+
+**How the debate ran.** Agent Teams aren't available in this cloud session, so I used the debate skill's subagent mode. Four voters each worked alone first: domain architect, security reviewer, performance reviewer and devil's advocate. They then had one rebuttal round, in which each saw my summary of the others' proposals rather than their full text. There was no Secretary and no event log, so the record is not verified.
+
+| Option | Mean weighted score (voters' own) |
+|---|---|
+| **A+**: streamed download with safeguards | **4.35** |
+| A: plain streamed download | 4.25 |
+| C: background job the user checks in the app, no e-mail (raised by two voters) | 3.28 |
+| B: background job that e-mails a link | 2.61 |
+
+- **Round 1:** three voters chose A and the devil's advocate chose A+.
+- **Round 2:** the devil's advocate argued that plain A does nothing defined when the 40,000-row assumption fails. It could time out silently or run out of memory. All four switched to A+.
+
+**What A+ requires:**
+- a fixed 12-month window;
+- a server-side row cap that returns a clear error instead of cutting the file short;
+- escaping of cells starting with `=`, `+`, `-` or `@`, so a spreadsheet doesn't run them as formulas;
+- amounts formatted from whole cents;
+- a test proving one organization never gets another's invoices;
+- before release, a timing test with 40,000 made-up invoices.
+
+**Why the e-mailed link lost:** it needs an e-mail provider, a job queue, file storage and expiring links, and none of these exist yet. Each would need your approval. It also creates a new way for files to leak, and it makes Finance wait for an e-mail while they are actively closing the month.
+
+**Questions for you (these block release, not the decision):**
+1. **Login check:** the organization is taken from a request header the caller sets themselves (`x-org-id`, `src/server.js:9`), so anyone could request another organization's invoices. All four voters say the export must not ship like this. The existing invoice list has the same problem. Should this slice wait for real authentication?
+2. **Window and cap:** should the window be a fixed 12 months, or selectable within 12 months? What row cap is acceptable?
+3. **Speed target:** how long can Finance wait for the download? Voters disagreed on when to fall back to a background job (10 s versus 30 s), and neither figure is approved.
+
+**Caveats:**
+- **Unmeasured performance:** the case for all options rests on a guess that 40,000 rows is a few MB and downloads in seconds. Nothing has been measured, and a unanimous vote doesn't prove A+ is best.
+- **Discovery gate not run:** I didn't run `/project-discovery`, and there is no `docs/agent-ops/READINESS_MATRIX.md` yet. It is needed before implementation.
+- **Ballot fields:** the devil's advocate's final ballot left out the voter and reason fields; I noted this in the ballots file.
+- **Validator:** `python3 scripts/validate_bundle.py` fails, 108 passed and 26 failed. The failures are about files missing from the repository and absent eval fixtures, none of which these two ADR files touch.
+- **Not committed:** nothing has been committed.
+
+Files are in `decisions/`:
+- ADR-0002-invoice-export-delivery.md
+- ADR-0002-invoice-export-delivery-ballots.md

@@ -2,7 +2,7 @@
 
 What has been proven by running Orcasus for real, and what has not. Each row links to the evidence; a row without evidence is NOT RUN. Update this page whenever new evidence lands, and rerun before each release and at least monthly.
 
-Last updated: 2026-10-30 (first live smoke run on the 8 skills changed in v2.4.0).
+Last updated: 2026-11-17 (owner pack, trace matrix, team-debate re-run).
 
 ## Package checks (CI, no model calls)
 
@@ -26,10 +26,11 @@ Proposed thresholds, to be confirmed by the owner: trigger accuracy ≥ 0.90, as
 | P2 subagent debate (2026-11-10) | RAN: agent asked for the undefined decision question; trigger FAIL (case prompt defect, retro R10). Spend $0.17 | [run](../evidence/live-evals/run-20261110T225126Z-6d06ba/run.json) |
 | Retro adoption re-run (2026-11-11): 10 cases after R10/R11 fixes | RAN: P1 4/4 (credited by skill-or-rule), P7 2/3, P4 2/4 and 1/3, P9 2/5 (intake now written). delivery-readiness, design-quality-gate, platform-discovery and root-cause-debate did not invoke their skill (4 positive trigger FAILs, auto-FAIL); meeting-record negative blocked by the provider. Spend $2.32 + $0.57 judge + $0.30 preflight | [run](../evidence/live-evals/run-20261111T002826Z-e5e1c1/run.json), [closeout](../reports/v2.4-retro-adoption-closeout.md) |
 | F13 re-runs (2026-11-14, cap $6) | RAN: P2 `team-debate/edge-no-agent-teams` trigger PASS, **5/5 assertions PASS** (subagent mode, verbatim ballots, NOT VERIFIED, ESCALATE). `vertical-slice-delivery/positive-build-slice` built the slice (10 tests pass) but did not invoke the skill (auto-FAIL 0/3). `team-debate/positive-architecture-choice` invoked the skill and declined to debate because the overlay intake already fixes the design (eval defect). Spend $2.05 + $0.65 judge (recorded) | [closeout](../reports/v2.4-f13-closeout.md) |
+| `team-debate/positive-architecture-choice` with the open-decision overlay (2026-11-17, cap $4) | RAN: trigger PASS, 5/5 deterministic checks, 4 of 5 assertions PASS (subagent mode, verbatim ballots, ADR state ESCALATE; it skipped project-discovery). Spend $1.44 + $0.44 judge | [run](../evidence/live-evals/run-20261117T040702Z-db3ab3/run.json), [closeout](../reports/v2.4-owner-pack-closeout.md) |
 | ~~team-debate positive and vertical-slice positive after their fixes~~ (superseded by the F13 row above) | NOT RUN: their per-case caps ($3 and $2) could exceed the owner's $3.50 cap | `run_live_evals.py --skill <skill> --case <id>` |
 | Smoke run, other 8 skills | NOT RUN | `python3 scripts/live_evals/run_live_evals.py --smoke --budget-total <USD>` |
 | Full run (78 cases × 3) | NOT RUN | owner decides after the smoke run's measured cost |
-| Judge calibration (≥ 30, target 60 human labels) | WAITING FOR OWNER: 40 + 21 + 16 + 19 items sampled, human labels empty | [labels 2026-10-30](../evidence/live-evals/calibration/2026-10-30-labels.csv), [labels 2026-11-10](../evidence/live-evals/calibration/2026-11-10-labels.csv), [labels 2026-11-10b](../evidence/live-evals/calibration/2026-11-10b-labels.csv), [labels 2026-11-11](../evidence/live-evals/calibration/2026-11-11-labels.csv), then `calibrate.py score` |
+| Judge calibration (≥ 30, target 60 human labels) | WAITING FOR OWNER: start with the 30-item [owner pack](../evidence/live-evals/calibration/2026-11-17-owner-pack.md) (evidence inline, labels empty). Older sheets: 40 + 21 + 16 + 19 items sampled, human labels empty | [labels 2026-10-30](../evidence/live-evals/calibration/2026-10-30-labels.csv), [labels 2026-11-10](../evidence/live-evals/calibration/2026-11-10-labels.csv), [labels 2026-11-10b](../evidence/live-evals/calibration/2026-11-10b-labels.csv), [labels 2026-11-11](../evidence/live-evals/calibration/2026-11-11-labels.csv), then `calibrate.py score` |
 | Scorecard | RAN 2026-10-30: every skill INSUFFICIENT EVIDENCE (1 attempt per case, judge not calibrated, 0 human labels) | [scorecard](../reports/live-eval-scorecard.md) |
 | SendMessage hook in headless mode | NOT RUN | `python3 scripts/live_evals/hook_probe.py` |
 

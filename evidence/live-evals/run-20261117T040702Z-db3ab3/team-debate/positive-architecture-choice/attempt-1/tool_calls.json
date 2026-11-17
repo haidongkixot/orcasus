@@ -1,0 +1,219 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice|export",
+      "glob": "!**/{.git,node_modules}/**",
+      "output_mode": "files_with_matches",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat docs/agent-ops/INTAKE_RECORD.md tickets/TICKET-12.md src/invoices.js",
+      "description": "Read intake record, ticket and invoice code"
+    }
+  },
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "team-debate",
+      "args": "Invoice export delivery mode for SL-2: synchronous CSV download vs background job emailing a download link. Intake LED-2026-10-25-export-design (CONFIRMED)."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls docs/agent-ops decisions meetings",
+      "description": "List ops, decisions and meeting records"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat projects/demo/PRD.md projects/demo/BACKLOG.md src/server.js",
+      "description": "Read PRD, backlog and server code"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat meetings/CURRENT_MEETING.json",
+      "description": "Show current meeting state"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: domain architect",
+      "subagent_type": "domain-architect",
+      "model": "sonnet",
+      "prompt": "You are a VOTER in an Orcasus team debate (subagent mode; independent first proposal — you see no peer output). Read-only. Be concise (≤450 words).\n\nQUESTION: How should invoice export for slice SL-2 deliver the file? \n- Option A: synchronous CSV download (HTTP GET streams CSV).\n- Option B: backgrou"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: security reviewer",
+      "subagent_type": "security-reviewer",
+      "model": "sonnet",
+      "prompt": "You are a VOTER in an Orcasus team debate (subagent mode; independent first proposal — you see no peer output). Read-only. Be concise (≤450 words).\n\nQUESTION: How should invoice export for slice SL-2 deliver the file? \n- Option A: synchronous CSV download (HTTP GET streams CSV).\n- Option B: backgrou"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: performance reviewer",
+      "subagent_type": "performance-reviewer",
+      "model": "sonnet",
+      "prompt": "You are a VOTER in an Orcasus team debate (subagent mode; independent first proposal — you see no peer output). Read-only. Be concise (≤450 words).\n\nQUESTION: How should invoice export for slice SL-2 deliver the file? \n- Option A: synchronous CSV download (HTTP GET streams CSV).\n- Option B: backgrou"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Agent",
+    "input": {
+      "description": "Voter: devil's advocate",
+      "subagent_type": "devil-advocate",
+      "model": "sonnet",
+      "prompt": "You are a VOTER and the Devil's Advocate in an Orcasus team debate (subagent mode; independent first proposal — you see no peer output). Read-only. Be concise (≤450 words). Give the strongest counterargument to whichever option looks obvious, and a credible simpler alternative.\n\nQUESTION: How should"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "ToolSearch",
+    "input": {
+      "query": "select:SendMessage",
+      "max_results": 1
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "ac023872af25bfb4c",
+      "summary": "Rebuttal round for architect",
+      "message": "Rebuttal round (the only one): the other voters' first proposals are below. Option labels are now normalised. A = plain synchronous streamed CSV. A+ = A plus guardrails: a mandatory 12-month window, a server-side row cap with an explicit error, CSV-injection escaping, a cross-tenant test, and a 40k ",
+      "type": "message",
+      "recipient": "ac023872af25bfb4c",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one): the other voters' …"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "ac6f19d37df293c7b",
+      "summary": "Rebuttal round for security",
+      "message": "Rebuttal round (the only one): the other voters' first proposals are below. Option labels are now normalised. A = plain synchronous streamed CSV. A+ = A plus guardrails: a mandatory 12-month window, a server-side row cap with an explicit error, CSV-injection escaping, a cross-tenant test, and a 40k ",
+      "type": "message",
+      "recipient": "ac6f19d37df293c7b",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one): the other voters' …"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a46de9661dac4c8e4",
+      "summary": "Rebuttal round for performance",
+      "message": "Rebuttal round (the only one): the other voters' first proposals are below. Option labels are now normalised. A = plain synchronous streamed CSV. A+ = A plus guardrails: a mandatory 12-month window, a server-side row cap with an explicit error, CSV-injection escaping, a cross-tenant test, and a 40k ",
+      "type": "message",
+      "recipient": "a46de9661dac4c8e4",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one): the other voters' …"
+    }
+  },
+  {
+    "name": "SendMessage",
+    "input": {
+      "to": "a74202ff8c8383ffe",
+      "summary": "Rebuttal round for devil's advocate",
+      "message": "Rebuttal round (the only one): the other voters' first proposals are below. Option labels are now normalised. A = plain synchronous streamed CSV. A+ = your \"C\": A plus guardrails (a mandatory 12-month window, a row cap with an explicit error, injection escaping, a cross-tenant test, and a 40k benchm",
+      "type": "message",
+      "recipient": "a74202ff8c8383ffe",
+      "recipient_kind": "agent",
+      "content": "Rebuttal round (the only one): the other voters' …"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "tail -30 docs/RESEARCH_AND_DECISIONS.md",
+      "description": "Show recent decision entries format"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/decisions/ADR-0002-invoice-export-delivery-ballots.md",
+      "content": "# ADR-0002 ballots: invoice export delivery mode (SL-2)\n\n- Intake: LED-2026-10-25-export-design\n- Date: 2026-11-17\n- Mode: `/team-debate` in subagent mode. Agent Teams were not available in this cloud session. There was no Secretary and no event log, so capture is NOT VERIFIED.\n- Voters (4): domain-"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-6czqlhgl/project/decisions/ADR-0002-invoice-export-delivery.md",
+      "content": "# ADR-0002: Invoice export delivery mode (SL-2)\n\n- Status: **ESCALATE**. The team recommends A+ and the product owner decides. The owner said on 2026-10-25: \"I decide after the ADR.\"\n- Date: 2026-11-17\n- Intake: LED-2026-10-25-export-design ([intake record](../docs/agent-ops/INTAKE_RECORD.md))\n- Bal"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "python3 scripts/validate_bundle.py",
+      "description": "Run the package validator"
+    }
+  }
+]

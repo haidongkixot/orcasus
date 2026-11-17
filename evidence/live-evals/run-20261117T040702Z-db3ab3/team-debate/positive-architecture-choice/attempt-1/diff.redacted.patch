@@ -1,0 +1,223 @@
+
+--- new file: decisions/ADR-0002-invoice-export-delivery-ballots.md ---
+# ADR-0002 ballots: invoice export delivery mode (SL-2)
+
+- Intake: LED-2026-10-25-export-design
+- Date: 2026-11-17
+- Mode: `/team-debate` in subagent mode. Agent Teams were not available in this cloud session. There was no Secretary and no event log, so capture is NOT VERIFIED.
+- Voters (4): domain-architect, security-reviewer, performance-reviewer, devil-advocate. All ran on model `sonnet`.
+- Brief: every voter got the same independent brief. Round 1 used the criteria and weights below. Round 2 was one rebuttal round, where each voter received the lead's summary of the other three proposals. The summary is not the peers' verbatim text.
+- Weights: product fit 20, UX/accessibility 15, security/data isolation 20, delivery complexity 15, performance/reliability 20, operating cost 10. Compared with the skill's default weights, extensibility was dropped (one CSV route has no extension surface), and the weight moved to security and performance, which are the decision drivers here.
+
+## Option labels
+
+The labels were normalised before round 2.
+
+- **A**: synchronous streamed CSV download.
+- **A+**: A plus mandatory guardrails:
+  - a 12-month window,
+  - a server-side row cap that returns an explicit error,
+  - CSV formula-injection escaping,
+  - a cross-tenant test,
+  - a 40k-row synthetic benchmark before release.
+
+  The devil's advocate called this "C" in round 1.
+- **B**: background job that e-mails a download link.
+- **C**: in-app async job that the user polls, with no e-mail. The architect and the performance reviewer raised it in round 1.
+
+## Round 1 — independent matrix rows
+
+Weighted scores are the voters' own component sums. Where a voter's printed total differed from its components, the corrected sum is shown and the voter confirmed it.
+
+| Voter | Option | fit | ux | sec | complexity | perf | cost | weighted |
+|---|---|---|---|---|---|---|---|---|
+| domain-architect | A | 5 | 4 | 4 | 5 | 3 | 5 | 4.25 |
+| domain-architect | B | 3 | 3 | 2 | 1 | 5 | 2 | 2.80 |
+| domain-architect | C | 4 | 3 | 3 | 3 | 4 | 4 | 3.50 |
+| security-reviewer | A | 5 | 4 | 3 | 5 | 4 | 5 | 4.25 |
+| security-reviewer | B | 3 | 3 | 2 | 1 | 4 | 2 | 2.60 |
+| performance-reviewer | A | 5 | 4 | 4 | 5 | 4 | 5 | 4.45 (printed 4.5; corrected in round 2) |
+| performance-reviewer | B | 2 | 2 | 3 | 1 | 4 | 2 | 2.45 |
+| performance-reviewer | C | 3 | 3 | 3 | 2 | 4 | 3 | 3.05 |
+| devil-advocate | A | 4 | 4 | 4 | 5 | 3 | 5 | 4.05 |
+| devil-advocate | B | 3 | 3 | 2 | 1 | 4 | 2 | 2.60 |
+| devil-advocate | A+ ("C") | 5 | 4 | 4 | 4 | 4 | 5 | 4.30 |
+
+## Round 1 — ballots (verbatim)
+
+```
+FINAL_BALLOT
+voter: Domain and Platform Architect
+choice: A
+confidence: medium
+reason: A reuses the existing org-scoped route, and the 40k-row, 12-month scope plausibly streams within limits without the e-mail provider and job queue that B would need, but the spoofable x-org-id header must be fixed first and export time must be measured.
+```
+```
+FINAL_BALLOT
+voter: Security Reviewer
+choice: A
+confidence: medium
+reason: A synchronous 12-month streamed CSV fits Finance's need and reuses the existing org-filtered path, while B needs an e-mail provider and a queue that don't exist, but the unauthenticated x-org-id header must be resolved with the owner before shipping.
+```
+```
+FINAL_BALLOT
+voter: Performance and Reliability Reviewer
+choice: A
+confidence: medium
+reason: About 40k rows (an unmeasured hypothesis of roughly 4–8 MB) fits a streamed download. B needs a queue and an e-mail provider that don't exist, so I'd benchmark A at 40k synthetic rows before release.
+```
+```
+FINAL_BALLOT
+voter: Devil's Advocate
+choice: C
+confidence: medium
+reason: A streamed, org-scoped, 12-month-capped CSV with a row limit and injection protection fits the facts without adding an e-mail provider or a queue, and it can escalate to B if the benchmark fails.
+```
+(The devil's advocate's "C" is A+ under the normalised labels.)
+
+## Round 2 — rebuttal challenges
+
+These are summarised by the lead.
+
+- **Architect → performance reviewer:** a 30 s reopen trigger is too lax, because proxy timeouts are often 30–60 s (NOT VERIFIED for this deployment). Use p95 > 10 s.
+- **Architect → security reviewer:** the x-org-id gap blocks every option. Treat it as a release gate, not as a scoring factor.
+- **Security reviewer → architect:** moving to C later adds job storage and a new leak surface. The auth block should extend to A+.
+- **Security reviewer → performance reviewer:** a synthetic benchmark does not exercise the cross-tenant case or injection escaping. Add tests for both.
+- **Performance reviewer → devil's advocate:** the "maps and stringifies everything" problem is in the existing JSON route, not in a streamed export. A row cap does not fix a slow link. The 10 s p95 target is a hypothesis, not an approved SLO.
+- **Performance reviewer → architect:** "C loses jobs on restart" holds only for in-memory jobs, which is unverified.
+- **Devil's advocate (to all):**
+  - A and A+ differ only in the mandatory window, a hard cap with explicit failure, and escaping. Without the cap, A has no defined behaviour when the 40k assumption fails.
+  - The cap and window values need an owner or finance decision.
+  - Use as the trigger the lower of the proxy timeout and 10 s, and also measure event-loop lag.
+  - The auth fix needs an owner decision.
+
+## Round 2 — revised matrix rows (A+)
+
+| Voter | fit | ux | sec | complexity | perf | cost | weighted |
+|---|---|---|---|---|---|---|---|
+| domain-architect | 5 | 4 | 4 | 4 | 4 | 5 | 4.30 |
+| security-reviewer | 5 | 4 | 4 | 4 | 4 | 5 | 4.30 |
+| performance-reviewer | 5 | 4 | 5 | 4 | 4 | 5 | 4.50 |
+| devil-advocate (round 1 row, confirmed) | 5 | 4 | 4 | 4 | 4 | 5 | 4.30 |
+
+## Round 2 — final ballots (verbatim)
+
+```
+FINAL_BALLOT
+voter: Domain and Platform Architect
+choice: A+
+confidence: medium
+reason: A+ keeps the cheap, org-scoped streamed route and makes its limits explicit and testable, with a 10 s p95 trigger for escalation. The x-org-id auth gap remains a release gate for every option.
+```
+```
+FINAL_BALLOT
+voter: Security Reviewer
+choice: A+
+confidence: medium
+reason: The security guardrails (injection escaping, cross-tenant test, row cap) are needed in any shipped export, and real auth replacing x-org-id must be resolved before release.
+```
+```
+FINAL_BALLOT
+voter: Performance and Reliability Reviewer
+choice: A+
+confidence: medium
+reason: A+ is A with the benchmark, cap, escaping and tenant test required. The x-org-id spoofing risk still needs an owner decision. I haven't measured anything. Re-open if the 40k benchmark misses the target the owner approves.
+```
+```
+FINAL_BALLOT
+choice: A+
+confidence: medium
+```
+**Format gap:** the devil's advocate's final ballot leaves out the `voter` and `reason` fields. The voter's identity comes from the agent it was sent to. Its stated reason is in its rebuttal: without the cap, A has no defined behaviour when the 40k assumption fails. The vote was explicitly cast, not inferred.
+
+--- new file: decisions/ADR-0002-invoice-export-delivery.md ---
+# ADR-0002: Invoice export delivery mode (SL-2)
+
+- Status: **ESCALATE**. The team recommends A+ and the product owner decides. The owner said on 2026-10-25: "I decide after the ADR."
+- Date: 2026-11-17
+- Intake: LED-2026-10-25-export-design ([intake record](../docs/agent-ops/INTAKE_RECORD.md))
+- Ballots and matrices: [ADR-0002 ballots](ADR-0002-invoice-export-delivery-ballots.md)
+- Capture status: **NOT VERIFIED**. The debate ran in subagent mode, with no Secretary and no event log.
+
+## Question
+Should SL-2 deliver the invoice CSV as a synchronous download, or as a background job that e-mails a download link?
+
+## Constraints (owner-confirmed facts)
+- The largest org has about 40,000 invoices in 12 months. Other orgs have a few hundred.
+- No e-mail provider exists for this service.
+- No job queue exists.
+- Only the last 12 months are needed ([PRD R3](../projects/demo/PRD.md), [TICKET-12](../tickets/TICKET-12.md)).
+- Tenant isolation is required (PRD R1).
+- The system is a single Node service ([ADR-0001](ADR-0001-modular-monolith.md)).
+
+## Options and averaged voter scores
+Scores are the voters' own judgements (1–5), not measurements.
+
+| Option | Voters scoring | Mean weighted score |
+|---|---|---|
+| **A+**: streamed sync CSV with mandatory guardrails | 4 | **4.35** |
+| A: plain streamed sync CSV | 4 | 4.25 |
+| C: in-app async job that the user polls, no e-mail | 2 | 3.28 |
+| B: background job and e-mailed link | 4 | 2.61 |
+
+## Votes
+- Round 1: A ×3, A+ ×1 (the devil's advocate).
+- Round 2: **A+ ×4**, all at medium confidence.
+- A unanimous vote does not prove A+ is optimal. Every voter's performance case rests on an unmeasured hypothesis: that 40k rows is roughly 4–8 MB and streams in seconds.
+
+## Recommendation: A+
+Add an org-scoped `GET` export route that streams CSV row by row with backpressure. It must also:
+- apply a mandatory 12-month window;
+- enforce a server-side row cap that returns an explicit error when exceeded, never a silent truncation;
+- escape cells starting with `=`, `+`, `-` or `@`;
+- format amounts deterministically from integer cents;
+- send `Content-Disposition: attachment`;
+- log an audit event with no personal data.
+
+Before release it needs:
+- a cross-tenant test showing org X never receives org Y's rows;
+- a formula-injection test;
+- a 40k-row **synthetic** benchmark measuring duration, memory and event-loop lag.
+
+## Rejected options
+- **B (e-mailed link):**
+  - It needs four things that don't exist: an e-mail provider, a queue and worker, artifact storage, and signed or expiring links.
+  - Each of these would need discovery and owner approval.
+  - It adds a leak surface for stored files and links.
+  - It delays a user who is waiting interactively for the file at month close.
+  - It ranked last with every voter.
+- **C (in-app polling):** it was kept as the escalation path. It is not justified until the benchmark fails.
+- **A (plain):** it has no defined behaviour when the 40k assumption fails, so it could time out silently or exhaust memory.
+
+## Dissent and unresolved disagreement
+- The final vote had no dissent.
+- Round 1 dissent: the devil's advocate argued for A+ while the others chose A. That position prevailed in round 2.
+- Still contested:
+  - The reopen threshold. The architect and the devil's advocate proposed p95 > 10 s, or the proxy timeout if lower. The performance reviewer proposed ~30 s, and noted that neither figure is an approved SLO.
+  - Whether C's "loses jobs on restart" penalty is real. This is unverified.
+
+## Owner questions (blocking release, not the decision)
+1. **Auth:** tenant identity comes from the client-supplied `x-org-id` header (`src/server.js:9`), which can be spoofed. All four voters say the export must not ship on it. It also affects the existing `/invoices` route. Should SL-2 wait for real authentication?
+2. **Window and cap:** should the window be 12 months fixed, or selectable inside 12 months? What row cap should apply? A cap that blocks the real monthly run would defeat the purpose.
+3. **Latency target:** what export time is acceptable to Finance? That figure becomes the benchmark pass line and the escalation trigger.
+
+## Unknowns
+- The real data store. Today it is an in-memory array, so query cost is unknown.
+- The invoice date field used for the 12-month filter. It is not present in `src/invoices.js`.
+- The deployment's proxy timeout.
+- Export size and duration at 40k rows. None of these is measured.
+
+## Revisit triggers
+- The 40k synthetic benchmark misses the latency target the owner approves.
+- Event-loop lag at that size is visible to users.
+- The largest org grows by about 10×.
+- A requirement appears for scheduled or unattended exports, or for windows longer than 12 months.
+- An e-mail provider or a job queue is provisioned for another slice. This makes B or C cheaper.
+
+## Deviations from the full protocol
+- Agent Teams were unavailable (cloud session), so subagent mode was used. There was no Secretary, no `meetings/CURRENT_MEETING.json` activation and no event log, so capture is NOT VERIFIED.
+- In round 2, voters received the lead's summary of their peers' proposals, not the verbatim text.
+- `/project-discovery` was not run separately, and `docs/agent-ops/READINESS_MATRIX.md` does not exist. Readiness relied on owner-confirmed facts in the intake: e-mail provider MISSING, job queue MISSING, auth for export UNKNOWN. These gaps must be closed before SL-2 implementation.
+- Some voters made arithmetic errors in their weighted totals (performance reviewer, devil's advocate). These were corrected to the component sums and the voters confirmed the corrections. The ranking did not change.
+- The devil's advocate's final ballot leaves out the `voter` and `reason` fields. See the ballots file.
+- The weights differ from the skill default. Extensibility was dropped and its weight moved to security and performance. The rationale is in the ballots file.
