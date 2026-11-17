@@ -264,3 +264,55 @@ The owner did not select these.
 
 | Date | Trigger | New class | Approval obtained |
 |---|---|---|---|
+
+---
+
+# Intake Record — S0 (owner pack and two eval fixes)
+
+- Intake ID: ORC-2026-11-17-owner-pack
+- Date: 2026-11-17
+- Requested by / owner: repository owner (haidongkixot)
+- Status: CONFIRMED (selection delegated to the agent; plan approved by the owner the same day)
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> "You decide" (owner, 2026-11-17), in answer to the four items still open on PR #3: accept the historical breaches, confirm the adopted R-list, countersign the re-audit, label the calibration sheets.
+
+The agent does **not** decide those four items. They exist so that a person checks the agent's own work, so a delegation cannot cover them (CLAUDE.md S3 "an agent never accepts its own assumption"; re-audit finding N2). The agent decides only how to make them cheap for the owner, and fixes the two eval defects found on 2026-11-14.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files | Class | Validation floor | Owner approval before work? |
+|---|---|---|---|---|---|
+| O1 | Overlay `export-design-open` and its use by `team-debate/positive-architecture-choice`; live re-run of that case | `evals/fixtures/overlays/**`, `.claude/skills/team-debate/evals/evals.json`, `evidence/live-evals/**` | agent-system-config | evals valid; one live run; judge | Yes (plan approved), cap **$4** including judge |
+| O2 | Fixture `npm test` works on Node 20 and 22 | `evals/fixtures/sample-app/package.json` | test-only | `npm test` exit 0; `test_live_evals.py` | No |
+| O3 | Trace matrix for P1–P9 and the focus rule (audit F7/N6) | `docs/agent-ops/TRACE_MATRIX.md` | docs-only | `check_knowledge_links.py` | No |
+| O4 | 30-item calibration pack with inline evidence; labels left empty | `evidence/live-evals/calibration/2026-11-17-owner-pack.{csv,md}` | docs-only | 30 rows, empty labels, no judge verdicts, no secrets or e-mail | No |
+| O5 | Draft sign-off wording for the owner to post on PR #3 | PR body, closeout | docs-only | marked as a draft, not an approval | No |
+| O6 | Closeout, evidence status, scorecard | `reports/v2.4-owner-pack-closeout.md`, `docs/EVIDENCE.md`, `reports/live-eval-scorecard.*` | docs-only | link check | No |
+
+Not in scope:
+- accepting the historical breaches, confirming the R-list, countersigning the re-audit;
+- writing any calibration label;
+- marking PR #3 ready, or merging;
+- R2 (gate-order CI check), still deferred.
+
+## 3. Readiness (short form)
+
+| Area | Status | Evidence |
+|---|---|---|
+| Eval runtime | AVAILABLE | nested `claude -p` ran on 2026-11-14 |
+| Budget | AVAILABLE, capped | $4 for O1, run plus judge |
+| Node for the fixture | AVAILABLE | v22.22.0 in the container; `node --test test/` exits 1 there, verified 2026-11-17 |
+| CI | AVAILABLE | GitHub Actions on 3 OSes |
+
+## 4. Scope contract and test plan
+
+- **Files:** those in section 2, plus `docs/agent-ops/{INTAKE_RECORD,APPROVALS}.md` and `evals/fixtures/overlays/README.md`.
+- **Test plan:** the validation floors in section 2, the package checks and CI.
+
+## 5. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|
