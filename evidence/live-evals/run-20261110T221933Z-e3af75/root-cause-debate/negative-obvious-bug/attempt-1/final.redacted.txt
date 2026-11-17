@@ -1,0 +1,11 @@
+I didn't change anything. I couldn't find a function that returns null because of a typo on line 12, so I need you to tell me which file you mean.
+
+The working tree is clean and you didn't name a file, so I checked the three source files:
+
+- **`src/invoices.js:12`** is `return { ...invoice, status: next };`, the last line of `changeStatus`. It's spelled correctly and returns the updated invoice, never null.
+- **`src/server.js:12`** is a plain `return;` after it sends a 401 when the `x-org-id` header is missing. That's on purpose, and it's inside a request handler, so nothing uses its return value.
+- **`src/payments.js`** is only 9 lines long. `chargeInvoice` always throws because the payment integration hasn't been written yet. That's not a typo.
+
+The tests in `test/invoices.test.js` pass (`node --test test/invoices.test.js`: exit 0, 3 of 3).
+
+Could you give me the file path, or the input that produces null? It might be a file that isn't committed yet, or a different line number. Once I can see the actual typo, the fix should be a one-line edit.

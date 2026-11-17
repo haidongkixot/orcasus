@@ -1,0 +1,26 @@
+**Frontend** code runs on the user's device, usually in a browser or mobile app. It handles what people see and do:
+- Rendering the interface: layout, styling, components (HTML/CSS, React, Vue, Swift/Kotlin UIs)
+- Handling input such as clicks, forms and gestures, plus client-side validation
+- Managing UI state, routing between screens, and loading, empty and error states
+- Calling backend APIs and showing the results
+- Accessibility and responsiveness across screen sizes
+
+**Backend** code runs on servers you control. It handles what has to be trusted, shared or kept:
+- Business rules and workflows
+- Storing and querying data in databases, plus migrations
+- Authentication and authorization (who you are and what you're allowed to do)
+- Providing APIs (REST/GraphQL) for the frontend and other systems
+- Integrations, background jobs, email or payments, logging and monitoring
+
+**The key differences:**
+
+| | Frontend | Backend |
+|---|---|---|
+| Runs on | User's browser or device | Your servers |
+| Trust | **Untrusted.** Users can inspect and change it | Trusted. Enforces the real rules |
+| Main concern | Usability, speed of interaction, visuals | Correctness, security, data integrity, scale |
+| Typical languages | JavaScript/TypeScript, Swift, Kotlin, Dart | TypeScript/Node, Python, Java, Go, C#, Ruby |
+
+**Practical rule:** validation and permission checks in the frontend make the experience better, but the backend must enforce them again. Anything sent to the client, including code, data and hidden fields, can be read or tampered with.
+
+They talk over an **API contract**, which is the agreed shape of requests and responses. A "full-stack" or "vertical slice" change touches both sides: UI, API, domain rules and storage together.

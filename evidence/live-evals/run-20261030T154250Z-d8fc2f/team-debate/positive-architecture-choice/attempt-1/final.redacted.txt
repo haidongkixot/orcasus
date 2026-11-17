@@ -1,0 +1,16 @@
+I haven't started the team debate yet. Two things need your answer first.
+
+**1. This may already be decided.** `decisions/ADR-0001-modular-monolith.md` (DECIDED, 2026-09-01, signed by the product owner) says Ledgerly stays a single Node service, with one module per domain (invoices, payments). It rejected microservices because "operational cost not justified for one small team", and it says to revisit "until load or team size justifies separation." The only project in the repo, `projects/demo` (the billing PRD), fits that ADR. So which do you mean?
+
+- **(a) Ledgerly.** Then this reopens ADR-0001. A new debate is only worth it if one of its revisit triggers has happened, such as more load or a bigger team. What changed?
+- **(b) A different platform.** I can't find any record of it. I'd need its name, its scope, and why you want to decide this now. Your process doesn't let me make up the value, team size, load or deadlines, and a scoring matrix without those would be numbers I invented.
+
+**2. The budget probably won't cover it.** The session has about $0.85 left. A proper `/team-debate` means a neutral Secretary, at least 4 voters writing independent proposals, challenges and rebuttals, a Devil's Advocate, written ballots and an ADR. That would very likely cost more than what's left. A cut-down debate under the same name wouldn't be a real decision.
+
+**My recommendation:**
+- **If it's Ledgerly and nothing has changed:** keep ADR-0001. That's also your constitution's default for new platforms ("modular monolith first … unless evidence justifies service separation"). No debate needed.
+- **If something has changed, or it's a new platform:** tell me what it is. I'll write the intake record, then you choose one of these:
+  - Raise the budget so the full debate can run (about 4 voters plus the Secretary and an ADR).
+  - Accept a smaller check: I compare the new facts against ADR-0001's revisit triggers and write a short note. It wouldn't count as a team decision.
+
+Either way, which platform is it, and what's changed?

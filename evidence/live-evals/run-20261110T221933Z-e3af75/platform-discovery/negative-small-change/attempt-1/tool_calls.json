@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Add a filter to the existing task list."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)task ?list|TaskList",
+      "glob": "!{.claude,docs,templates,knowledge,meetings,evidence,decisions,reports,scripts}/**",
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files",
+      "description": "List tracked files"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)\\btask|filter",
+      "path": "/tmp/orcasus-eval-4rg_r4az/project",
+      "glob": "{src/**,test/**,projects/**,tickets/**,knowledge/INDEX.md,package.json}",
+      "output_mode": "content",
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-4rg_r4az/project/templates/INTAKE_RECORD_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-4rg_r4az/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — S0\n\n- Intake ID: INTAKE-task-list-filter\n- Date: 2026-11-10\n- Requested by / owner: repository owner\n- Status: INTAKE PENDING (target of the request not found in the repository; owner input required)\n- Lane: normal\n\n## 1. Request (verbatim)\n\n> Add a filter to the existing task list"
+    }
+  }
+]

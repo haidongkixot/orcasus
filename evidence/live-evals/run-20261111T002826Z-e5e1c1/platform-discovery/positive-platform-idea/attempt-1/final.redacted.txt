@@ -1,0 +1,29 @@
+This request is already on record, so we don't need to start from zero.
+
+**Where things stand**
+
+- `docs/agent-ops/INTAKE_RECORD.md` holds intake **WRK-2026-10-23-platform**, which you confirmed on 2026-10-23. It records this exact request word for word: a new platform called "Worklane", separate from Ledgerly. Ledgerly's invoicing may later become Worklane's billing module.
+- The confirmed problem is that mid-size companies run projects, purchasing and invoicing in separate tools. No success metrics have been agreed yet.
+- The scope contract says the next step is `/platform-discovery`, with no code in this phase.
+- Discovery hasn't started: there is no `DISCOVERY_SUMMARY.md` or `READINESS_MATRIX.md` in `docs/agent-ops/`.
+
+I won't open a second intake for the same request. The next step is **platform discovery**.
+
+**What platform discovery produces** (still no code)
+
+1. **Product brief:** who the target customers are, the core jobs they need done, what's out of scope, and success metrics. You set the metrics; I won't make them up.
+2. **Capability map:** work management (projects, tasks, approvals), ERP (purchasing, inventory, finance/billing), mobile, and the shared parts underneath: identity, tenants, permissions, audit, notifications.
+3. **Domain model and boundaries:** this includes deciding whether Ledgerly's invoicing becomes Worklane's billing module. `decisions/ADR-0001-modular-monolith.md` sets a modular-monolith approach for Ledgerly, and that's the likely starting point for Worklane too. That choice will be compared against alternatives in a recorded debate, not assumed.
+4. **Architecture options:** web stack, mobile approach (native, cross-platform or responsive web, plus offline needs), tenancy model and integrations. The key options will be weighed in that debate.
+5. **Readiness matrix:** what's available, missing or unknown: team, budget, credentials, integrations (accounting, identity provider), devices and environments.
+6. **Phased roadmap of thin end-to-end slices:** usually one small workflow first, such as "create project → raise purchase request → approve on mobile → generate invoice". Building a whole module first is usually the wrong order.
+
+**What I need from you to start discovery**
+
+- **Who it's for:** target customer size and industry, and the first one or two user roles.
+- **ERP scope for v1:** which of purchasing, inventory, accounting/GL, HR/time or invoicing must be in it.
+- **Mobile:** field or offline use, or approvals on the go? Do you need iOS, Android or both?
+- **Constraints:** team size, budget, deadline, and required systems (SSO provider, accounting software, a cloud provider).
+- **Ledgerly:** should it be reused as the billing module now, or later?
+
+Answer whichever of these you can and I'll run `/platform-discovery` and write the readiness matrix and discovery summary. Anything you leave open will be marked UNKNOWN, and it stays an open question for you rather than something I fill in with an assumption.

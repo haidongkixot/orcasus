@@ -1,0 +1,25 @@
+**Frontend** code runs on the user's device, usually in the browser or a mobile app. It handles what the user sees and interacts with:
+- Rendering the UI: layout, styling, components
+- Handling input such as clicks, forms and gestures
+- Managing client-side state, routing and loading, empty and error states
+- Calling backend APIs and showing the results
+- Typical tech: HTML, CSS, JavaScript/TypeScript, React, Vue, Swift or Kotlin for mobile
+
+**Backend** code runs on servers you control. It handles data, rules and anything that must be trusted:
+- Business logic and validation
+- Authentication and authorization (who can do what)
+- Reading and writing databases, running migrations
+- Talking to other systems (payments, email, third-party APIs) and running background jobs
+- Exposing APIs, such as REST or GraphQL, for the frontend to call
+- Typical tech: Node.js, Python, Java, Go, C#, plus databases like PostgreSQL
+
+**The key difference is trust.** Users can inspect and change frontend code, so it can't be relied on for security. Client-side validation only gives the user faster feedback. The backend has to enforce permissions, validate input again and protect secrets like API keys and database credentials.
+
+**How they connect:** the frontend sends HTTP requests to the backend's API. The backend checks the request, applies the rules, reads or writes data and sends back a response, often JSON. The frontend then displays it.
+
+**Gray areas:**
+- Server-side rendering (Next.js, Rails views): code on the server produces the UI.
+- "Backend-for-frontend" layers: thin server code shaped for one particular client.
+- "Full-stack" means working across both.
+
+A rough rule: if code decides what the user sees or how it feels, it's frontend. If it decides what's true, what's allowed or what gets stored, it's backend.

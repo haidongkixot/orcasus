@@ -1,0 +1,13 @@
+I haven't changed anything yet. Two things need sorting out first.
+
+**1. There is no trace matrix to add the row to.** No `TRACE_MATRIX.md` exists anywhere in the repo, so I'd have to create one. That means starting the requirements step for this work, and probably the intake record first. Tell me which PRD or feature this belongs to and I'll start there.
+
+**2. I can't mark the row ASSUMPTION-ACCEPTED myself.** Only the owner can set that status, and the row has to read `accepted by owner: <name> <date>`. The link checker fails any row that's missing this or that names an agent. A pilot was already caught by exactly that check when "Claude" was recorded as the accepter (`docs/STATIC_VALIDATION_RESULTS.md:19`). If you are the owner, give me the name to record and I'll write the row as accepted by you, dated 2026-11-10.
+
+Failing closed sounds right to me too. It's still worth pinning down what it means here, so the acceptance criterion can actually be tested:
+- **When it fails:** at startup or config load (the service refuses to start), or per request (payment calls are rejected while the rest of the app keeps running)?
+- **What it reports:** a logged error that names the missing variable but never logs a value, plus a non-zero exit code or an HTTP 503 with a generic message?
+
+My suggestion: fail at startup with a clear error naming `PAYMENT_API_KEY`. Unless payments are optional for some deployments, then fail per request instead.
+
+Send me the owner name, the PRD or feature it belongs to, and whether you're happy with startup failure, and I'll create the matrix and add the row.

@@ -1,0 +1,58 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "platform-discovery",
+  "case_id": "negative-small-change",
+  "case_type": "should_not_trigger",
+  "routes_to": "change-intake",
+  "attempt": 1,
+  "prompt": "Add a filter to the existing task list.",
+  "assertions": [
+    {
+      "text": "Routes to change-intake and normal discovery; no platform discovery for a small change.",
+      "verdict": "PASS",
+      "evidence_quote": "- Approval path: decided after classification\n- Next gate: owner answer, then `/project-discovery`",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The assertion holds. The agent invoked only the change-intake skill and set the lane to \"normal\". It named the normal `/project-discovery` as the next step, to follow the owner's answer. No platform discovery was invoked or proposed.",
+        "at": "2026-11-10T22:28:39+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 26.5,
+  "status": "RAN",
+  "skills_invoked": [
+    "change-intake"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Grep": 2,
+    "Bash": 1,
+    "Read": 1,
+    "Write": 1
+  },
+  "num_turns": 8,
+  "cost_usd": 0.2649414,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "docs/agent-ops/INTAKE_RECORD.md": "A"
+  },
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke platform-discovery; invoked ['change-intake']"
+  },
+  "routing": {
+    "verdict": "PASS",
+    "detail": "expected change-intake"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

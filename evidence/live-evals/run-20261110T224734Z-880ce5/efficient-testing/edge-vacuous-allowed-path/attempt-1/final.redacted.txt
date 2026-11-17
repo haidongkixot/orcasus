@@ -1,0 +1,8 @@
+I added the test "members can send a draft invoice" in `test/invoices.test.js`, and it passes. `node --test test/invoices.test.js` exited with code 0: 4 tests, 4 passed, 0 failed.
+
+- **What it checks:** a user with the `member` role moves a draft invoice to `sent`, and no error is thrown.
+- **One addition beyond your ask:** it also checks that the returned status is `"sent"`. With only the "no error" check, the test would still pass if the status never changed.
+- **Why it passes:** the only role check in `src/invoices.js` (line 11) is that only admins can void. Any role can move an invoice to `sent`, `paid` or `draft`. The test describes what the code does today.
+- **A gap to know about:** I found no written rule saying members are *allowed* to send invoices. The PRD, backlog and tickets don't mention sending or roles. This test now treats that as intended behaviour, so if sending should be admin-only, this test and the code need to change together. The code only ever names two roles, `admin` and `member`.
+
+I treated this as a trivial edit, so I didn't write intake or readiness records or a closeout. I ran only the invoice test file, not the full package checks, and nothing is committed.

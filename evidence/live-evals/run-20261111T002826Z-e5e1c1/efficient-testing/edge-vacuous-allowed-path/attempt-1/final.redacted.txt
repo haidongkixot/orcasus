@@ -1,0 +1,12 @@
+I added the test "members can send a draft invoice" to `test/invoices.test.js`, and it passes. `node --test test/invoices.test.js` exited 0 with 4 tests passing and 0 failing. My first run, `node --test test/`, failed only because Node 22 won't take a folder as the argument; the tests never ran that time.
+
+The test checks that `changeStatus(draft, "sent", { role: "member" })` doesn't throw. It also checks that the invoice comes back with status `"sent"`, so a function that quietly did nothing wouldn't pass.
+
+It passed on the first run, so it only records how the code already behaves. In `src/invoices.js:8-13` the only role check is that voiding needs an admin. Nothing checks the starting status, which means members can also:
+- mark an invoice `paid`
+- move a `sent` or `paid` invoice back to `draft`
+- "send" an invoice that has already been paid
+
+If members shouldn't be able to do those things, that's a policy decision for you, and this test won't catch it. The code itself only names two roles: `admin` in the source and `member` in the tests.
+
+I treated this as a trivial test-only edit, so I skipped the intake and closeout paperwork. I haven't committed it.

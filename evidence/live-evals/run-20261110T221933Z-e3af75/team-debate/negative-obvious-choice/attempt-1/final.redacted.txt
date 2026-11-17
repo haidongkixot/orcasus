@@ -1,0 +1,8 @@
+I can't find a date utility in this repository. The only date handling is inline calls to Python's standard library:
+
+- `scripts/skill_evals.py:132` uses `date.today().isoformat()` for the grading sheet header.
+- `scripts/log_team_message.py:69`, `:103` and `:136` use `datetime.now(timezone.utc)` with a few different formats: `%Y%m%d`, ISO with milliseconds, and `%Y%m%dT%H%M%S%fZ`.
+
+**My recommendation:** keep using `datetime` from the standard library directly, and don't write a new utility for a single use. If you're adding date code to the logger, copy the `datetime.now(timezone.utc)` pattern it already uses. Pull out a shared helper only when a second or third script needs the same format. The logger's three repeated `UNASSIGNED-` + date lines are the most likely place for that later. Avoid adding a third-party date library, since the project rules say not to add a dependency without a demonstrated gap.
+
+If you meant a date utility somewhere else, like a different repo or a product project under `projects/`, tell me where it is and what you need it to do. I can then say whether it covers your case.

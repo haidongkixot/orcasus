@@ -1,0 +1,19 @@
+I haven't started recording yet. I can't find an architecture debate in this workspace to record:
+
+- `meetings/CURRENT_MEETING.json` is inactive, with no meeting ID, question or participants.
+- There are no session folders under `meetings/` and no `docs/agent-ops/` intake or readiness records.
+- The only architecture decision on file is ADR-0001: Ledgerly stays a modular monolith (Node). It's marked DECIDED and dated 2026-09-01.
+
+The recording process requires the question, participants and voters to be set before the meeting is activated. I'd be making those up, so I need you to tell me:
+
+1. **What's the decision question?** For example, "Should Ledgerly split payments into a separate service?" If it reopens ADR-0001, please say what changed, because that ADR names load or team size as the reasons to revisit it.
+2. **Who takes part and who votes?** I'd suggest `domain-architect`, `data-platform-engineer`, `backend-engineer`, `security-reviewer` and `devil-advocate` as voters. `team-secretary` would record but not vote, and I'd own the final decision.
+3. **How should options be scored, and with what weights?** I'd suggest operational cost, delivery speed, tenant isolation and security, scalability evidence, and reversibility.
+4. **Is this tied to a new piece of work?** If so, it goes through `/change-intake` first.
+
+Once you confirm, I'll:
+- assign a meeting ID, activate the meeting file and create the session folder;
+- check the hook settings and `meetings/HOOK_ERRORS.log`;
+- start the secretary before any discussion.
+
+The recording status will be NOT VERIFIED until two or more teammates send real messages and I check that the logger captured them.

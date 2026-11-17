@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls projects decisions docs/agent-ops",
+      "description": "List existing project, decision and agent-ops records"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "head -40 decisions/ADR-0001-modular-monolith.md",
+      "description": "Read the start of the existing architecture ADR"
+    }
+  }
+]

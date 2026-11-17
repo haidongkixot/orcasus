@@ -1,0 +1,16 @@
+I haven't written any code yet. The intake check found that this work already exists in your plan, so building it now would likely duplicate or clash with it. I've saved the findings and open questions in `docs/agent-ops/INTAKE_RECORD.md` (status: waiting for your answers).
+
+**What I found:**
+- **It's already in progress.** `projects/demo/BACKLOG.md:6` lists SL-2, "CSV export of invoices from the billing page", as IN PROGRESS on branch `feat/csv-export`. Shell commands are blocked in this session, so I couldn't look at that branch or any open PRs.
+- **Two records disagree on the date range.** `projects/demo/PRD.md:12` says exports include all past invoices. `tickets/TICKET-12.md:6` says only the last 12 months are needed.
+- **The intended user doesn't match.** You said "customers", but the PRD names finance staff and organization admins, and the ticket came from the Finance lead.
+- **There's no billing page in this repo.** The only code is an API server with one route, `GET /invoices` (`src/server.js`), scoped to an organization.
+
+**Questions for you:**
+1. Should I pick up SL-2 on `feat/csv-export`, or is this a separate request?
+2. Date range: all history (PRD) or the last 12 months (ticket)?
+3. Which roles may export? The code mentions `admin` (`src/invoices.js:11`) and `member` (in a test), but roles aren't defined in one place, so there may be others. Which invoice statuses (`draft`, `sent`, `paid`, `void`) should the CSV include?
+4. Who is this for: customers, or finance staff and admins?
+5. Where does the billing page live? Is it in another repo, or should it be built here?
+
+If export is limited by role, the change will need your approval and a security review before work starts. The intake record is not committed yet, because committing needs shell access.

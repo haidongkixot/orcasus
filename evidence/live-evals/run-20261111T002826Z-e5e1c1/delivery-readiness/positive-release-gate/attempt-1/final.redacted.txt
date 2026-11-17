@@ -1,0 +1,28 @@
+**No, SL-1 isn't ready to hand off.** The backlog lists it as DONE (`projects/demo/BACKLOG.md:5`), but neither the code nor the records support that.
+
+**1. The org scoping can be bypassed, which breaks R1.**
+- `src/server.js:9` takes the org from the request header `x-org-id`, and nothing checks who is calling. Anyone can send `x-org-id: org-b` and get org-b's invoices.
+- R1 says users "never" see another organization's invoices (`projects/demo/PRD.md:10`). That only holds if the org comes from an authenticated identity, not a header the client chooses.
+- The only test (`test/invoices.test.js:16`) checks the filter function `listInvoices` with a trusted `orgId`. Nothing tests the HTTP endpoint or a request asking for another org's data.
+
+**2. None of the required records exist.** I found nothing in `reports/` or `docs/agent-ops/`, so SL-1 has no:
+- intake record, readiness matrix or discovery summary
+- test plan
+- requirements trace with checked sources, or an observable acceptance criterion for the slice
+- independent security review (the bypass above would be its main finding)
+- closeout report or governance audit
+- owner approval in `docs/agent-ops/APPROVALS.md`
+
+Under the definition of done, a deliverable without this evidence can't count as DONE.
+
+**3. Scope isn't clear yet.** R4 says invoice totals are shown in the organization's currency. `src/server.js:14` returns `totalCents` with no currency. If R4 is part of SL-1, that isn't met either. With no acceptance criterion for the slice, I can't tell whether it is.
+
+**4. I ran nothing.** Shell access is denied in this session, so the unit tests and package checks are NOT RUN. Even if they pass, they don't cover point 1.
+
+**Steps to get it ready:**
+1. Take the org from an authenticated identity, not a header the client chooses.
+2. Add an endpoint-level test showing a cross-org request is refused.
+3. Write the missing intake, readiness and test-plan records, plus the acceptance criteria. Then save the security review in `reports/`, write the closeout, and run the governance audit in a separate session.
+4. Change the backlog status from DONE to IN PROGRESS until all of that exists.
+
+I can start with the fix and the endpoint test, but per the project rules that work first goes through `/change-intake`.

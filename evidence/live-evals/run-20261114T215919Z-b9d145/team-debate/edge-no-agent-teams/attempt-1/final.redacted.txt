@@ -1,0 +1,44 @@
+The debate didn't settle on a storage option: the decision goes back to you (state **ESCALATE**). Three of four voters lean toward SQLite, but only if your host gives the service a persistent disk, and nobody knows that yet.
+
+Agent Teams aren't available in this cloud session, so I ran the debate with four separate subagents instead of a live team: data-platform engineer, domain architect, security reviewer and devil's advocate. Each scored the options on its own, then got one round to answer the others. There was no meeting secretary or event log, so the record is NOT VERIFIED. The voters ran on the smaller Haiku model to stay within the $2 budget.
+
+**Scores** (out of 5, averaged from the voters' own totals; I didn't score):
+
+| Option | First round | Final |
+|---|---|---|
+| A: in-memory array | 2.95 | 2.95 |
+| B: SQLite | 3.63 | 3.58 |
+| C: PostgreSQL | 3.53 | 3.48 |
+
+The 0.10 gap between SQLite and PostgreSQL is within what every voter called judgment error. If the host has no persistent disk, SQLite drops to about 2.9 in every voter's analysis and PostgreSQL leads. The hosting answer decides it, not the scores.
+
+**Final ballots:**
+- Data-platform engineer and domain architect: SQLite, as an experiment.
+- Security reviewer: SQLite, but wants your call on hosting and database-level tenant isolation first.
+- Devil's advocate: don't pick an engine until hosting, isolation needs and load are known.
+
+**My recommendation:**
+- **Drop the in-memory array.** It doesn't fix the problem and no voter supported it.
+- **Choose SQLite if** you'll run one instance with a persistent disk and backups.
+- **Choose PostgreSQL if** there's no persistent disk, more than one instance must share data, or you need tenant isolation enforced by the database.
+- **Either way,** put storage behind one interface that requires the org ID on every call, so a later switch stays cheap.
+
+**The debate also found two problems in the code:**
+- **No way to create invoices:** `src/server.js` only has a read route, so "lost on restart" can't be reproduced in this repo. Changing storage alone won't fix it.
+- **Security hole:** `src/server.js:9` trusts the `x-org-id` header the caller sends, so anyone can read any organisation's invoices. All four voters want this fixed before any tenant data is stored. It's outside this task's scope.
+
+**I made one relay error.** In the rebuttal round I told the security reviewer that you require database-level isolation; the architect had only said "if you required it". That pushed them to vote PostgreSQL. I sent a correction and they changed back to SQLite. Both ballots are kept in the record.
+
+**Decisions for you:**
+1. Which host will you use, and does it offer a persistent disk?
+2. Do you need tenant isolation enforced by the database itself?
+3. Either option needs a new dependency or a newer Node version. Do you approve either one? `package.json` allows Node 20 and has no dependencies; Node's built-in SQLite needs 22.5 or later and is still experimental.
+4. Should the security hole get its own task now?
+
+I didn't change any code or commit anything. The package validator exited 1 (108 passed, 26 failed); the failures are missing package files and test fixtures that this work didn't touch. No app tests ran because no code changed.
+
+Files are in `decisions/`, `reports/` and `docs/agent-ops/`:
+- ADR-0002-invoice-storage.md
+- ADR-0002-invoice-storage-ballots.md
+- LED-2026-10-24-storage-closeout.md
+- READINESS_MATRIX.md

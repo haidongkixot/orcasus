@@ -1,0 +1,42 @@
+{
+  "run_id": "run-20261030T154015Z-752394",
+  "skill": "change-intake",
+  "case_id": "negative-conceptual-question",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "What is the difference between frontend and backend code?",
+  "assertions": [
+    {
+      "text": "Answers the question plainly; no intake record or classification ritual.",
+      "verdict": "PENDING",
+      "evidence_quote": null,
+      "judge": null
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 9.9,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {},
+  "num_turns": 1,
+  "cost_usd": 0.1215556,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke change-intake; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

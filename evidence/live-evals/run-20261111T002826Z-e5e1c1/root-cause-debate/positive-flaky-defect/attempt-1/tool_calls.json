@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Production bug: users occasionally see another organization's invoice in the invoice list; not reproducible. Suspected tenant-isolation failure (security/data exposure)."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)invoice",
+      "output_mode": "files_with_matches",
+      "head_limit": 30
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-yra6o72k/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-yra6o72k/project/docs/agent-ops/INTAKE_RECORD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-yra6o72k/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)crossorg|cross-org|another organi",
+      "path": "/tmp/orcasus-eval-yra6o72k/project",
+      "glob": "{reports,meetings,decisions,knowledge,projects,evidence}/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-yra6o72k/project/src/server.js"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -10",
+      "description": "Show recent commits"
+    }
+  }
+]

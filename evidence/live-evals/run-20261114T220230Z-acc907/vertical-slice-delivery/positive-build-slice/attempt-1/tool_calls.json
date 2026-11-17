@@ -1,0 +1,154 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "SL-2",
+      "output_mode": "content",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -15",
+      "description": "Show recent commits"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "docs/agent-ops/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/docs/agent-ops/INTAKE_RECORD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/docs/agent-ops/READINESS_MATRIX.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/docs/agent-ops/TEST_PLAN.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short",
+      "description": "Show working tree status"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{test/**,package.json,tickets/TICKET-12.md,projects/demo/PRD.md}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/package.json"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git switch -c feat/sl-2-csv-export",
+      "description": "Create feature branch for SL-2"
+    }
+  },
+  {
+    "name": "Edit",
+    "input": {
+      "replace_all": false,
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/src/invoices.js",
+      "old_string": "export function listInvoices(invoices, { orgId }) {\n  return invoices.filter((invoice) => invoice.orgId === orgId);\n}",
+      "new_string": "export function listInvoices(invoices, { orgId }) {\n  return invoices.filter((invoice) => invoice.orgId === orgId);\n}\n\n// Start of the export window: the same calendar instant 12 months before `now` (UTC).\nexport function exportCutoff(now) {\n  const cutoff = new Date(now.getTime());\n  cutoff.setUTCM"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/src/server.js",
+      "content": "import http from \"node:http\";\nimport { listInvoices, invoiceTotal, exportableInvoices, invoicesToCsv } from \"./invoices.js\";\n\nexport function createServer(invoices = [], { now = () => new Date() } = {}) {\n  return http.createServer((req, res) => {\n    const url = new URL(req.url, \"http://localhost\")"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/test/export.test.js",
+      "content": "import { test } from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { exportableInvoices, invoicesToCsv, csvCell } from \"../src/invoices.js\";\nimport { createServer } from \"../src/server.js\";\n\nconst NOW = new Date(\"2026-11-14T12:00:00Z\");\nconst base = { status: \"sent\", lines: [{ quantit"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "npm test",
+      "description": "Run the project test suite"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test \"test/*.test.js\"",
+      "description": "Run all test files via node's test runner glob"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/docs/agent-ops/TEST_PLAN.md",
+      "content": "# Risk-Based Test Plan — SL-2\n\n| Criterion | Risk | Layer | Concrete assertion | Status |\n|---|---|---|---|---|\n| CSV contains only the caller's organization | Cross-org data leak | Unit (`exportableInvoices`) + API | Rows for `org-b` never appear for `x-org-id: org-a` | PASS (2026-11-14) |\n| Only t"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-ucqmbu6q/project/reports/SL-2-closeout.md",
+      "content": "# Closeout — SL-2: CSV export of invoices\n\n- Intake: LED-2026-10-21-sl2 (class backend-api, CONFIRMED). Readiness: READY (2026-10-21). Test plan: `docs/agent-ops/TEST_PLAN.md`.\n- Date: 2026-11-14\n- Status: IMPLEMENTED, NOT DONE. The independent security review, commit/PR and governance audit are sti"
+    }
+  }
+]

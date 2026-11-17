@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="header">Organization settings</div>
+  <form id="settings">
+    <input type="text" id="org-name" placeholder="Organization name">
+    <select id="currency">
+      <option>EUR</option>
+      <option>USD</option>
+    </select>
+    <input type="checkbox" id="void-alerts"> Email me when an invoice is voided
+    <div class="button" onclick="save()">Save</div>
+  </form>
+  <div id="status"></div>
+  <script>
+    function save() {
+      fetch("/settings", { method: "POST", body: new FormData(document.getElementById("settings")) })
+        .then(() => { document.getElementById("status").textContent = "Saved"; });
+    }
+  </script>
+</body>
+</html>

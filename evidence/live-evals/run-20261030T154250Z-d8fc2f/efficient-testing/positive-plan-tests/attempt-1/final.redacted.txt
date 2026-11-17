@@ -1,0 +1,30 @@
+I've written a draft test plan at `docs/agent-ops/TEST_PLAN.md`, but the tests can't be finalised yet: the two sources disagree on which invoices the export should include. The PRD says all historical invoices (`projects/demo/PRD.md:12`). The ticket says only the last 12 months (`tickets/TICKET-12.md`). I haven't picked one, so the date-window test is left open until you decide.
+
+**What the repo has today:**
+- **Endpoint:** not written. `src/server.js` only serves `GET /invoices`. The backlog marks the `feat/csv-export` branch as in progress, but I couldn't look at it because shell access was denied, so any existing implementation may differ from this plan.
+- **Button:** there's no frontend in the repo and no browser or component test tooling. The button tests are blocked until you tell me where the UI lives.
+- **Existing tests:** I couldn't run the current suite (`npm test`) either, also because shell access was denied.
+
+**The plan:**
+- **Tools:** it uses only the built-in Node test runner the project already has, with no new dependencies.
+- **Unit tests:** org scoping, the date window (with a fixed test clock), which invoice statuses are included, exact header and row text, totals, the empty export, and blocking spreadsheet formula injection (cells starting with `=`, `+`, `-`, `@`).
+- **API tests:** start the real server and call it. Each one checks one exact status code:
+  - 200 for allowed roles, with the expected rows (not just "not 403")
+  - exactly 401 when the org header is missing
+  - exactly 403 for every role that isn't allowed
+
+  They also check the download headers, and that a caller never sees another org's invoices.
+- **Button tests (once a UI exists):** find the button by its label, check that a click sends the request, the loading and error states, and keyboard use. At most one end-to-end test, and only if it's needed.
+- **Captures:** no screenshots, traces or videos.
+- **Change for testability:** the API tests need a way to load test invoices into the server's in-memory list, which means a small change to `src/server.js`.
+
+**Questions for you:**
+1. All history or last 12 months?
+2. Which roles may export? The code only knows "admin"; the PRD's "finance staff" has no matching role.
+3. Which statuses are included: draft, sent, paid, void?
+4. CSV or another spreadsheet format? Which columns, in what order?
+5. Should there be a currency column? Invoices don't store a currency today.
+6. Where is the frontend for the button?
+7. Is there a row limit or size limit on the export?
+
+The intake record and discovery records that the project rules require before this work don't exist yet. Do you want me to run `/change-intake` and `/project-discovery` next? I'd fold your answers into those records and then finalise the plan.

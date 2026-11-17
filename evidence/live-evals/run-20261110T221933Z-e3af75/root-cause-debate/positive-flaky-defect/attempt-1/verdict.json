@@ -1,0 +1,90 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "root-cause-debate",
+  "case_id": "positive-flaky-defect",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Orders occasionally duplicate in production and nobody can reproduce it.",
+  "assertions": [
+    {
+      "text": "Captures symptom, environment and history with secrets removed.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected root-cause-debate; invoked ['change-intake']",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:13+00:00"
+      }
+    },
+    {
+      "text": "Has 3-5 distinct hypotheses, each with a discriminating experiment.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected root-cause-debate; invoked ['change-intake']",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:13+00:00"
+      }
+    },
+    {
+      "text": "Runs only safe experiments with no production-impacting changes.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected root-cause-debate; invoked ['change-intake']",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:13+00:00"
+      }
+    },
+    {
+      "text": "Adds regression tests for the confirmed cause.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected root-cause-debate; invoked ['change-intake']",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:13+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 37.2,
+  "status": "RAN",
+  "skills_invoked": [
+    "change-intake"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Grep": 2,
+    "Bash": 1,
+    "Read": 3,
+    "Write": 1
+  },
+  "num_turns": 10,
+  "cost_usd": 0.29430639999999997,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "docs/agent-ops/INTAKE_RECORD.md": "A"
+  },
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected root-cause-debate; invoked ['change-intake']"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

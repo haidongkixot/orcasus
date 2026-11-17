@@ -34,15 +34,25 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/scripts/hooks/run_python.sh\" --check",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "SendMessage",
         "hooks": [
           {
             "type": "command",
-            "command": "python",
-            "timeout": 10,
-            "args": ["${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py"]
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/scripts/hooks/run_python.sh\" \"${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py\"",
+            "timeout": 10
           }
         ]
       }
@@ -52,9 +62,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python",
-            "timeout": 10,
-            "args": ["${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py"]
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/scripts/hooks/run_python.sh\" \"${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py\"",
+            "timeout": 10
           }
         ]
       }
@@ -64,9 +73,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python",
-            "timeout": 10,
-            "args": ["${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py"]
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/scripts/hooks/run_python.sh\" \"${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py\"",
+            "timeout": 10
           }
         ]
       }
@@ -76,9 +84,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python",
-            "timeout": 10,
-            "args": ["${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py"]
+            "command": "sh \"${CLAUDE_PROJECT_DIR}/scripts/hooks/run_python.sh\" \"${CLAUDE_PROJECT_DIR}/scripts/log_team_message.py\"",
+            "timeout": 10
           }
         ]
       }

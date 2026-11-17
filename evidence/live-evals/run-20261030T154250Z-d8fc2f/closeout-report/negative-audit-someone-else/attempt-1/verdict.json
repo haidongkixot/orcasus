@@ -1,0 +1,55 @@
+{
+  "run_id": "run-20261030T154250Z-d8fc2f",
+  "skill": "closeout-report",
+  "case_id": "negative-audit-someone-else",
+  "case_type": "should_not_trigger",
+  "routes_to": "governance-audit",
+  "attempt": 1,
+  "prompt": "Check whether PR 42 followed our rules.",
+  "assertions": [
+    {
+      "text": "Routes to governance-audit; a closeout covers your own finished work.",
+      "verdict": "PASS",
+      "evidence_quote": "Skill: {\"skill\": \"governance-audit\", \"args\": \"PR 42\"}",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent sent the request to governance-audit, not closeout-report. It did not write a closeout itself. Instead it said the change author should write one with /closeout-report, which matches the idea that a closeout covers your own finished work.",
+        "at": "2026-10-30T15:54:01+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 23.0,
+  "status": "RAN",
+  "skills_invoked": [
+    "governance-audit"
+  ],
+  "tools_used": {
+    "Skill": 1,
+    "Bash": 1,
+    "Glob": 1,
+    "Grep": 1
+  },
+  "num_turns": 6,
+  "cost_usd": 0.1850164,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke closeout-report; invoked ['governance-audit']"
+  },
+  "routing": {
+    "verdict": "PASS",
+    "detail": "expected governance-audit"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

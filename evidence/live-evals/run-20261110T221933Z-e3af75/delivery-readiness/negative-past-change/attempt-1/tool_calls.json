@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "governance-audit",
+      "args": "last week's PR"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --all --since=2026-10-27 --format='%h %ad %an %s' --date=iso",
+      "description": "List recent commits across branches"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "gh pr list --state all --limit 10",
+      "description": "List recent pull requests"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)(PR ?#?\\d+|pull request|2026-11-0[2-9])",
+      "path": "/tmp/orcasus-eval-fjz1d0td/project",
+      "glob": "{reports,projects,decisions,docs/agent-ops,meetings}/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{reports,docs/agent-ops,projects,decisions}/**/*"
+    }
+  }
+]

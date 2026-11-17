@@ -1,0 +1,29 @@
+I've written the acceptance criteria for the invoice export in `projects/demo/TRACE_MATRIX.md`, with a source cited for each one. All eight requirements stay **PROPOSED** for now: one has two sources that disagree, and two have no source at all, so they need your decision.
+
+**Sources I opened and checked:** `tickets/TICKET-12.md` (Finance lead, 2026-10-10), `projects/demo/PRD.md`, `projects/demo/BACKLOG.md`, `src/invoices.js` and `src/server.js`.
+
+| ID | Requirement | Source | Citation check |
+|---|---|---|---|
+| EX1 | Download invoices as a spreadsheet file | TICKET-12 L5 | VERIFIED |
+| EX2 | The file is CSV | BACKLOG L6 | VERIFIED (the ticket only says "spreadsheet") |
+| EX3 | Last 12 months only | TICKET-12 L6 | **MISMATCH**: PRD L12 says "all historical invoices" |
+| EX4 | Only the requester's own organization's invoices; no file without an org ID (401) | PRD L10 | PARAPHRASE-OK |
+| EX5 | Totals in the organization's currency | PRD L13 | PARAPHRASE-OK, but the code has no currency field |
+| EX6 | Which roles may export | — | **NO SOURCE** |
+| EX7 | Which invoice statuses are included | — | **NO SOURCE** |
+| EX8 | Started from the billing page | BACKLOG L6 | VERIFIED; there's no UI code in `src/` |
+
+Each row in the file has testable acceptance criteria and the cheapest test type that can check them. For example, EX4 seeds invoices for two organizations and asserts the export contains zero rows from the other one.
+
+**Questions for you (each has a recommendation in the file):**
+1. **12 months or all history?** The ticket and the PRD disagree. I'd follow the ticket: it's from the person who asked for the feature, and it says older invoices are archived elsewhere. If so, is it a rolling 12 months or calendar months, and by issue date, sent date or paid date?
+2. **Is CSV acceptable, or do you need .xlsx?**
+3. **Who may export?** The code only mentions `admin`. The PRD lists "Finance staff and organization admins", but no finance role exists in the code, and `/invoices` doesn't check roles at all.
+4. **Which statuses go in the file:** `draft`, `sent`, `paid`, `void`? And what should an organization with no invoices get?
+5. **Where does an organization's currency come from?** Nothing in the code or data stores it, so EX5 can't be built until that's decided.
+
+**Gaps:**
+- I couldn't run `scripts/check_knowledge_links.py` because shell access was denied. The links in the file haven't been machine-checked; I only checked them by opening each source.
+- There's no intake record (`docs/agent-ops/INTAKE_RECORD.md`) and no discovery record. The project rules require both, run through `/change-intake` and `/project-discovery`, before any code for this slice.
+- The backlog says this slice is "IN PROGRESS (branch feat/csv-export)", but that branch doesn't exist in this repo; only `master` is there.
+- I haven't committed the file.

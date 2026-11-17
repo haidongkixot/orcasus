@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Customers want to export invoices to CSV. Add that to the billing page."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-2ljah_s1/project; git log --oneline | head -5; git branch -a; ls; ls docs/agent-ops templates 2>/dev/null; grep -rIil \"invoice\\|billing\" --exclude-dir=.git --exclude-dir=node_modules . | head -40",
+      "description": "Survey repo, records and billing/invoice references"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cd /tmp/orcasus-eval-2ljah_s1/project; for f in docs/agent-ops/INTAKE_RECORD.md src/invoices.js src/server.js src/payments.js projects/demo/PRD.md projects/demo/BACKLOG.md tickets/TICKET-12.md decisions/ADR-0001-modular-monolith.md test/invoices.test.js package.json knowledge/INDEX.md templates/INTA",
+      "description": "Read existing intake, source, records and template"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/docs/agent-ops/INTAKE_RECORD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{src/**,test/**,decisions/**,meetings/**,reports/**,knowledge/INDEX.md,package.json}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-2ljah_s1/project/docs/agent-ops/INTAKE_RECORD_invoice-csv-export.md",
+      "content": "# Intake Record — S0\n\n> Written with `/change-intake`. Kept separate from `INTAKE_RECORD.md`, which holds the confirmed v2.4 intake for another change.\n\n- Intake ID: BILL-2026-10-30-csv-export\n- Date: 2026-10-30\n- Requested by / owner: repository owner\n- Status: **INTAKE PENDING** (waiting for the o"
+    }
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "design-quality-gate",
+  "case_id": "negative-security",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Check the settings page for authorization bypasses.",
+  "assertions": [
+    {
+      "text": "Hands this to the security-reviewer agent; it is not a design review.",
+      "verdict": "FAIL",
+      "evidence_quote": "If you'd like me to follow up on the `x-org-id` issue, I can start an intake and do a proper security review, including a failing test that proves it.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The tool calls are only Grep, Bash and Read. The agent never handed the task to a security-reviewer agent (there is no Task or Agent call) and did the search itself. It only offered a security review as an optional follow-up, so the required handoff didn't happen.",
+        "at": "2026-11-10T22:28:09+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 16.6,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 2,
+    "Bash": 1,
+    "Read": 1
+  },
+  "num_turns": 5,
+  "cost_usd": 0.1764725,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke design-quality-gate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

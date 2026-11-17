@@ -1,0 +1,46 @@
+Happy to help with this. I'll start with questions instead of a feature list. This project's rules say I shouldn't invent the app's purpose, users or success measures for you, and a field-service app built on guesses tends to become a generic job tracker.
+
+Once you've answered, I'll open a formal intake record (`docs/agent-ops/INTAKE_RECORD.md`) and turn your answers into a product brief: who uses it, what it can do, a domain model and a first small working version to build. I haven't written any files or started any process yet.
+
+## Questions that shape everything
+
+**1. Who is it for?**
+- Your own field-service business, a product you sell to other businesses, or an internal tool for one company?
+- What industry? HVAC, plumbing, electrical, elevator maintenance, pest control, telecom, medical equipment and others have very different jobs.
+
+**2. What's painful today?**
+- What does the current process look like (paper, spreadsheets, WhatsApp, an existing tool)?
+- Where do things go wrong: missed appointments, lost job notes, slow invoicing, no proof of work, parts not on the truck, unhappy customers?
+
+**3. Who touches it?** Pick any that apply:
+- Dispatcher / office scheduler
+- Field technician (phone or tablet, possibly offline)
+- Supervisor / manager
+- End customer (booking, tracking the tech, signing off, paying)
+- Subcontractors
+
+**4. What does one job look like from start to finish?** For example: request comes in → scheduled → tech assigned → travels → does the work → captures photos/signature → closes → invoiced → paid. Tell me where your process differs.
+
+**5. Constraints**
+- Do techs work with poor or no signal?
+- Systems it must connect to: accounting (QuickBooks, Xero), CRM, payments, maps, inventory?
+- Regulatory or compliance needs: safety checklists, certifications, audit trails?
+- Budget, timeline, team size: only if you know them. Leave blank otherwise and I'll mark them as unknown.
+
+## Areas we'll choose from later
+
+These are the usual areas a field-service app covers. They're here to jog your thinking, not as a recommendation:
+
+| Area | Examples |
+|---|---|
+| Intake & scheduling | Job requests, calendar, dispatch board, route planning |
+| Field execution | Mobile job view, checklists, photos, notes, signatures, offline sync |
+| Assets & history | Customer sites, equipment records, service history, warranties |
+| Parts & inventory | Van stock, parts used per job, reorder |
+| Billing | Quotes, invoices, payments, contracts and recurring maintenance |
+| Customer experience | Booking portal, "tech is on the way" alerts, feedback |
+| Management | Utilisation, first-time fix rate, SLA tracking, reports |
+
+The first version should be one working path through this table that solves your biggest pain point, not every row at once.
+
+**Easiest next step:** describe in a few sentences who uses it and what problem you most want gone. Rough answers are fine, and I'll handle the structure from there.

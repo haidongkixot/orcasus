@@ -1,0 +1,25 @@
+I haven't started the team debate. The repo already settles most of this question, and holding a debate now would mean weighing an option whose prerequisites don't exist.
+
+**The approved scope already picks synchronous.** The approved intake (`docs/agent-ops/INTAKE_RECORD.md:17`) defines deliverable D1 as `GET /invoices/export.csv`, an org-scoped CSV of the last 12 months of invoices, returned in the response. The readiness matrix marks it READY as of 2026-10-21. TICKET-12 asks only that finance can "download invoices as a spreadsheet for the monthly close". Switching to emailed links would change an approved scope, so under our process it goes back to intake as a new decision.
+
+**The emailed-link option can't be built yet.** It needs things this repo doesn't have:
+
+| Prerequisite | Status | Evidence |
+|---|---|---|
+| Email provider and credentials | MISSING | No mail code or dependency |
+| Job runner or queue | MISSING | `src/server.js` is a single plain HTTP handler |
+| Durable file storage plus expiring links | MISSING | Invoices live in an in-memory array (`src/server.js:4`) |
+| A user identity with an email address | MISSING | Requests carry only an `x-org-id` header; there are no users |
+| Evidence that volume is too large for synchronous | UNKNOWN | The 12-month limit caps size, but I don't have real counts and won't guess |
+
+Our rules say not to debate a solution around missing prerequisites, so a vote now would be choosing between something buildable and something hypothetical. The debate would also run as subagents rather than a real Agent Team: at least 4 voters plus a rebuttal round, roughly 8+ agent runs. That's a large share of the remaining ~$2.80 budget, and the capture status would be NOT VERIFIED.
+
+**My recommendation:** keep the synchronous CSV download as already approved. Reopen the question only if something triggers it, such as:
+- real export sizes or response times turning out too large or slow;
+- finance needing exports to arrive while they're offline;
+- email, job and storage infrastructure being approved for some other reason.
+
+I need you to choose one:
+1. **Confirm synchronous (recommended).** I'll record the decision in `docs/RESEARCH_AND_DECISIONS.md` with what would trigger a revisit. No debate needed.
+2. **Debate anyway.** I'll open a new intake for the change, then run the debate as subagents, with the emailed-link option marked BLOCKED. Expect it to use most of the budget.
+3. **Do discovery first.** If you know the real export volumes, or that email/job infrastructure is planned, tell me. I'll update the readiness matrix and then decide whether a debate is worth it.

@@ -1,0 +1,50 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "root-cause-debate",
+  "case_id": "negative-obvious-bug",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "This function returns null because of a typo on line 12. Fix it.",
+  "assertions": [
+    {
+      "text": "Fixes it directly; no multi-agent debate for an obvious defect.",
+      "verdict": "FAIL",
+      "evidence_quote": "I didn't change anything. I couldn't find a function that returns null because of a typo on line 12, so I need you to tell me which file you mean.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The assertion has two parts. The second part holds: the agent used no skills and ran no multi-agent debate, only a few direct reads and test runs. The first part, fixing the defect directly, did not happen. No files changed and the diff is empty. The agent asked the user to clarify instead. That may have been reasonable since it found no typo, but the required fix is missing, so this is a FAIL.",
+        "at": "2026-11-10T22:29:13+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 16.0,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Bash": 4,
+    "Read": 3
+  },
+  "num_turns": 8,
+  "cost_usd": 0.2186882,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke root-cause-debate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

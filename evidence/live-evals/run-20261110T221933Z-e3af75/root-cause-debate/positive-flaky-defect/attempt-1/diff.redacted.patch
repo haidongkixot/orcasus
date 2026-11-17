@@ -1,0 +1,54 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — S0
+
+> Status: INTAKE PENDING until the owner confirms intent and value and points to the order code.
+
+- Intake ID: INTAKE-2026-11-10-order-duplicates
+- Date: 2026-11-10
+- Requested by / owner: repository owner (confirmation pending)
+- Status: INTAKE PENDING
+- Lane: normal (hotfix lane not requested; needs the owner's explicit confirmation of an active incident)
+
+## 1. Request (verbatim)
+
+> Orders occasionally duplicate in production and nobody can reproduce it.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | Find the root cause of intermittent duplicate orders | `src/server.js`, `src/invoices.js`, `src/payments.js`, full `git ls-files`: **no order-creation code exists in this repository** | bug-fix (provisional) | Failing case reproduced (test or controlled experiment), then passing | QA | No for bug-fix; **reclassify** if the fix needs a unique constraint / migration (data-schema-migration → yes), a payment/queue/webhook change (integration) or infra retry settings (infra-deploy-release → yes) |
+| D2 | Fix so a single order request cannot create two orders | Unknown — code not located | bug-fix (provisional) | Same as D1 plus a regression test for the duplicating path | QA | See D1 |
+
+- Governing class: bug-fix, provisional. Cannot be confirmed until the order code is inspected. Usual fixes for this kind of bug (idempotency keys, unique constraints, deduplicating consumers) often move the class up to data-schema-migration or integration.
+- Suggestions recorded but NOT in scope: cleaning up existing duplicate orders in production (a destructive data operation that needs separate approval); alerting on duplicates.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1, D2 | knowledge/INDEX.md, projects/demo/{PRD,BACKLOG}.md, decisions/, meetings/, docs/, tickets/ (grep "order", "duplicat", "idempoten") | NEW within this repo; **UNKNOWN** for issue tracker/PRs and the production codebase (not accessible) | Only hit was a table header "Order" in projects/demo/BACKLOG.md:3 (priority order, unrelated). `reports/` and `docs/agent-ops/` did not exist. |
+
+## 4. Intent and value (draft, not confirmed)
+
+- Problem: some production orders are created twice, intermittently; no known reproduction.
+- Who is affected: UNKNOWN (customers? fulfilment? finance?), owner to state.
+- Expected value: UNKNOWN, owner to state (not invented).
+- Success signal: draft "no duplicate orders for the same request after the fix", owner to confirm how this is measured.
+- Urgency / deadline: none stated.
+- Non-goals (draft): repairing historical duplicates; redesigning the order flow.
+- Owner confirmation: PENDING.
+- Domain values before any policy question: no order statuses/roles exist in this repo, so UNKNOWN.
+
+## 5. Scope contract (draft)
+
+- Expected files/modules: order creation endpoint/handler, any client submit/retry logic, queue/webhook consumers, the orders table schema. **Location unknown; must be supplied.**
+- Out of scope: production data changes, deploys, payment-provider changes without separate approval.
+- Approval path: bug-fix → none before work. Reclassify on schema/integration/infra changes.
+- Next gate: `/project-discovery` (code, logs, DB access, environments), then `/root-cause-debate` (competing hypotheses), then `/efficient-testing`.
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|

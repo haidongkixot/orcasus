@@ -1,0 +1,49 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "project-discovery",
+  "case_id": "negative-typo",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Fix the spelling of 'recieve' in the footer.",
+  "assertions": [
+    {
+      "text": "Does a light check proportionate to the change; no full discovery matrix for a trivial docs fix.",
+      "verdict": "PASS",
+      "evidence_quote": "This is a trivial edit, so the intake and discovery steps don't apply.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent ran only two greps, one for \"recieve\" and one for \"footer\", and invoked no skills. It also said outright that it was skipping intake and discovery because the edit is trivial. That check is light and fits the size of the task, and there was no full discovery matrix.",
+        "at": "2026-11-10T22:28:43+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 9.1,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 2
+  },
+  "num_turns": 3,
+  "cost_usd": 0.14407899999999998,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke project-discovery; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

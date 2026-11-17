@@ -1,0 +1,93 @@
+{
+  "skill": "backlog-slicing",
+  "description": "S5 slicing into testable vertical slices with an owner-decided priority.",
+  "cases": [
+    {
+      "id": "positive-epic-to-backlog",
+      "type": "should_trigger",
+      "prompt": "The invoicing PRD is approved. Break it into slices we can build one PR at a time and suggest an order.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Restates the goal and the observable done state with citations to PRD, trace matrix and intake record.",
+          "Maps layers to files marked VERIFIED or ASSUMED.",
+          "Gives every slice one intent, an observable acceptance criterion, its evidence, a test layer and a testability verdict.",
+          "Proposes priority with a named frame and marks guessed inputs as ESTIMATE; leaves the final order to the owner.",
+          "Writes projects/<slug>/BACKLOG.md and starts no implementation."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-untestable-slice",
+      "type": "should_trigger",
+      "prompt": "Add a slice 'make the dashboard feel faster'.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks the slice UNTESTABLE and turns it into an owner question or a time-boxed spike with an observable criterion."
+        ]
+      }
+    },
+    {
+      "id": "edge-blocked-resource",
+      "type": "should_trigger",
+      "prompt": "Slice 3 needs the payment provider sandbox, which the readiness matrix lists as MISSING. Plan it anyway.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Marks slice 3 BLOCKED with the named blocker.",
+          "Does not plan a mock that hides the missing sandbox in production scope."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-already-small",
+      "type": "should_trigger",
+      "prompt": "Plan the work to rename one button label.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Says the goal fits one reviewable change and hands it to vertical-slice-delivery without padding a plan."
+        ]
+      }
+    },
+    {
+      "id": "negative-build-request",
+      "type": "should_not_trigger",
+      "prompt": "Implement slice SL-2 from the backlog now.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to vertical-slice-delivery; slicing is complete."
+        ]
+      },
+      "routes_to": "vertical-slice-delivery"
+    },
+    {
+      "id": "negative-new-request",
+      "type": "should_not_trigger",
+      "prompt": "A customer just asked for SMS notifications. What should we do with that?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Routes to change-intake first; there is no approved scope to slice yet."
+        ]
+      },
+      "routes_to": "change-intake"
+    }
+  ]
+}

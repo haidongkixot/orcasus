@@ -1,0 +1,21 @@
+I haven't shipped a fix yet. The service has no authentication at all, so there's nothing trustworthy to take the org from, and I need you to choose how it should work.
+
+**What's wrong**
+- `src/server.js:9` takes the org straight from the `x-org-id` header the client sends. The only check (lines 10–13) is that the header isn't empty.
+- The filter itself is correct: `src/invoices.js:15-17` returns only invoices for the org it's given. The problem is that the server believes whatever org the caller claims.
+- There's nothing in `src/` to check the claim against: no logins, sessions, tokens, users or org memberships. So "use the authenticated user's org" isn't possible yet.
+
+Any real fix needs a way to tell who the caller is, which is a new security mechanism. I won't make that up on my own in a production hotfix.
+
+**Options**
+1. **Stop the leak now (recommended first step, done in minutes):** make `GET /invoices` return an error for everyone until proper authentication is in place, with tests. This ends the exposure immediately, but it's an outage for legitimate users.
+2. **One secret key per org:** each org gets its own key, the server looks up the org from the key, and the `x-org-id` header is ignored. Small change, no new dependency, but you'd need to create the keys and send them to customers.
+3. **Use your existing identity provider:** if a gateway or login system sits in front of this service, verify the token it issues and read the org from that. This is the right long-term answer, but I need to know what that system is and how to reach it.
+
+My recommendation is 1 now, then 2 or 3 as the proper fix. Which do you want? For 3, which system issues the tokens?
+
+**Paperwork status**
+- I've written the minimal hotfix intake at `docs/agent-ops/INTAKE_RECORD.md`. It's marked blocked waiting on your answer and isn't committed yet.
+- Once you choose, I'll commit the intake, then fix it on a branch with a draft pull request and tests showing that a request for another org gets nothing back.
+- Still owed before the pull request leaves draft: the security review, readiness and requirements records, and the closeout.
+- I haven't searched existing records for duplicates yet. `tickets/TICKET-12.md` and `projects/demo/` both mention invoices.

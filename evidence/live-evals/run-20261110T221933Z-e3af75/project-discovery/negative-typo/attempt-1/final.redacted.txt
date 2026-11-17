@@ -1,0 +1,7 @@
+I didn't change anything, because this repository has no footer with "recieve" in it.
+
+I searched the whole repo, ignoring case:
+- **"recieve"** shows up only once, in `.claude/skills/project-discovery/evals/evals.json:65`. That line is an eval prompt that uses your exact sentence as a sample request. It isn't footer text, so changing it would break the eval.
+- **"footer"** shows up only in that same file. The repo has no app, site or template with a footer.
+
+Your footer is probably in a different repository. If you point me to it, or paste the file path, I'll fix the spelling there. This is a trivial edit, so the intake and discovery steps don't apply.

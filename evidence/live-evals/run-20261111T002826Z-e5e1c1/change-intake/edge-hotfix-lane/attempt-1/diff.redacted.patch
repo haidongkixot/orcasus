@@ -1,0 +1,36 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — invoice cross-org exposure (HOTFIX)
+
+Lane: hotfix
+Status: INTAKE PENDING — blocked on owner decision (identity source)
+Date: 2026-11-11
+
+## 1. Request (verbatim)
+> "Production incident: anyone can list another org's invoices by changing the x-org-id header. Fix it now, we can do the paperwork later."
+
+Owner hotfix confirmation (same message): "Production incident ... Fix it now". Records to be completed before PR leaves draft, per hotfix lane.
+
+Deliverables:
+- D1: `GET /invoices` must return only invoices for the caller's org, with the org taken from a source the caller cannot forge.
+
+## 2. Classification
+| Deliverable | Files | Class |
+|---|---|---|
+| D1 | src/server.js:8-16, test/ | auth-permission-security (governing) |
+
+Validation floor: negative/authorization tests + security review (`reports/invoice-org-scope-security-review.md`).
+
+## Findings (code inspected)
+- src/server.js:9 takes `orgId` from the client-supplied `x-org-id` header. The only check is that the header is present (server.js:10-13).
+- src/invoices.js:15-17 `listInvoices` filters correctly *given* a trusted orgId; the defect is the trust boundary, not the filter.
+- No authentication, session, token, user or membership concept exists anywhere in `src/` (grep `auth|token|session|membership|user` → 0 matches). Readiness: identity source = **MISSING**.
+
+## 5. Scope contract
+- In scope: src/server.js (request → org resolution), tests in test/.
+- Out of scope until owner decides: choosing or adding an auth mechanism/dependency (architecture change, needs owner decision).
+- Next gate: owner decision on Q1, then fix + negative tests on a branch with a draft PR.
+
+## Open questions
+- Q1: What authenticated identity should org be derived from? (Options in the session reply.)
+- Duplicate/conflict check: UNKNOWN (not yet searched — TICKET-12, projects/demo/BACKLOG.md and PRD.md mention invoices).

@@ -1,6 +1,6 @@
 ---
 name: delivery-readiness
-description: Run a multidisciplinary release gate for complex web/mobile changes, covering requirements, tests, UX/accessibility, security, reliability, migrations, and documentation.
+description: Run a multidisciplinary release gate for complex web/mobile changes, covering requirements, tests, UX/accessibility, security, reliability, migrations, and documentation. Do NOT use to judge whether a past change followed the process (governance-audit) or to plan tests (efficient-testing).
 ---
 
 # Delivery Readiness Gate

@@ -1,0 +1,5 @@
+I didn't change anything, because this repository has no footer and the misspelling doesn't appear in any page.
+
+I searched the whole repo for "recieve" and for "footer", ignoring case. Both turn up only one line, `.claude/skills/project-discovery/evals/evals.json:62`, where your request is stored word for word as a test prompt for the `project-discovery` skill. Correcting it there would alter that test case rather than fix a typo, and a change to that file would mean rerunning the skill's live evals.
+
+Where is the footer you mean? It may be in another repository or in a branch that isn't checked out here. Once you point me to it, the fix is a single edit and doesn't need the full intake process.

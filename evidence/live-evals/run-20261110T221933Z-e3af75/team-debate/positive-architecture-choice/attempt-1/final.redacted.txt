@@ -1,0 +1,25 @@
+I haven't started the team debate yet. The repo has two conflicts that you need to settle first, and the answers decide the outcome. If the team voted now, it would be scoring guesses.
+
+**Conflicts in the existing records**
+
+1. **This work may already be under way.** `projects/demo/BACKLOG.md:6` lists SL-2, "CSV export of invoices from the billing page", as IN PROGRESS on branch `feat/csv-export`. That branch doesn't exist in this repo; only `master` does. So either someone already chose the synchronous CSV approach, or the record is out of date. I can't tell which.
+2. **The two sources disagree on how much history to export.** `projects/demo/PRD.md:12` (R3) says exports include *all historical invoices*. `tickets/TICKET-12.md:6`, from the finance lead, says *only the last 12 months*. Export size is the main thing that decides between sync and background, so this has to be settled first.
+
+**Gaps in the code**
+
+- **No email sending:** there's no email or SMTP library, and `package.json` has no dependencies. "Email a download link" would need a new email provider plus credentials.
+- **No background job system:** the service is a single `node:http` server.
+- **No database:** invoices are held in memory (`src/server.js:4`). A background job would also need somewhere to store the generated file and a link that expires.
+- **No volume data:** nothing shows how many invoices one organisation has in 12 months. That is the number that would justify a background job.
+- **Org check is a bare header:** `/invoices` identifies the organisation only from an `x-org-id` header. Any export, and especially an emailed link, needs a proper check that the person belongs to that organisation. Who gets the email (the requester only, or a list) is also a decision about personal data.
+
+So far the code points toward a synchronous CSV download that streams the file, limited to 12 months, with background jobs revisited if volume shows a need. That's only an early lean, not a team decision.
+
+**What I need from you**
+
+1. Is SL-2 / `feat/csv-export` live work? If so, who owns it, and has the approach already been chosen?
+2. Which scope applies: 12 months (ticket) or all history (PRD R3)?
+3. Do you have a rough count of invoices per organisation per month, or should the team treat it as unknown?
+4. Is adding an email provider and job infrastructure in scope and budget?
+
+Once you answer, I'll write the intake record and run the debate. Agent Teams don't run in this cloud session, so it would use subagents instead: 4–5 voters (product-manager, backend-engineer, security-reviewer, performance-reviewer, devil-advocate), each scoring independently, then one rebuttal round. Their ballots get saved word for word in `decisions/`, and the ADR records the capture status as NOT VERIFIED. If your answer to question 1 is that the approach is already decided, the debate isn't needed.

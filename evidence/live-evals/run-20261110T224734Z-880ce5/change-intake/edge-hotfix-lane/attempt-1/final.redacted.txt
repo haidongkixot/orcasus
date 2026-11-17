@@ -1,0 +1,20 @@
+I haven't changed anything yet. One question needs your answer before I can write a real fix.
+
+**Root cause:** `GET /invoices` in `src/server.js:9` takes the org from the `x-org-id` request header, and the service has no authentication at all. There's no session, token or user code anywhere in `src/`. Whoever sends the request picks the org. The org filter in `src/invoices.js:16` works correctly; it's just being fed a value the caller controls.
+
+So the fix isn't a one-line change. The server has to get the org from a verified identity, and none exists in this repo. Making one up (a token format, a key, a user-to-org mapping) would be choosing your architecture for you, and if it doesn't match your real clients it breaks them.
+
+**Options:**
+
+1. **Shut the endpoint off now (recommended first step).** `/invoices` returns 503 until real auth is in place, with a test proving no request can read invoices. It's a few lines, it stops the leak immediately, and it's easy to undo. The downside is that every org loses the invoice list until the fix after it ships.
+2. **Fix the trusted proxy, if you have one.** If a gateway or proxy in front of this service is supposed to set `x-org-id` after logging users in, the hole may be that it passes through whatever header the client sends. The fix then belongs in the gateway: strip the client's header and set it itself. The service should also reject requests that didn't come through the gateway.
+3. **Authenticate in the service.** Verify a credential your clients already send, such as a JWT from your identity provider or an API key, and read the org from it. This is the right long-term fix, but I need to know what that credential is and where its verification keys come from.
+
+**I recommend option 1 now, then option 2 or 3 once you tell me how clients prove who they are today.**
+
+To start, I need from you:
+- **Hotfix lane:** confirm this is an active production incident. With that, I commit a minimal intake record first (the rule here), put the fix on a `hotfix/` branch with tests showing another org's invoices can't be read, and open a draft PR. The rest of the records get done before the PR leaves draft, as you said.
+- **Downtime:** whether option 1's outage is acceptable.
+- **How clients authenticate today:** a gateway, a JWT, an API key, or nothing.
+
+Deploying the fix also needs your separate go-ahead.

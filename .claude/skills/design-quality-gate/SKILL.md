@@ -1,6 +1,6 @@
 ---
 name: design-quality-gate
-description: Assess a web/mobile design system and implemented UI against usability, accessibility, responsiveness, consistency, and interaction-state criteria.
+description: Assess a web/mobile design system and implemented UI against usability, accessibility, responsiveness, consistency, and interaction-state criteria. Do NOT use for security or authorization review (security-reviewer agent) or as the whole release gate (delivery-readiness).
 ---
 
 # Design Quality Gate

@@ -1,0 +1,53 @@
+{
+  "run_id": "run-20261030T154015Z-752394",
+  "started_utc": "20261030T154015Z",
+  "claude_version": "2.1.314 (Claude Code)",
+  "model": "default",
+  "platform": "Linux 6.18.44-fc-v185",
+  "python": "3.13.17",
+  "orcasus_commit": "1df5dcec7d0aaf87822479592bf5397900217088",
+  "args": {
+    "skill": [
+      "change-intake",
+      "closeout-report",
+      "efficient-testing",
+      "governance-audit",
+      "project-discovery",
+      "requirements-traceability",
+      "team-debate",
+      "vertical-slice-delivery"
+    ],
+    "case": null,
+    "smoke": true,
+    "repeats": 1,
+    "budget_total": 10.0,
+    "budget_per_run": 1.0,
+    "max_runs": 0,
+    "max_turns": 25,
+    "timeout": 900,
+    "model": null,
+    "claude_bin": "claude",
+    "out": "/home/user/orcasus/evidence/live-evals",
+    "dry_run": false
+  },
+  "allowed_tools": [
+    "Read",
+    "Grep",
+    "Glob",
+    "Write",
+    "Edit",
+    "Skill",
+    "Agent",
+    "SendMessage",
+    "TodoWrite",
+    "Bash(git status *)",
+    "Bash(git diff *)",
+    "Bash(git log *)",
+    "Bash(git show *)",
+    "Bash(ls *)",
+    "Bash(python3 scripts/*)",
+    "Bash(node --test *)",
+    "Bash(npm test *)"
+  ],
+  "planned_attempts": 16
+}

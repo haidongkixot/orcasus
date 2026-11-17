@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "requirements-traceability",
+      "args": "Write acceptance criteria for the export feature with sources."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)export",
+      "glob": "!{.claude/**,scripts/**,.github/**}",
+      "output_mode": "content",
+      "head_limit": 60
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{docs/agent-ops/*,projects/**/*,decisions/*,meetings/sessions/**/*,templates/TRACE_MATRIX_TEMPLATE.md}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/templates/TRACE_MATRIX_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "role|currency|orgId",
+      "path": "/tmp/orcasus-eval-msorptzu/project/src",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git -C /tmp/orcasus-eval-msorptzu/project branch -a",
+      "description": "List git branches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/src/server.js"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-msorptzu/project/projects/demo/TRACE_MATRIX.md",
+      "content": "# Requirements Trace Matrix — S3: Invoice export (SL-2)\n\n> Completed with `/requirements-traceability`. Citation status values: VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE, NO SOURCE. Requirement status values: PROPOSED, APPROVED, REJECTED, ASSUMPTION-ACCEPTED.\n\n- Scope / PRD: [PRD](PRD.md), [Ba"
+    }
+  }
+]

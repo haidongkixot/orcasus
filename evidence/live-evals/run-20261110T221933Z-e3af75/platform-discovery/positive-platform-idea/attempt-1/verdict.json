@@ -1,0 +1,71 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "platform-discovery",
+  "case_id": "positive-platform-idea",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "I want to build an enterprise work-management platform with ERP and mobile. Where do we start?",
+  "assertions": [
+    {
+      "text": "Runs project-discovery first and does not assume greenfield.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected platform-discovery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:28:39+00:00"
+      }
+    },
+    {
+      "text": "Defines users, jobs-to-be-done, workflows, constraints and success metrics, separating primitives from modules.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected platform-discovery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:28:39+00:00"
+      }
+    },
+    {
+      "text": "Picks one end-to-end vertical slice that tests the riskiest assumption and records MVP non-goals.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected platform-discovery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:28:39+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 18.4,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Bash": 2
+  },
+  "num_turns": 3,
+  "cost_usd": 0.1689002,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected platform-discovery; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

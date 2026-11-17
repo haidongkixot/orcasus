@@ -1,0 +1,49 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "team-debate",
+  "case_id": "negative-obvious-choice",
+  "case_type": "should_not_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Should I use the existing date utility or write a new one?",
+  "assertions": [
+    {
+      "text": "Answers directly; no debate for a choice without genuine competing options.",
+      "verdict": "PASS",
+      "evidence_quote": "**My recommendation:** keep using `datetime` from the standard library directly, and don't write a new utility for a single use.",
+      "judge": {
+        "model": "default",
+        "rubric_hash": "e8a84368d8920272",
+        "reason": "The agent checked the repo, found there was no existing date utility, and gave one clear recommendation. It did not lay out a long comparison of pros and cons. The extra guidance stays short and is about acting on that one choice.",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 10.9,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 2
+  },
+  "num_turns": 3,
+  "cost_usd": 0.1591283,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {},
+  "trigger": {
+    "verdict": "PASS",
+    "detail": "must not invoke team-debate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

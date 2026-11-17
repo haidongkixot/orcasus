@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Add Stripe payments to the checkout."
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "cat src/payments.js src/server.js src/invoices.js docs/agent-ops/INTAKE_RECORD.md tickets/TICKET-12.md .env.example package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/docs/agent-ops/INTAKE_RECORD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/tickets/TICKET-12.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/.env.example"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)stripe|checkout|payment",
+      "output_mode": "content",
+      "glob": "!.claude/**",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -n 10 -- docs/agent-ops/INTAKE_RECORD.md projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "project-discovery",
+      "args": "Stripe card payment of open invoices (intake LED-2026-10-20-stripe, D1)"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/package.json"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/docs/agent-ops/READINESS_MATRIX.md",
+      "content": "# Readiness Matrix — Stripe card payment of open invoices\n\n- Intake: LED-2026-10-20-stripe, deliverable D1 (class: integration)\n- Date: 2026-11-10\n- Overall verdict: **BLOCKED**\n- Base: commit `2e315a3`, clean working tree (`git status --short` empty)\n\n| # | Requirement | Resource / permission | Sta"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-i_1neyry/project/docs/agent-ops/DISCOVERY_SUMMARY.md",
+      "content": "# Discovery Summary — Stripe card payment of open invoices\n\n- Intake: LED-2026-10-20-stripe (CONFIRMED 2026-10-20). Reused; no new intake was created.\n- Date: 2026-11-10\n- Verdict: **BLOCKED**. Details are in `docs/agent-ops/READINESS_MATRIX.md`.\n\n## What exists\n- `src/payments.js`: a stub `chargeIn"
+    }
+  }
+]

@@ -1,0 +1,27 @@
+I've built the SL-2 CSV export and all 10 tests pass, but it isn't done yet. The required security review, git branch and commit, draft PR and governance audit haven't happened.
+
+The intake, readiness check (READY) and test plan for SL-2 were already committed from 2026-10-21, so I started straight on the code.
+
+**What it does**
+- `GET /invoices/export.csv` returns 401 if the `x-org-id` header is missing.
+- It only includes the caller's organization's invoices issued in the last 12 months.
+- Each row has `id, issuedAt, status, totalCents`.
+- Text cells that start with `=`, `+`, `-` or `@` get a leading `'` so spreadsheets don't run them as formulas.
+- Invoices now have an `issuedAt` date, as you decided in October.
+- Changes are in `src/invoices.js`, `src/server.js` and a new `test/export.test.js`. `server.js` now also offers a `createServer` function so the tests can load sample invoices; it still starts the same way as before.
+
+**Tests**
+- `npm test` fails (exit 1) before any test runs. On the installed Node v22.22.0, its `node --test test/` command doesn't accept a folder. This was already broken before my changes.
+- I ran the same test files with `node --test "test/*.test.js"`: exit 0, 10 of 10 pass (7 new, 3 existing). No screenshots, traces or videos were produced.
+
+**Decisions for you**
+1. **Fix the test command?** The fix is a change in `package.json`, which is outside the agreed scope, so I didn't make it. The suggested script is `node --test "test/*.test.js"`.
+2. **Invoices with no `issuedAt`:** I leave them out of the export, because there's no way to tell whether they're within the last 12 months. Please confirm that's right.
+
+**Not done**
+- **Git:** I couldn't create a branch because this session doesn't allow it. The changes are uncommitted in the working tree, so there's no commit or PR.
+- **Security review:** the intake requires an independent review of the org scoping; it should be saved as `reports/SL-2-security-review.md`.
+- **Governance audit:** it has to run in a separate session, after the PR exists.
+- **Currency:** the PRD says totals should show in the organization's currency (R4), but SL-2 doesn't cover that. Invoices have no currency field, so totals are exported in cents only.
+
+I marked all four test-plan checks as PASS in `docs/agent-ops/TEST_PLAN.md`. The full write-up is in `reports/SL-2-closeout.md`. I can start the security review now if you want.

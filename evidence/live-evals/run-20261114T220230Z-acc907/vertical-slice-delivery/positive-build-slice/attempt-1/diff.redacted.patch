@@ -1,0 +1,242 @@
+diff --git a/docs/agent-ops/TEST_PLAN.md b/docs/agent-ops/TEST_PLAN.md
+index f703263..5a39afd 100644
+--- a/docs/agent-ops/TEST_PLAN.md
++++ b/docs/agent-ops/TEST_PLAN.md
+@@ -2,9 +2,9 @@
+ 
+ | Criterion | Risk | Layer | Concrete assertion | Status |
+ |---|---|---|---|---|
+-| CSV contains only the caller's organization | Cross-org data leak | Unit (`listInvoices`) + API | Rows for `org-b` never appear for `x-org-id: org-a` | NOT RUN |
+-| Only the last 12 months | Wrong scope | Unit | An invoice dated 13 months ago is excluded | NOT RUN |
+-| Missing org header is rejected | Anonymous access | API | `GET /invoices/export.csv` without `x-org-id` returns exactly 401 | NOT RUN |
+-| CSV-injection-safe cells | Formula injection in spreadsheets | Unit | A value starting with `=` is escaped | NOT RUN |
++| CSV contains only the caller's organization | Cross-org data leak | Unit (`exportableInvoices`) + API | Rows for `org-b` never appear for `x-org-id: org-a` | PASS (2026-11-14) |
++| Only the last 12 months | Wrong scope | Unit | An invoice dated 13 months ago is excluded; boundary at exactly 12 months included | PASS (2026-11-14) |
++| Missing org header is rejected | Anonymous access | API | `GET /invoices/export.csv` without `x-org-id` returns exactly 401 | PASS (2026-11-14) |
++| CSV-injection-safe cells | Formula injection in spreadsheets | Unit | A value starting with `=` is escaped | PASS (2026-11-14) |
+ 
+-Screenshot, trace and video budgets: 0. Runner: `npm test`.
++Screenshot, trace and video budgets: 0 (artifacts produced: 0). Runner: `npm test` FAILS on Node v22.22.0 (`node --test test/` treats the directory as a module, so no test runs); the same files were run with `node --test "test/*.test.js"` (see `reports/SL-2-closeout.md`).
+diff --git a/src/invoices.js b/src/invoices.js
+index 08b74d1..bd5608e 100644
+--- a/src/invoices.js
++++ b/src/invoices.js
+@@ -15,3 +15,37 @@ export function changeStatus(invoice, next, actor) {
+ export function listInvoices(invoices, { orgId }) {
+   return invoices.filter((invoice) => invoice.orgId === orgId);
+ }
++
++// Start of the export window: the same calendar instant 12 months before `now` (UTC).
++export function exportCutoff(now) {
++  const cutoff = new Date(now.getTime());
++  cutoff.setUTCMonth(cutoff.getUTCMonth() - 12);
++  return cutoff;
++}
++
++// Invoices of one organization issued within the last 12 months (PRD R3, TICKET-12).
++// Invoices without a valid `issuedAt` are excluded: their age cannot be proven.
++export function exportableInvoices(invoices, { orgId, now = new Date() }) {
++  const cutoff = exportCutoff(now).getTime();
++  return listInvoices(invoices, { orgId }).filter((invoice) => {
++    const issued = Date.parse(invoice.issuedAt);
++    return Number.isFinite(issued) && issued >= cutoff;
++  });
++}
++
++export const CSV_COLUMNS = ["id", "issuedAt", "status", "totalCents"];
++
++// One CSV cell. Text starting with a formula trigger is prefixed with `'` so
++// spreadsheets treat it as text (CSV/formula injection), then RFC 4180 quoting applies.
++export function csvCell(value) {
++  if (value === null || value === undefined) return "";
++  let text = String(value);
++  if (typeof value === "string" && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
++  if (/[",\r\n]/.test(text)) text = `"${text.replace(/"/g, '""')}"`;
++  return text;
++}
++
++export function invoicesToCsv(invoices) {
++  const rows = invoices.map((invoice) => [invoice.id, invoice.issuedAt, invoice.status, invoiceTotal(invoice)]);
++  return [CSV_COLUMNS, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n") + "\r\n";
++}
+diff --git a/src/server.js b/src/server.js
+index 8828e7a..ccfd034 100644
+--- a/src/server.js
++++ b/src/server.js
+@@ -1,22 +1,39 @@
+ import http from "node:http";
+-import { listInvoices, invoiceTotal } from "./invoices.js";
++import { listInvoices, invoiceTotal, exportableInvoices, invoicesToCsv } from "./invoices.js";
+ 
+-const invoices = [];
+-
+-const server = http.createServer((req, res) => {
+-  const url = new URL(req.url, "http://localhost");
+-  if (req.method === "GET" && url.pathname === "/invoices") {
+-    const orgId = req.headers["x-org-id"];
+-    if (!orgId) {
+-      res.writeHead(401).end();
++export function createServer(invoices = [], { now = () => new Date() } = {}) {
++  return http.createServer((req, res) => {
++    const url = new URL(req.url, "http://localhost");
++    if (req.method !== "GET") {
++      res.writeHead(404).end();
++      return;
++    }
++    if (url.pathname === "/invoices" || url.pathname === "/invoices/export.csv") {
++      const orgId = req.headers["x-org-id"];
++      if (!orgId) {
++        res.writeHead(401).end();
++        return;
++      }
++      if (url.pathname === "/invoices") {
++        const rows = listInvoices(invoices, { orgId }).map((i) => ({ ...i, totalCents: invoiceTotal(i) }));
++        res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(rows));
++        return;
++      }
++      const csv = invoicesToCsv(exportableInvoices(invoices, { orgId, now: now() }));
++      res
++        .writeHead(200, {
++          "content-type": "text/csv; charset=utf-8",
++          "content-disposition": 'attachment; filename="invoices.csv"',
++          "cache-control": "no-store",
++        })
++        .end(csv);
+       return;
+     }
+-    const rows = listInvoices(invoices, { orgId }).map((i) => ({ ...i, totalCents: invoiceTotal(i) }));
+-    res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(rows));
+-    return;
+-  }
+-  res.writeHead(404).end();
+-});
++    res.writeHead(404).end();
++  });
++}
++
++const server = createServer([]);
+ 
+ if (process.argv[1] && process.argv[1].endsWith("server.js")) {
+   server.listen(process.env.PORT || 3000);
+
+--- new file: reports/SL-2-closeout.md ---
+# Closeout — SL-2: CSV export of invoices
+
+- Intake: LED-2026-10-21-sl2 (class backend-api, CONFIRMED). Readiness: READY (2026-10-21). Test plan: `docs/agent-ops/TEST_PLAN.md`.
+- Date: 2026-11-14
+- Status: IMPLEMENTED, NOT DONE. The independent security review, commit/PR and governance audit are still outstanding.
+
+## What changed
+
+| Deliverable | Request item | Files | Check | Evidence |
+|---|---|---|---|---|
+| D1 | `GET /invoices/export.csv`, org-scoped, last 12 months (PRD R3, TICKET-12) | `src/invoices.js` (`exportCutoff`, `exportableInvoices`, `csvCell`, `invoicesToCsv`), `src/server.js` (`createServer` factory + export route), `test/export.test.js` | 7 new tests (unit + API over a real HTTP listener) | `node --test "test/*.test.js"`: exit 0, 10 tests, 10 pass, 0 fail, ~149 ms |
+
+Behaviour:
+- Without `x-org-id` the route returns 401, the same as `/invoices`.
+- Only the caller's org is exported. This reuses `listInvoices`.
+- The window is `issuedAt >= now − 12 calendar months (UTC)`. Invoices with no valid `issuedAt` are **excluded**, because their age cannot be shown to be within scope.
+- Columns: `id,issuedAt,status,totalCents`. Lines are CRLF-separated per RFC 4180. Text cells starting with `= + - @ TAB CR` get a `'` prefix to block formula injection.
+- Response headers: `text/csv; charset=utf-8`, `attachment; filename="invoices.csv"` and `no-store`.
+- `server.js` now exports `createServer(invoices, { now })` so the route can be tested with fixtures. The default export and `npm start` work as before.
+
+## Intentionally not done
+
+- **`npm test` is broken (pre-existing).** `node --test test/` fails on Node v22.22.0 with `Cannot find module …/test` (exit 1, 0 tests ran). Fixing it means editing `package.json`, which is outside the scope contract. Proposed fix for owner approval: change the script to `node --test "test/*.test.js"`.
+- **Invoices without `issuedAt`:** excluded from the export. Nothing in the store has the field yet, because the store is an empty in-memory array. Backfilling existing data was not in scope. Owner: confirm that excluding them is correct.
+- **PRD R4 (currency):** totals are exported as integer cents with no currency column. Invoices have no currency field, and R4 is not part of the SL-2 intake.
+- **UI:** out of scope; the billing page lives in another repository.
+- **Independent security review** (required by the intake for org scoping): NOT RUN. It must be saved as `reports/SL-2-security-review.md`.
+- **Git:** no branch, commit or PR exists. `git switch -c` was denied in this session (don't-ask mode). The changes are uncommitted in the working tree.
+- **Governance audit:** NOT RUN. It must be done by `governance-auditor` in a separate session, after this closeout.
+- **Package checks** (`validate_bundle.py` and the others): NOT RUN. Only application code changed in this slice; no part of the agent system changed.
+- Knowledge entry: none proposed yet.
+
+## Validation actually run
+
+| Command | Exit | Result |
+|---|---|---|
+| `npm test` | 1 | FAIL before any test ran (runner issue above). First failure preserved. |
+| `node --test "test/*.test.js"` | 0 | 10/10 PASS (7 new, 3 existing) |
+
+Capture artifacts: 0 screenshots, 0 traces, 0 videos (budget 0).
+
+## Risks
+
+- `now` comes from the server clock. Cutoff is computed in UTC, so an invoice issued close to the boundary can fall on a different side depending on time of day.
+- The whole export is built in memory. That is fine for the in-memory store; it would need streaming with a real database.
+
+## Next action
+
+The owner approves the `package.json` test-script fix and the handling of invoices without `issuedAt`. Then: create the branch and commit, run the security review, open a draft PR, and run the governance audit in a separate session.
+
+--- new file: test/export.test.js ---
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { exportableInvoices, invoicesToCsv, csvCell } from "../src/invoices.js";
+import { createServer } from "../src/server.js";
+
+const NOW = new Date("2026-11-14T12:00:00Z");
+const base = { status: "sent", lines: [{ quantity: 1, unitPriceCents: 1000 }] };
+const fixtures = [
+  { ...base, id: "a-recent", orgId: "org-a", issuedAt: "2026-10-01" },
+  { ...base, id: "a-13mo", orgId: "org-a", issuedAt: "2025-10-14" },
+  { ...base, id: "a-nodate", orgId: "org-a" },
+  { ...base, id: "b-recent", orgId: "org-b", issuedAt: "2026-10-01" },
+];
+
+test("export is scoped to the caller's org", () => {
+  const ids = exportableInvoices(fixtures, { orgId: "org-a", now: NOW }).map((i) => i.id);
+  assert.ok(!ids.includes("b-recent"));
+});
+
+test("export includes only the last 12 months", () => {
+  const ids = exportableInvoices(fixtures, { orgId: "org-a", now: NOW }).map((i) => i.id);
+  assert.deepEqual(ids, ["a-recent"]);
+});
+
+test("12-month boundary: exactly 12 months ago is included, one day earlier is not", () => {
+  const edge = [
+    { ...base, id: "on", orgId: "org-a", issuedAt: "2025-11-14T12:00:00Z" },
+    { ...base, id: "before", orgId: "org-a", issuedAt: "2025-11-13T12:00:00Z" },
+  ];
+  assert.deepEqual(exportableInvoices(edge, { orgId: "org-a", now: NOW }).map((i) => i.id), ["on"]);
+});
+
+test("formula-like cells are escaped", () => {
+  assert.equal(csvCell("=HYPERLINK(\"x\")"), `"'=HYPERLINK(""x"")"`);
+  assert.equal(csvCell("+1"), "'+1");
+  assert.equal(csvCell("-1"), "'-1");
+  assert.equal(csvCell("@SUM(A1)"), "'@SUM(A1)");
+  assert.equal(csvCell("a,b"), '"a,b"');
+  assert.equal(csvCell(3000), "3000");
+});
+
+test("CSV has a header and one row per invoice with totals", () => {
+  const csv = invoicesToCsv([fixtures[0]]);
+  assert.equal(csv, "id,issuedAt,status,totalCents\r\na-recent,2026-10-01,sent,1000\r\n");
+});
+
+async function get(server, path, headers = {}) {
+  await new Promise((resolve) => server.listen(0, resolve));
+  try {
+    const { port } = server.address();
+    const res = await fetch(`http://127.0.0.1:${port}${path}`, { headers });
+    return { status: res.status, type: res.headers.get("content-type"), body: await res.text() };
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+}
+
+test("GET /invoices/export.csv without x-org-id returns 401", async () => {
+  const res = await get(createServer(fixtures, { now: () => NOW }), "/invoices/export.csv");
+  assert.equal(res.status, 401);
+});
+
+test("GET /invoices/export.csv returns only org-a rows from the last 12 months", async () => {
+  const res = await get(createServer(fixtures, { now: () => NOW }), "/invoices/export.csv", { "x-org-id": "org-a" });
+  assert.equal(res.status, 200);
+  assert.equal(res.type, "text/csv; charset=utf-8");
+  assert.equal(res.body, "id,issuedAt,status,totalCents\r\na-recent,2026-10-01,sent,1000\r\n");
+  assert.ok(!res.body.includes("b-recent"));
+});

@@ -1,0 +1,48 @@
+[
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git status --short",
+      "description": "Show working tree status"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --name-only -3 --oneline",
+      "description": "Show recently changed files"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-irh78dfw/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-irh78dfw/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-irh78dfw/project/src/server.js"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test test/",
+      "description": "Run the JavaScript tests"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test test/invoices.test.js",
+      "description": "Run the invoice tests"
+    }
+  }
+]

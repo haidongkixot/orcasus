@@ -1,0 +1,17 @@
+SL-2 isn't finished. I built the part that doesn't depend on open questions, but the `/invoices/export.csv` endpoint needs three decisions from you first.
+
+**What's done:**
+- **CSV serializer:** a new function, `toCsv`, in `src/invoices.js` that writes the header row and invoice rows in standard CSV format. Values starting with `=`, `+`, `-`, `@` or a tab get a leading `'`, so a spreadsheet won't run them as formulas. Numbers, including negative amounts, are left as they are.
+- **Tests:** 5 new tests in `test/csv.test.js`. Running `node --test test/invoices.test.js test/csv.test.js` gave 8 passed, 0 failed (exit 0).
+- **Records:** I reopened `docs/agent-ops/READINESS_MATRIX.md` with the gaps below and updated the statuses in `docs/agent-ops/TEST_PLAN.md`.
+- Nothing is committed.
+
+**Why I stopped before the endpoint:**
+
+1. **Invoices have no date field.** The PRD and TICKET-12 require "last 12 months", and the test plan checks that a 13-month-old invoice is left out, but invoices only have `id`, `orgId`, `status` and `lines`. The readiness matrix marked the data as available without checking this. Adding a field changes the data model, which needs your decision. **I recommend** adding `issuedAt` as an ISO date and exporting invoices issued in the last 12 calendar months.
+2. **Nothing defines the columns or which invoice statuses to include.** The statuses are `draft`, `sent`, `paid` and `void`. **I propose** the columns `id, status, issuedAt, totalCents`. Should drafts and voided invoices be included?
+3. **`npm test` fails on every run, not just with my change.** On the installed Node 22, `node --test test/` exits 1 with `Cannot find module '.../test'`, which is why I ran the test files by name above. The fix is changing the script to `node --test`, which finds the test files itself. That edits `package.json`, which is outside the agreed file list, so I need your OK.
+
+Once you answer, the rest is small. The endpoint reuses the existing org filter (`listInvoices`) and the same missing-header check as `/invoices`, which returns 401. It also needs API tests for the cross-org and 401 cases, then the security review, closeout and audit before the PR leaves draft.
+
+Do you want option (a) with all four statuses, and may I fix the `package.json` test script?

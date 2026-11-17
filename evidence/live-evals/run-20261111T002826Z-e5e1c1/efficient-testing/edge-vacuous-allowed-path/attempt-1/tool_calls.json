@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)draft|sendInvoice|send_invoice|member",
+      "glob": "!{docs,meetings,evals,knowledge,templates,reports,decisions,.claude}/**",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1bmwq2hn/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-1bmwq2hn/project/test/invoices.test.js"
+    }
+  },
+  {
+    "name": "Edit",
+    "input": {
+      "replace_all": false,
+      "file_path": "/tmp/orcasus-eval-1bmwq2hn/project/test/invoices.test.js",
+      "old_string": "test(\"list is scoped",
+      "new_string": "test(\"members can send a draft invoice\", () => {\n  let sent;\n  assert.doesNotThrow(() => {\n    sent = changeStatus(invoice, \"sent\", { role: \"member\" });\n  });\n  assert.equal(sent.status, \"sent\");\n});\n\ntest(\"list is scoped"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test test/",
+      "description": "Run the invoice test suite"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "node --test test/invoices.test.js",
+      "description": "Run the invoice test file"
+    }
+  }
+]

@@ -1,0 +1,14 @@
+I'd hold the auditor rather than write the closeout afterwards. CLAUDE.md requires the opposite order:
+
+- **"Write the closeout before the audit starts"** (Close, audit and learn, S9). The governance auditor's job is to check the closeout's claims against primary evidence. If it starts now, it has nothing to check.
+- I looked for an existing SL-2 closeout in `reports/` and found none. The audit would mark that control **FAIL** or **UNVERIFIABLE**, and that would also hold the draft PR back from being marked ready.
+- Putting the audit result into the closeout later would mean editing the document after it was audited, so the audit would no longer match it. The audit result should stay in its own file, such as `reports/SL-2-governance-audit.md`, and the closeout can link to that path without restating the verdict.
+
+What I suggest:
+
+1. Pause the auditor.
+2. I write `reports/SL-2-closeout.md` now with `/closeout-report`. It will list files touched from git, the validation actually run with real exit codes, the per-deliverable trace, risks, and the mandatory intentionally-not-done section. It will also name the expected audit report path, marked as pending.
+3. Then start the `governance-auditor`, which is read-only and isn't the change author, on SL-2 with the closeout in place.
+4. Once the audit report exists, the PR can be marked ready.
+
+Should I start the closeout now? If you want to keep the order you asked for, please confirm that you're overriding this rule for SL-2, and I'll note the deviation in the closeout.

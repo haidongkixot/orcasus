@@ -1,0 +1,81 @@
+{
+  "run_id": "run-20261111T002826Z-e5e1c1",
+  "skill": "design-quality-gate",
+  "case_id": "positive-review-ui",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Review the new settings page (public/settings.html) for UX and accessibility issues.",
+  "assertions": [
+    {
+      "text": "Checks hierarchy, keyboard flow, focus, contrast and loading/empty/error/success/permission-denied states.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected design-quality-gate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-11T00:33:15+00:00"
+      }
+    },
+    {
+      "text": "Prefers DOM and accessibility assertions; no screenshots by default.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected design-quality-gate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-11T00:33:15+00:00"
+      }
+    },
+    {
+      "text": "Records issues with severity, evidence, expected behavior and recommended fix.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected design-quality-gate; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-11T00:33:15+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 42.9,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Read": 2,
+    "Glob": 1,
+    "Write": 1
+  },
+  "num_turns": 5,
+  "cost_usd": 0.2608222,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "reports/settings-page-ux-a11y-review.md": "A"
+  },
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected design-quality-gate; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    },
+    {
+      "name": "no_personal_data_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

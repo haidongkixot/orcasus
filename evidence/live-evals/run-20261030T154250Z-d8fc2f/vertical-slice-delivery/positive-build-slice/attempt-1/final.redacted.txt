@@ -1,0 +1,21 @@
+I haven't implemented SL-2. The intake gate stopped it: there's a possible duplicate, the requirements conflict, and the access policy needs your decision. The intake record is in `docs/agent-ops/INTAKE_RECORD.md`, marked **INTAKE PENDING** and not committed yet. No code was written and no tests were run.
+
+**Blockers**
+
+1. **Possible duplicate.** `projects/demo/BACKLOG.md:6` says SL-2 is already in progress on branch `feat/csv-export`. That branch doesn't exist here (`master` only) and there's no git remote, so I couldn't check whether someone else's work exists.
+2. **Conflicting requirements.** The PRD says "Exports include all historical invoices for the organization" (`projects/demo/PRD.md:11`). TICKET-12 says "Only the last 12 months are needed" (`tickets/TICKET-12.md:6`).
+3. **No billing page exists.** The repo is only a Node HTTP server (`src/server.js`, `src/invoices.js`, `src/payments.js`). There's no UI to put an export control on.
+4. **Owner approval needed.** The export exposes data that belongs to one organization (`orgId`), so its riskiest part is classed as auth-permission-security, which needs your approval first. Today the organization comes from the `x-org-id` request header, which nothing verifies (`src/server.js:9`). An export built on that would trust the same header.
+
+**Decisions I need from you**
+
+1. `feat/csv-export`: continue it (where is it?), discard it, or start fresh?
+2. Date range: all history (PRD) or the last 12 months (ticket)?
+3. Statuses (`src/invoices.js:2`): include or exclude each of `draft`, `sent`, `paid`, `void`?
+4. Who may export: `admin`? `member`? There's no complete role list in the code, and the PRD's "Finance staff" has no matching role.
+5. Is "end to end" API-only here, or does the billing page live in another repo?
+6. Is the unverified `x-org-id` header acceptable for this slice, or must real authentication come first?
+7. Which columns should the CSV have, and where does the currency come from? PRD R4 requires the organization's currency, but there's no currency field in the code.
+8. Do you confirm the intent and value I drafted from the PRD and ticket (in the intake record)?
+
+Once you answer, I'll commit the intake record and move on to the next gates (discovery, then requirements and test planning). Then I'll build the export in `src/` with tests on the existing `node --test` runner, including tests that one organization can't export another's invoices.

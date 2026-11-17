@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)settings",
+      "glob": "!{.claude/**,docs/**,meetings/**,reports/**,knowledge/**,templates/**,evals/**}",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files --exclude-standard -co -- ':!.claude' ':!docs' ':!meetings' ':!reports' ':!knowledge' ':!templates' ':!evidence' ':!decisions'",
+      "description": "List project files outside governance folders"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-amcdwbmy/project/src/server.js"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)setting|preference|profile|config",
+      "path": "/tmp/orcasus-eval-amcdwbmy/project",
+      "glob": "{src/**,test/**,projects/**,tickets/**,package.json,README.md}",
+      "output_mode": "content"
+    }
+  }
+]

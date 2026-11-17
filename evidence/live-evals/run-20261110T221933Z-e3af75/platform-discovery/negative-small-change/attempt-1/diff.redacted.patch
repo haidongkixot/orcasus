@@ -1,0 +1,51 @@
+
+--- new file: docs/agent-ops/INTAKE_RECORD.md ---
+# Intake Record — S0
+
+- Intake ID: INTAKE-task-list-filter
+- Date: 2026-11-10
+- Requested by / owner: repository owner
+- Status: INTAKE PENDING (target of the request not found in the repository; owner input required)
+- Lane: normal
+
+## 1. Request (verbatim)
+
+> Add a filter to the existing task list.
+
+## 2. Deliverables and classes
+
+| ID | Deliverable | Files/modules inspected | Class | Validation floor | Reviewers | Owner approval before work? |
+|---|---|---|---|---|---|---|
+| D1 | Filter on the "existing task list" | All tracked files (`git ls-files`); `src/server.js`, `src/invoices.js`, `src/payments.js`, `test/invoices.test.js`, `projects/demo/*`, `tickets/TICKET-12.md`, `package.json` searched for `task`/`filter` | UNCLASSIFIED: no task list exists to inspect | Not set until classified | Not set | Unknown until classified |
+
+- Governing class: UNKNOWN. Classification needs the files the change would touch, and none exist yet.
+- Suggestions recorded but NOT in scope: none.
+
+## 3. Duplicate and conflict check
+
+| Deliverable | Sources searched | Verdict | Citation |
+|---|---|---|---|
+| D1 | `src/`, `test/`, `projects/demo/BACKLOG.md`, `projects/demo/PRD.md`, `tickets/`, `knowledge/INDEX.md`, `package.json` (grep for `task` and `filter`) | UNKNOWN | No task-list code or record was found. The only `filter` match is `src/invoices.js:16` (org scoping of invoices). `decisions/`, `meetings/sessions/`, `reports/`, open branches and issues/PRs were not searched. |
+
+## 4. Intent and value (owner-confirmed)
+
+- Problem: NOT CONFIRMED
+- Who is affected: NOT CONFIRMED
+- Expected value: NOT CONFIRMED
+- Success signal: NOT CONFIRMED
+- Urgency / deadline: none stated
+- Non-goals: NOT CONFIRMED
+- Owner confirmation: pending
+- Domain values (statuses, roles, tenants): UNKNOWN. No task entity is defined in the code.
+
+## 5. Scope contract
+
+- Expected files/modules: UNKNOWN until the owner identifies the task list
+- Out of scope: building a new task list, or applying a filter to a different list (for example invoices), unless the owner says so
+- Approval path: decided after classification
+- Next gate: owner answer, then `/project-discovery`
+
+## 6. Reclassification log
+
+| Date | Trigger | New class | Approval obtained |
+|---|---|---|---|

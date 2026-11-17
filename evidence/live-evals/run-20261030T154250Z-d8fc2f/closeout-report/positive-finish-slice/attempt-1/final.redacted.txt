@@ -1,0 +1,14 @@
+I wrote the closeout at `reports/SL-2-closeout.md`, but it records SL-2 as **not done**. I couldn't find anything in the repository showing the slice was built.
+
+- **No code:** there's no CSV export anywhere in `src/`. `src/server.js` only serves `GET /invoices` as JSON.
+- **No tests:** `test/invoices.test.js` still has only the 3 older tests (total, void, organization scoping).
+- **No branch:** `feat/csv-export`, the branch the backlog names, doesn't exist locally or as a remote-tracking ref. The checkout is on `master`, and the backlog still says SL-2 is `IN PROGRESS`.
+- **No process records:** there's no intake record, readiness/discovery record, trace matrix, test plan or review for SL-2.
+- **The requirements conflict:** `projects/demo/PRD.md:12` says exports include all historical invoices, but `tickets/TICKET-12.md:6` says only the last 12 months are needed. You need to decide which applies.
+
+**Limits of this check:** I didn't have shell access, so I couldn't run git or the test suite. The changed-files list and the head commit are marked NOT VERIFIED, and the test run is marked BLOCKED. I also haven't committed the closeout.
+
+**Decisions for you:**
+1. Where is the SL-2 work? If it's on another machine or an unpushed branch, push `feat/csv-export` and I'll redo the closeout against the real changes.
+2. Should exports cover all history or only the last 12 months?
+3. If the work was never started, SL-2 stays `IN PROGRESS` and should go through `/change-intake` first.

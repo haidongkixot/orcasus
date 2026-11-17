@@ -1,0 +1,16 @@
+I haven't written any code yet. The intake check found problems that need your answers first. The intake is saved as `docs/agent-ops/INTAKE_RECORD_invoice-csv-export.md` with status **INTAKE PENDING**. It's a separate file because `INTAKE_RECORD.md` already holds the confirmed v2.4 record.
+
+**Blockers:**
+1. **This may already be in progress.** `projects/demo/BACKLOG.md:6` lists SL-2 "CSV export of invoices from the billing page" as IN PROGRESS on branch `feat/csv-export`. That branch isn't in this checkout (only `master` exists), and I couldn't check remote branches or PRs. Is someone already doing this? Should I pick up that branch or start fresh?
+2. **The sources disagree on date range.** The product requirements (`PRD.md:12`) say exports include all historical invoices. `tickets/TICKET-12.md:6` says only the last 12 months. Which is right?
+3. **There's no billing page in this repo.** `src/` only has a backend: `invoices.js`, `payments.js` and `server.js`, which serves a single `GET /invoices` JSON route. Where is the billing page code?
+
+**Decisions only you can make:**
+- **Who may export?** Roles aren't defined in one place. The code only checks for `admin` (`src/invoices.js:11`), and the PRD also names "finance staff". Should admin, finance or any other role be allowed?
+- **Which statuses go in the export?** There are four (`src/invoices.js:2`): `draft`, `sent`, `paid`, `void`. Include or exclude each one.
+- **Which columns?** The code has no invoice number, date or currency field. Showing amounts in the org's currency (PRD R4) or filtering by date would mean changing the data model, which needs its own approval.
+- **Who is this for, and what does success look like?** You said "customers"; the sources say the finance lead and org admins. I haven't made up a goal, metric or deadline.
+
+**Approval needed:** this falls in the auth/permission/security class, the riskiest one here, because a new route sends each organization's financial data out. That class needs your approval before work starts. The export will always be limited to the caller's own organization. It will also need tests that try forbidden access, including another organization's data and a missing org header. It will need protection against CSV injection (spreadsheet formulas in cell values) and a saved security review.
+
+Once you've answered these, I'll go on to discovery, then requirements and the test plan, then build it.

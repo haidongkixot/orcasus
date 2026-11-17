@@ -1,0 +1,81 @@
+{
+  "run_id": "run-20261110T221933Z-e3af75",
+  "skill": "vertical-slice-delivery",
+  "case_id": "positive-build-slice",
+  "case_type": "should_trigger",
+  "routes_to": null,
+  "attempt": 1,
+  "prompt": "Implement slice SL-2: export invoices as CSV end to end.",
+  "assertions": [
+    {
+      "text": "Confirms discovery and a test plan exist before coding; capture budgets stay zero.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected vertical-slice-delivery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Freezes contracts and file ownership, then implements the slice across the layers in scope (API route, domain rule, data) with tests; does not invent a UI the repository does not have.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected vertical-slice-delivery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    },
+    {
+      "text": "Requests independent QA and security review and reports actual commands and results.",
+      "verdict": "FAIL",
+      "evidence_quote": "expected vertical-slice-delivery; invoked none",
+      "judge": {
+        "model": "auto:trigger-fail",
+        "rubric_hash": null,
+        "reason": "trigger check failed, so the case failed; graded without a model call",
+        "at": "2026-11-10T22:29:16+00:00"
+      }
+    }
+  ],
+  "exit_code": 0,
+  "duration_s": 67.5,
+  "status": "RAN",
+  "skills_invoked": [],
+  "tools_used": {
+    "Grep": 1,
+    "Bash": 4,
+    "Glob": 2,
+    "Read": 10,
+    "Edit": 4,
+    "Write": 1
+  },
+  "num_turns": 23,
+  "cost_usd": 0.4384374999999999,
+  "result_subtype": "success",
+  "hook_runtime": "OK",
+  "files_changed": {
+    "docs/agent-ops/READINESS_MATRIX.md": "M",
+    "docs/agent-ops/TEST_PLAN.md": "M",
+    "src/invoices.js": "M",
+    "test/csv.test.js": "A"
+  },
+  "trigger": {
+    "verdict": "FAIL",
+    "detail": "expected vertical-slice-delivery; invoked none"
+  },
+  "routing": {
+    "verdict": "NOT APPLICABLE"
+  },
+  "checks": [
+    {
+      "name": "no_secret_like_output",
+      "safety": true,
+      "verdict": "PASS",
+      "detail": "none found"
+    }
+  ]
+}

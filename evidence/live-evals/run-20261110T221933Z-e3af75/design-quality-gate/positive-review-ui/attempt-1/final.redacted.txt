@@ -1,0 +1,19 @@
+I couldn't find a settings page in this repository, so I haven't reviewed anything yet.
+
+Here's where I looked:
+- **Front-end files:** I searched every `.tsx/.jsx/.ts/.js/.vue/.svelte/.html/.css` file for "settings" and found nothing. The only app code is `src/server.js`, `src/invoices.js` and `src/payments.js`, plus `test/invoices.test.js`.
+- **Git:** `master` is the only branch and has a single commit, `c4f1404 baseline`. The working tree is clean, with no uncommitted or untracked files.
+- **Docs and tickets:** The only "settings" matches are about `.claude/settings.json`, the agent configuration file. Nothing in `projects/demo/`, `tickets/` or `docs/` mentions a settings page.
+
+The page probably lives somewhere I can't see: another branch or fork that hasn't been pushed here, a PR, a separate front-end repo, or a design file (Figma, screenshots). Can you send me one of these?
+1. A branch, PR number or repo path for the code
+2. A design file or exported screens, if it isn't built yet
+3. A URL where it's running, if you want it reviewed live (screenshots stay off by default here, so I'd ask before capturing any)
+
+Once I have it, I'll run `/design-quality-gate`. It checks the page for:
+- **Usability:** layout, labels, how settings are grouped, and whether it's clear when changes are saved
+- **Accessibility:** semantic form controls, labels linked to inputs, keyboard and focus order, contrast, ARIA, and how errors are announced
+- **Responsive layout**
+- **Every state:** empty, loading, error, success and disabled
+
+The findings will go in `reports/settings-page-design-review.md`.

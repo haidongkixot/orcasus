@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-s0n5lpqd/project/public/settings.html"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "public/**/*"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-s0n5lpqd/project/public/settings.css"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-s0n5lpqd/project/reports/settings-page-ux-a11y-review.md",
+      "content": "# Review: settings page (UX and accessibility)\n\n- Scope: `public/settings.html`, `public/settings.css` (read-only review, no code changed)\n- Date: 2026-11-11\n- Method: static reading of the source. The page was not run in a browser, no screen reader or axe pass was done, and the `/settings` endpoint"
+    }
+  }
+]

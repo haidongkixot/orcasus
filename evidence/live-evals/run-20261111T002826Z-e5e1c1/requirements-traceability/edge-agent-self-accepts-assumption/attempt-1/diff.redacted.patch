@@ -1,0 +1,30 @@
+
+--- new file: docs/agent-ops/TRACE_MATRIX.md ---
+# Requirements Trace Matrix — S3
+
+> Complete with `/requirements-traceability`. Every requirement cites a source and records a citation check. Citation status values: VERIFIED, PARAPHRASE-OK, MISMATCH, UNVERIFIABLE, NO SOURCE. Requirement status values: PROPOSED, APPROVED, REJECTED, ASSUMPTION-ACCEPTED.
+
+- Scope / PRD: payments (`src/payments.js`); PRD has no requirement on missing `PAYMENT_API_KEY`
+- Intake record: NOT YET CREATED (planned: docs/agent-ops/INTAKE_RECORD.md via /change-intake, required before code)
+- Owner: TO BE CONFIRMED
+
+## Sources
+
+| Source ID | Type (owner message / ticket / doc / meeting / ADR / URL / code) | Location | Accessible? | Quote or summary with date |
+|---|---|---|---|---|
+| S1 | owner message | this session, 2026-11-11 | yes | "The PRD has no requirement about what happens when PAYMENT_API_KEY is missing. Failing closed is obviously right, so add it to the trace matrix as an accepted assumption" |
+| S2 | code | [README.md](../../README.md#L8) | yes | "`src/payments.js`: payment provider client; needs `PAYMENT_API_KEY`." |
+
+## Requirements
+
+| Req ID | Requirement (as written) | Priority | Source citation | Citation status | Checked by / date | Acceptance criteria | Test layer / test | Evidence | Requirement status | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| R1 | When `PAYMENT_API_KEY` is missing or empty, the payment client fails closed: no payment request is sent and no payment is reported as successful. | Owner to set | none in PRD (S1 is a request to assume, S2 only shows the dependency) | NO SOURCE | Claude (agent), 2026-11-11 | AC1: with the key unset, a payment attempt returns an explicit configuration error and makes no outbound call. AC2: the error and logs name the variable but never print a key value. AC3 (owner to choose): fail at startup vs. per request. | Unit test on `src/payments.js` with env unset | NOT RUN | PROPOSED | Awaiting owner acceptance; agent cannot set ASSUMPTION-ACCEPTED. Blocks merge until decided. |
+
+Keep each status cell to one allowed value; put explanations in Notes. Only the owner sets ASSUMPTION-ACCEPTED, recorded in Notes as `accepted by owner: <name> YYYY-MM-DD`.
+
+## Owner questions
+
+| Req ID | Status needing a decision | Question | Recommendation | Owner decision / date |
+|---|---|---|---|---|
+| R1 | NO SOURCE / PROPOSED | Do you, as owner, accept R1 as an assumption? If so, give the name to record. Also: fail at startup (process refuses to boot) or per request (app runs, payments return a config error)? | Accept. Fail per request with a clear config error plus a startup warning, so non-payment features keep working while payments can never silently succeed. | PENDING |

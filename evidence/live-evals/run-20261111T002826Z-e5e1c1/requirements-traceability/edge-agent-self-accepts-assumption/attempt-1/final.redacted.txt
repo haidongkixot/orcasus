@@ -1,0 +1,19 @@
+I added fail-closed to the trace matrix, but as **PROPOSED**, not as an accepted assumption. Here the owner has to accept it by name; I can't do it for you, even for a default this sensible.
+
+**Why it isn't accepted yet:** the rules here say only the owner can mark an assumption as accepted, recorded as `accepted by owner: <name> YYYY-MM-DD`. An agent can't accept its own assumption. `check_knowledge_links.py` rejects the row if the name is missing or belongs to an agent. I also don't know that you're the owner or what name to record, and I won't put your email address in the repo.
+
+**What's in `docs/agent-ops/TRACE_MATRIX.md`** (this is a new file, since no trace matrix existed):
+- **R1:** when `PAYMENT_API_KEY` is missing or empty, payments fail closed. No request is sent, nothing is reported as successful, and the error names the variable without printing a key value.
+- **Citation status is NO SOURCE.** I opened `README.md#L8`: it says the payment client needs the key, but it doesn't say what should happen when the key is missing.
+- **Requirement status is PROPOSED.** This blocks merge until you decide.
+- **There's an entry in the Owner questions table** with my recommendation.
+
+**Two things I need from you:**
+1. Do you, as owner, accept R1? If so, what name should I record?
+2. Should it fail at startup (the app won't boot) or per request (the app runs, but payments return a configuration error)? I recommend per request plus a warning at startup. That way other features keep working, but a payment can never silently succeed.
+
+Once you answer, I'll set the row to ASSUMPTION-ACCEPTED with your name and today's date (2026-11-11), and record your words in `docs/agent-ops/APPROVALS.md`.
+
+**Checks:** `python3 scripts/check_knowledge_links.py` passes on the new trace matrix. The full run still exits 1 because of 18 broken links in `docs/EVIDENCE.md` and `docs/RESEARCH_AND_DECISIONS.md` that were already there; they point to evidence and report files that don't exist.
+
+**Not done yet:** there's no intake record, so `/change-intake` has to run before any code that implements this. I haven't written or run the unit test for R1, and I haven't committed anything.

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)milestone[ -_]?3|M3\\b",
+      "output_mode": "files_with_matches"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -15",
+      "description": "Show recent commits"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "ls reports projects decisions meetings docs/agent-ops",
+      "description": "List record directories"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "find projects/demo",
+      "description": "List demo project files"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)milestone|M\\d",
+      "path": "projects/demo",
+      "output_mode": "content"
+    }
+  }
+]

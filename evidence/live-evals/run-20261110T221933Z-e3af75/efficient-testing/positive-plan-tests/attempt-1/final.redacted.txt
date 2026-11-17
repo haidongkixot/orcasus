@@ -1,0 +1,26 @@
+I've written the test plan in `docs/agent-ops/TEST_PLAN.md`, but it's a draft: it can't be finalised until you answer the questions below. I haven't written or run any tests.
+
+**The tests, all using the project's existing `node --test` runner with no new dependencies:**
+- **Unit tests (T1–T5):** the spreadsheet output (header, row order, escaping of commas, quotes and newlines, and protection against spreadsheet formula injection), totals with no rounding errors, the date-window boundaries, and which statuses are included.
+- **Endpoint tests (T6–T11):** each case checks for an exact status code, not just "not 401/403":
+  - an allowed user gets a 200 with the right file headers and the exact expected content;
+  - a request with no organisation gets 401;
+  - a user whose role isn't allowed gets 403 and sees no invoice data;
+  - one organisation's export never contains another organisation's invoices;
+  - an organisation with no invoices gets just the header row;
+  - the existing invoice list endpoint keeps working.
+- **Button tests (T12–T13):** checking the button's label, who sees it, its loading state and its error state. These are blocked because the repo has no frontend code.
+- **Screenshots, traces and videos:** zero. Only one end-to-end browser test would ever be added, and only if a browser test setup exists and you approve it.
+
+**Decisions I need from you:**
+1. **How far back?** `tickets/TICKET-12.md` asks for the last 12 months, but `projects/demo/PRD.md` (R3) says all history. Invoices also have no date field yet, so the 12-month option may need a data-model change.
+2. **Who can export?** The code only distinguishes `admin` from everyone else (the existing tests use `member`). The PRD mentions "finance staff", but that role doesn't exist in the code.
+3. **Which invoices?** The code has four statuses: `draft`, `sent`, `paid` and `void`. Which should the export include?
+4. **What format?** The backlog says CSV and the ticket says "spreadsheet", which could mean Excel. I also need the columns, the currency, and whether amounts appear in cents or as decimals.
+5. **Where is the billing page?** I need its location and how its components are tested before the button can be tested.
+
+**Other issues:**
+- `projects/demo/BACKLOG.md` lists this export as already in progress on the `feat/csv-export` branch. I couldn't check that branch because shell access was denied, so this may duplicate existing work.
+- The intake and discovery records the project rules require before implementation don't exist yet.
+- The existing test suite wasn't run in this session for the same reason.
+- There's no real login: the server trusts whatever organisation the `x-org-id` header names. The tests can prove the export only returns that organisation's invoices, not that the caller really belongs to it. This should go to security review.

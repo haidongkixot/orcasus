@@ -1,6 +1,6 @@
 ---
 name: project-discovery
-description: Mandatory preflight gate for non-trivial web/mobile work. Inventory repository, assets/licences, tools and permissions, integrations, credential availability, runtime, environments, test resources and budget before architecture or implementation.
+description: Mandatory preflight gate for non-trivial web/mobile work. Inventory repository, assets/licences, tools and permissions, integrations, credential availability, runtime, environments, test resources and budget before architecture or implementation. Do NOT use for a trivial edit, to classify a new request (change-intake) or to write the test plan (efficient-testing).
 ---
 
 # Project Discovery — Mandatory Preflight Gate v1.3.0
@@ -11,7 +11,7 @@ For non-trivial features, integrations, redesigns, migrations, permission change
 Reuse a current, evidence-backed readiness record rather than duplicating it.
 
 ## Inspect actual evidence
-Inspect instructions, git status/diff, in-progress work, manifests/lockfiles, versions/scripts, architecture, routes/state/APIs/schemas/migrations, reusable UI, design tokens, fonts/logos/icons/images and licences. Inventory auth/SSO, database, storage, email, payments, analytics, external APIs, tool/MCP availability and actual operation scopes. Check environment-variable names and presence only; never print secrets. Check local/preview/staging/production separation, browsers/devices, CI, fixtures, test runner, observability, budget, accessibility, localization, performance and release/rollback requirements.
+Inspect instructions, git status/diff, in-progress work, manifests/lockfiles, versions/scripts, architecture, routes/state/APIs/schemas/migrations, reusable UI, design tokens, fonts/logos/icons/images and licences. Inventory auth/SSO, database, storage, email, payments, analytics, external APIs, tool/MCP availability and actual operation scopes. Check environment-variable names and presence only; never print secrets. Take the names from code and configuration (`process.env.X`, `os.environ`, `env(...)` in schemas, CI and deployment config), not from `.env` files: the permission rules deny reading every `.env*` file, including `.env.example`, and this skill never works around them. List each name with the file:line that reads it and ask the owner to confirm which are set in each environment. Check local/preview/staging/production separation, browsers/devices, CI, fixtures, test runner, observability, budget, accessibility, localization, performance and release/rollback requirements.
 
 Do not overwrite uncommitted changes. Do not infer a credential, account, scope, asset or runtime exists just because code references it.
 

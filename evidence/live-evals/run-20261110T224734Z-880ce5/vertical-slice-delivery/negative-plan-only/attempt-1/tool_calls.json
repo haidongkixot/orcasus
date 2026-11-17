@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "backlog-slicing"
+    }
+  },
+  {
+    "name": "Glob",
+    "input": {
+      "pattern": "{projects/**/*,docs/agent-ops/*,**/*PRD*}"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/projects/demo/PRD.md"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/projects/demo/BACKLOG.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files -- docs/agent-ops projects decisions reports src app templates/BACKLOG_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git log --oneline -8 --all"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/src/invoices.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/templates/BACKLOG_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-wu10j8d_/project/projects/demo/BACKLOG.md",
+      "content": "# Backlog — S5: Billing area\n\n> Produced with `/backlog-slicing` on 2026-11-10. Plan only; no implementation started. Priority order is set by the owner.\n\n- Goal (one sentence): Finance staff and org admins work with their organization's invoices in the product (view, void, export, in org currency) "
+    }
+  }
+]

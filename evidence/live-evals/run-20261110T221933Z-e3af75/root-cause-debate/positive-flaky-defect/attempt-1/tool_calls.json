@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Skill",
+    "input": {
+      "skill": "change-intake",
+      "args": "Bug report: orders occasionally duplicate in production; nobody can reproduce it."
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)order|idempoten|duplicate",
+      "glob": "!{.claude/**,evals/**,scripts/**}",
+      "output_mode": "files_with_matches",
+      "head_limit": 40
+    }
+  },
+  {
+    "name": "Bash",
+    "input": {
+      "command": "git ls-files",
+      "description": "List tracked files"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-fmzxu3dz/project/src/server.js"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-fmzxu3dz/project/templates/INTAKE_RECORD_TEMPLATE.md"
+    }
+  },
+  {
+    "name": "Grep",
+    "input": {
+      "pattern": "(?i)order|duplicat",
+      "path": "/tmp/orcasus-eval-fmzxu3dz/project/projects/demo/BACKLOG.md",
+      "output_mode": "content"
+    }
+  },
+  {
+    "name": "Read",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-fmzxu3dz/project/src/payments.js"
+    }
+  },
+  {
+    "name": "Write",
+    "input": {
+      "file_path": "/tmp/orcasus-eval-fmzxu3dz/project/docs/agent-ops/INTAKE_RECORD.md",
+      "content": "# Intake Record — S0\n\n> Status: INTAKE PENDING until the owner confirms intent and value and points to the order code.\n\n- Intake ID: INTAKE-2026-11-10-order-duplicates\n- Date: 2026-11-10\n- Requested by / owner: repository owner (confirmation pending)\n- Status: INTAKE PENDING\n- Lane: normal (hotfix l"
+    }
+  }
+]

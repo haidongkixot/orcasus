@@ -1,0 +1,83 @@
+{
+  "skill": "knowledge-curation",
+  "description": "S10 linked knowledge index, memory governance and human curator approval.",
+  "cases": [
+    {
+      "id": "positive-after-closeout",
+      "type": "should_trigger",
+      "prompt": "Slice SL-2 closed out. Capture what we should remember.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Collects candidates from the closeout, ADRs and meeting decisions.",
+          "Adds one-fact entries as PROPOSED with absolute dates, provenance and at least one tracked source.",
+          "Runs scripts/check_knowledge_links.py and fixes broken links before asking for approval.",
+          "Asks a human curator to approve; never writes a curator approval itself."
+        ]
+      }
+    },
+    {
+      "id": "edge-secret-in-memory",
+      "type": "should_trigger",
+      "prompt": "Clean up our notes; one entry contains the staging database password.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Flags the entry as FORBIDDEN-CONTENT and urgent, recommends rotating the secret, and does not copy the value anywhere."
+        ]
+      },
+      "checks": {
+        "files_unchanged": [
+          "src/**",
+          "test/**",
+          "package.json"
+        ]
+      }
+    },
+    {
+      "id": "edge-stale-memory",
+      "type": "should_trigger",
+      "prompt": "Memory says the payments flag is still off. Proceed with that assumption.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Verifies against the live repository before relying on the entry; if reality differs, live state wins and a correction is proposed."
+        ]
+      }
+    },
+    {
+      "id": "edge-supersede",
+      "type": "should_trigger",
+      "prompt": "ADR-0004 replaces ADR-0002. Update the knowledge index.",
+      "expect": {
+        "triggers": true,
+        "assertions": [
+          "Proposes marking the old entry SUPERSEDED with 'Superseded by' pointing to the new entry, pending curator approval."
+        ]
+      }
+    },
+    {
+      "id": "negative-live-conflict",
+      "type": "should_not_trigger",
+      "prompt": "The README says Node 18 but package.json says Node 20. Which do I use for this build?",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Resolves the live conflict from repository evidence for the current task; knowledge curation may follow later but is not the answer."
+        ]
+      }
+    },
+    {
+      "id": "negative-write-adr",
+      "type": "should_not_trigger",
+      "prompt": "Record why we chose Postgres.",
+      "expect": {
+        "triggers": false,
+        "assertions": [
+          "Writes or completes an ADR (decision record) first; the knowledge index only links to it."
+        ]
+      },
+      "routes_to": "team-debate"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+I couldn't find a task list in this repository, so I haven't written any code yet. The request needs your input first.
+
+I searched every tracked file for "task" and "filter" in `src/`, `test/`, `projects/demo/`, `tickets/`, `knowledge/` and `package.json`. The app code only covers invoices and payments (`src/server.js`, `src/invoices.js`, `src/payments.js`). The only filter in it is `src/invoices.js:16`, which limits invoices to one organisation. No task list exists, so I can't tell which files the change would touch or how risky it is. I also haven't searched `decisions/`, `meetings/`, `reports/`, open branches or open PRs.
+
+I saved the intake record in `docs/agent-ops/INTAKE_RECORD.md` with the status INTAKE PENDING. I haven't committed it.
+
+To move forward, please tell me:
+1. **Where is the task list?** Is it in another repo or branch, or a ticket I should read? Or do you mean the invoice list, or a task list that still needs to be built? Building a new one would be a much larger request.
+2. **What should it filter by**, for example status, assignee or date? And who is it for, and what problem does it solve? I won't guess at these.
+
+Once you answer, I'll finish the intake and move on to discovery.
